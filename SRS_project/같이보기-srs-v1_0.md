@@ -1,6 +1,6 @@
-# [SRS 문서] ai-place (한글)
+# [SRS 문서] 같이보기 (한글)
 
-# [SRS 문서] ai-place
+# [SRS 문서] 같이보기
 
 # 소프트웨어 요구사항 명세서 (SRS)
 
@@ -12,7 +12,7 @@
 
 **표준:** ISO/IEC/IEEE 29148:2018 — Systems and software engineering — Life cycle processes — Requirements engineering, Clause 9.6 (Software requirements specification content)
 
-**기준 PRD:** `ai-place-prd-v1_0.md` (네이버 부동산 공동 주거 의사결정 기능 PRD)
+**기준 PRD:** `같이보기-prd-v1_0.md` (네이버 부동산 공동 주거 의사결정 기능 PRD)
 
 **문서 구성 원칙:** §1~§7은 팀이 지정한 예시 SRS 템플릿(`[SRS 문서] AD-Core-Platform (한글).md`)과 동일한 포맷·범위로 작성했다. PRD 내용 중 그 템플릿의 범위를 벗어나는 부분은 §8~§12로 별도 확장했으며, 각 장은 ISO/IEC/IEEE 29148:2018 §9.6의 해당 조항을 표준 근거로 인용한다. 새 챕터는 PRD에 이미 작성된 내용만을 재구성한 것이며 새로운 요구사항을 만들지 않는다.
 
@@ -526,7 +526,7 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 
 **확장 챕터 (ISO/IEC/IEEE 29148:2018 §9.6 기준)**
 
-§1~§7은 예시 SRS 템플릿의 포맷·범위를 그대로 따른 것이다. 아래 §8~§12는 PRD(`ai-place-prd-v1_0.md`)에 이미 작성돼 있으나 그 템플릿의 7개 장에는 자리가 없는 내용을 담는다. 새 요구사항을 만들지 않고, ISO/IEC/IEEE 29148:2018 Clause 9.6(Software requirements specification content)의 대응 조항에 맞춰 기존 PRD 내용을 옮기고 재구성했다.
+§1~§7은 예시 SRS 템플릿의 포맷·범위를 그대로 따른 것이다. 아래 §8~§12는 PRD(`같이보기-prd-v1_0.md`)에 이미 작성돼 있으나 그 템플릿의 7개 장에는 자리가 없는 내용을 담는다. 새 요구사항을 만들지 않고, ISO/IEC/IEEE 29148:2018 Clause 9.6(Software requirements specification content)의 대응 조항에 맞춰 기존 PRD 내용을 옮기고 재구성했다.
 
 | 확장 챕터 | 표준 근거 | PRD 대응 절 |
 |---|---|---|

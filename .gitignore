@@ -5,3 +5,6 @@ Thumbs.db
 
 # copyrighted standard document — reference only, not for public redistribution
 SRS_project/29148-2018-ISOIECIEEE.pdf
+
+# HTML renderings stay local (PC folder) only — never pushed to GitHub
+*.html
