@@ -1,0 +1,1222 @@
+<title>같이 고르기 PRD</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#EEF3F8;
+    --sheet:#FFFFFF;
+    --ink:#16324F;
+    --ink-soft:#3D5A75;
+    --ink-faint:#7893A8;
+    --line:#C7D7E4;
+    --line-strong:#5C7F9C;
+    --accent:#1C7C8C;
+    --accent-strong:#0E5B68;
+    --accent-soft:#E3F1F0;
+    --warn:#B5730E;
+    --warn-soft:#FBEEDA;
+    --info:#2A6FB0;
+    --info-soft:#E4EEF8;
+    --hypo:#7A4FBE;
+    --hypo-soft:#EEE7F9;
+    --out:#AD4430;
+    --out-soft:#F7E7E2;
+    --code-bg:#F3F8FB;
+    --card-bg:#F7FAFC;
+    --sidebar-bg:#E7EFF6;
+    --shadow: 0 1px 2px rgba(22,50,79,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C2438;
+      --sheet:#123A5C;
+      --ink:#DCEBF4;
+      --ink-soft:#A9C4D8;
+      --ink-faint:#7B9AB2;
+      --line:#25506E;
+      --line-strong:#6C9BBB;
+      --accent:#5CD9DF;
+      --accent-strong:#8CEAEF;
+      --accent-soft:#173F49;
+      --warn:#E8A33D;
+      --warn-soft:#3A2C14;
+      --info:#6FB2E8;
+      --info-soft:#152F44;
+      --hypo:#B79CE8;
+      --hypo-soft:#241C3A;
+      --out:#E08A73;
+      --out-soft:#3A2118;
+      --code-bg:#0B2338;
+      --card-bg:#0F2E48;
+      --sidebar-bg:#0A2033;
+      --shadow: 0 1px 2px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C2438;
+    --sheet:#123A5C;
+    --ink:#DCEBF4;
+    --ink-soft:#A9C4D8;
+    --ink-faint:#7B9AB2;
+    --line:#25506E;
+    --line-strong:#6C9BBB;
+    --accent:#5CD9DF;
+    --accent-strong:#8CEAEF;
+    --accent-soft:#173F49;
+    --warn:#E8A33D;
+    --warn-soft:#3A2C14;
+    --info:#6FB2E8;
+    --info-soft:#152F44;
+    --hypo:#B79CE8;
+    --hypo-soft:#241C3A;
+    --out:#E08A73;
+    --out-soft:#3A2118;
+    --code-bg:#0B2338;
+    --card-bg:#0F2E48;
+    --sidebar-bg:#0A2033;
+    --shadow: 0 1px 2px rgba(0,0,0,.3);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR","Malgun Gothic",sans-serif;
+    font-size:15.5px;
+    line-height:1.7;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  ::selection{background:var(--accent-soft);}
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--sheet) 92%, transparent), transparent),
+      repeating-linear-gradient(0deg, var(--line) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 28px);
+    background-color:var(--sheet);
+    border-bottom:2px solid var(--line-strong);
+    padding:44px 32px 30px;
+  }
+  .masthead-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .kicker{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 10px;
+  }
+  h1.doctitle{
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:600;
+    font-size:clamp(26px,3.6vw,38px);
+    line-height:1.2;
+    margin:0;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .doc-sub{
+    margin:12px 0 0;
+    max-width:62ch;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+  .meta-block{
+    text-align:right;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.8;
+    white-space:nowrap;
+  }
+  .meta-block .ver{
+    display:inline-block;
+    font-size:13px;
+    color:var(--accent-strong);
+    background:var(--accent-soft);
+    padding:2px 9px;
+    border-radius:3px;
+    margin-bottom:4px;
+  }
+
+  /* ---------- layout ---------- */
+  .layout{
+    max-width:1180px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:270px minmax(0,1fr);
+    gap:0;
+    align-items:start;
+  }
+  nav.sidebar{
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    background:var(--sidebar-bg);
+    border-right:1px solid var(--line);
+    padding:26px 16px 60px 22px;
+  }
+  nav.sidebar::-webkit-scrollbar{width:8px;}
+  nav.sidebar::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:4px;}
+  .toc-heading{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin:0 0 14px;
+  }
+  ul.toc-root, ul.toc-sub{
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  ul.toc-root > li{margin-bottom:2px;}
+  ul.toc-sub{margin:2px 0 8px 0;padding-left:14px;border-left:1px solid var(--line);}
+  ul.toc-sub li{margin-bottom:1px;}
+  nav.sidebar a{
+    display:flex;
+    gap:8px;
+    align-items:baseline;
+    padding:5px 8px;
+    border-radius:4px;
+    color:var(--ink-soft);
+    font-size:13.2px;
+    line-height:1.4;
+  }
+  ul.toc-root > li > a{font-weight:500;color:var(--ink);}
+  nav.sidebar a:hover{background:var(--accent-soft);text-decoration:none;color:var(--accent-strong);}
+  nav.sidebar a.active{background:var(--accent-soft);color:var(--accent-strong);font-weight:600;}
+  .toc-num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11.5px;
+    color:var(--ink-faint);
+    flex-shrink:0;
+  }
+  nav.sidebar a.active .toc-num, nav.sidebar a:hover .toc-num{color:var(--accent);}
+  .toc-title{overflow:hidden;text-overflow:ellipsis;}
+
+  main.content{
+    padding:40px 44px 120px;
+    min-width:0;
+  }
+
+  main.content h2{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:22px;
+    font-weight:600;
+    color:var(--ink);
+    margin:56px 0 18px;
+    padding-bottom:12px;
+    border-bottom:2px solid var(--line-strong);
+    scroll-margin-top:16px;
+    text-wrap:balance;
+  }
+  main.content > h2:first-child{margin-top:0;}
+  main.content h3{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:16.5px;
+    font-weight:600;
+    color:var(--accent-strong);
+    margin:38px 0 12px;
+    scroll-margin-top:16px;
+  }
+  main.content h4{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--ink);
+    margin:30px 0 10px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+  }
+  .fr-badge{
+    display:inline-block;
+    background:var(--accent);
+    color:var(--sheet);
+    font-size:11.5px;
+    font-weight:600;
+    padding:2px 7px;
+    border-radius:3px;
+    margin-right:8px;
+    letter-spacing:.02em;
+  }
+  main.content p{margin:0 0 14px;color:var(--ink);max-width:78ch;}
+  main.content ul, main.content ol{margin:0 0 16px;padding-left:1.4em;max-width:78ch;}
+  main.content li{margin-bottom:5px;}
+  main.content strong{color:var(--ink);font-weight:600;}
+
+  blockquote{
+    margin:0 0 18px;
+    padding:14px 18px;
+    background:var(--card-bg);
+    border-left:3px solid var(--accent);
+    border-radius:0 3px 3px 0;
+    color:var(--ink-soft);
+    font-size:14.8px;
+  }
+  blockquote strong{color:var(--ink);}
+
+  hr{
+    border:none;
+    border-top:1px solid var(--line);
+    margin:36px 0;
+  }
+
+  code{
+    font-family:"IBM Plex Mono",monospace;
+    background:var(--code-bg);
+    padding:2px 5px;
+    border-radius:3px;
+    font-size:0.9em;
+    color:var(--accent-strong);
+  }
+  pre.codeblock{
+    background:var(--code-bg);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:14px 16px;
+    overflow-x:auto;
+    font-size:13px;
+    line-height:1.6;
+  }
+  pre.codeblock code{background:none;padding:0;color:var(--ink);}
+
+  .diagram-frame{
+    position:relative;
+    background:var(--sheet);
+    border:1px solid var(--line-strong);
+    border-radius:2px;
+    padding:30px 20px 18px;
+    margin:8px 0 24px;
+  }
+  .diagram-frame::before, .diagram-frame::after{
+    content:"";
+    position:absolute;
+    width:16px;height:16px;
+    border:2px solid var(--line-strong);
+  }
+  .diagram-frame::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+  .diagram-frame::after{top:-1px;right:-1px;border-left:none;border-bottom:none;}
+  .diagram-scroll{overflow-x:auto;}
+  .diagram-scroll pre.mermaid{margin:0;min-width:600px;background:none;border:none;padding:0;}
+
+  .table-scroll{overflow-x:auto;margin:0 0 22px;border:1px solid var(--line);border-radius:4px;}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.6px;
+    line-height:1.55;
+    background:var(--sheet);
+  }
+  th, td{
+    text-align:left;
+    padding:10px 13px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  th{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:500;
+    background:var(--card-bg);
+    position:sticky;
+    top:0;
+  }
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:var(--card-bg);}
+
+  .pill{
+    display:inline-block;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:11.5px;
+    font-weight:500;
+    padding:2px 8px;
+    border-radius:10px;
+    white-space:nowrap;
+    line-height:1.5;
+  }
+  .pill-confirmed{background:var(--accent-soft);color:var(--accent-strong);}
+  .pill-evidence{background:var(--info-soft);color:var(--info);}
+  .pill-hypothesis{background:var(--hypo-soft);color:var(--hypo);}
+  .pill-tbd{background:var(--warn-soft);color:var(--warn);}
+  .pill-outscope{background:var(--out-soft);color:var(--out);}
+  .pill-proposal{background:var(--sheet);color:var(--accent);border:1px dashed var(--accent);}
+  .pill-inference{background:var(--card-bg);color:var(--ink-faint);}
+
+  .ref{border-bottom:1px dotted var(--ink-faint);cursor:help;color:var(--ink-soft);}
+
+  footer.doc-footer{
+    grid-column:1 / -1;
+    border-top:1px solid var(--line);
+    padding:22px 44px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;
+    color:var(--ink-faint);
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  #navToggle{display:none;}
+  .navToggleBtn{
+    display:none;
+    position:fixed;
+    z-index:20;
+    bottom:20px;
+    right:20px;
+    width:46px;height:46px;
+    border-radius:50%;
+    background:var(--accent);
+    color:var(--sheet);
+    border:none;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:18px;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+  }
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    nav.sidebar{
+      position:fixed;
+      top:0; left:0; bottom:0;
+      width:78vw;
+      max-width:320px;
+      height:100vh;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+      z-index:30;
+      box-shadow:2px 0 12px rgba(0,0,0,.2);
+    }
+    #navToggle:checked ~ nav.sidebar{transform:translateX(0);}
+    main.content{padding:28px 20px 100px;}
+    .navToggleBtn{display:flex;align-items:center;justify-content:center;}
+    footer.doc-footer{padding:18px 20px;}
+  }
+</style>
+
+<input type="checkbox" id="navToggle">
+<label for="navToggle" class="navToggleBtn" aria-label="목차 열기">≡</label>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <p class="kicker">같이 고르기 · 공동 주거 의사결정</p>
+      <h1 class="doctitle">네이버 부동산 공동 주거 의사결정 기능 PRD</h1>
+      <p class="doc-sub">두 사람이 조건을 입력하면 관심매물별로 무엇이 맞고 어긋나는지, 무엇을 감수하는지를 보여준다. 총점을 만들지 않고 방문 후보 2개를 스스로 정하도록 돕는다.</p>
+    </div>
+    <div class="meta-block">
+      <span class="ver">v0.2</span><br>
+      작성 기준일 2026-08-20<br>
+      개정 2026-08-24
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <p class="toc-heading">Contents</p>
+    <ul class="toc-root">
+<li class="toc-h2"><a href="#s1"><span class="toc-num">1</span><span class="toc-title">Document Overview</span></a>
+<ul class="toc-sub">
+<li><a href="#s1-1"><span class="toc-num">1.1</span><span class="toc-title">상태 표기</span></a></li>
+<li><a href="#s1-2"><span class="toc-num">1.2</span><span class="toc-title">정합성 적용 원칙</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s2"><span class="toc-num">2</span><span class="toc-title">Product Summary</span></a>
+</li>
+<li class="toc-h2"><a href="#s3"><span class="toc-num">3</span><span class="toc-title">Background / Context</span></a>
+<ul class="toc-sub">
+<li><a href="#s3-1"><span class="toc-num">3.1</span><span class="toc-title">현재 집찾기 구조</span></a></li>
+<li><a href="#s3-2"><span class="toc-num">3.2</span><span class="toc-title">기회 구간</span></a></li>
+<li><a href="#s3-3"><span class="toc-num">3.3</span><span class="toc-title">확인된 것과 아직 모르는 것</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s4"><span class="toc-num">4</span><span class="toc-title">Target User</span></a>
+<ul class="toc-sub">
+<li><a href="#s4-1"><span class="toc-num">4.1</span><span class="toc-title">Primary User — 제품 정의</span></a></li>
+<li><a href="#s4-2"><span class="toc-num">4.2</span><span class="toc-title">Initial Validation Segment — 검증 집단</span></a></li>
+<li><a href="#s4-3"><span class="toc-num">4.3</span><span class="toc-title">주거 형태 구분</span></a></li>
+<li><a href="#s4-4"><span class="toc-num">4.4</span><span class="toc-title">현재 제외 사용자</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s5"><span class="toc-num">5</span><span class="toc-title">User Job / JTBD</span></a>
+<ul class="toc-sub">
+<li><a href="#s5-1"><span class="toc-num">5.1</span><span class="toc-title">Core Job</span></a></li>
+<li><a href="#s5-2"><span class="toc-num">5.2</span><span class="toc-title">Job 구조</span></a></li>
+<li><a href="#s5-3"><span class="toc-num">5.3</span><span class="toc-title">`납득`의 정의</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s6"><span class="toc-num">6</span><span class="toc-title">Problem Definition</span></a>
+<ul class="toc-sub">
+<li><a href="#s6-1"><span class="toc-num">6.1</span><span class="toc-title">확인된 문제</span></a></li>
+<li><a href="#s6-2"><span class="toc-num">6.2</span><span class="toc-title">검증 중인 문제</span></a></li>
+<li><a href="#s6-3"><span class="toc-num">6.3</span><span class="toc-title">Problem Statement</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s7"><span class="toc-num">7</span><span class="toc-title">Value Proposition</span></a>
+<ul class="toc-sub">
+<li><a href="#s7-1"><span class="toc-num">7.1</span><span class="toc-title">Primary Value Proposition</span></a></li>
+<li><a href="#s7-2"><span class="toc-num">7.2</span><span class="toc-title">Short Value Proposition</span></a></li>
+<li><a href="#s7-3"><span class="toc-num">7.3</span><span class="toc-title">핵심 사용자 가치</span></a></li>
+<li><a href="#s7-4"><span class="toc-num">7.4</span><span class="toc-title">기존 탐색·공유 기능과의 차이</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s8"><span class="toc-num">8</span><span class="toc-title">Product Goal</span></a>
+<ul class="toc-sub">
+<li><a href="#s8-1"><span class="toc-num">8.1</span><span class="toc-title">MVP 사용자 결과</span></a></li>
+<li><a href="#s8-2"><span class="toc-num">8.2</span><span class="toc-title">제품 종료점</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s9"><span class="toc-num">9</span><span class="toc-title">Non-goals</span></a>
+</li>
+<li class="toc-h2"><a href="#s10"><span class="toc-num">10</span><span class="toc-title">Core User Scenario</span></a>
+<ul class="toc-sub">
+<li><a href="#sx2"><span class="toc-num"></span><span class="toc-title">대표 시나리오: A와 B가 전·월세 집을 함께 구하는 경우</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s11"><span class="toc-num">11</span><span class="toc-title">End-to-End User Flow</span></a>
+<ul class="toc-sub">
+<li><a href="#s11-1"><span class="toc-num">11.1</span><span class="toc-title">로그인 원칙</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s12"><span class="toc-num">12</span><span class="toc-title">Condition Model</span></a>
+<ul class="toc-sub">
+<li><a href="#s12-1"><span class="toc-num">12.1</span><span class="toc-title">기본 원칙</span></a></li>
+<li><a href="#s12-2"><span class="toc-num">12.2</span><span class="toc-title">사람별 조건 구조</span></a></li>
+<li><a href="#s12-3"><span class="toc-num">12.3</span><span class="toc-title">판정 가능한 여섯 항목</span></a></li>
+<li><a href="#s12-4"><span class="toc-num">12.4</span><span class="toc-title">선호·확인·현장 항목 분리</span></a></li>
+<li><a href="#s12-5"><span class="toc-num">12.5</span><span class="toc-title">입력이 없거나 적용되지 않는 경우</span></a></li>
+<li><a href="#s12-6"><span class="toc-num">12.6</span><span class="toc-title">1단계와 확장 단계</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s13"><span class="toc-num">13</span><span class="toc-title">Listing Comparison Model</span></a>
+<ul class="toc-sub">
+<li><a href="#s13-1"><span class="toc-num">13.1</span><span class="toc-title">비교 질문</span></a></li>
+<li><a href="#s13-2"><span class="toc-num">13.2</span><span class="toc-title">후보와 결과 구조</span></a></li>
+<li><a href="#s13-3"><span class="toc-num">13.3</span><span class="toc-title">정렬과 시각화</span></a></li>
+<li><a href="#s13-4"><span class="toc-num">13.4</span><span class="toc-title">예산과 실부담</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s14"><span class="toc-num">14</span><span class="toc-title">Trade-off / Compromise Model</span></a>
+<ul class="toc-sub">
+<li><a href="#s14-1"><span class="toc-num">14.1</span><span class="toc-title">기본 출력 구조</span></a></li>
+<li><a href="#s14-2"><span class="toc-num">14.2</span><span class="toc-title">문장 생성 규칙</span></a></li>
+<li><a href="#s14-3"><span class="toc-num">14.3</span><span class="toc-title">조건 완화</span></a></li>
+<li><a href="#s14-4"><span class="toc-num">14.4</span><span class="toc-title">최종 두 후보 비교</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s15"><span class="toc-num">15</span><span class="toc-title">AI Role</span></a>
+<ul class="toc-sub">
+<li><a href="#s15-1"><span class="toc-num">15.1</span><span class="toc-title">AI가 하는 것</span></a></li>
+<li><a href="#s15-2"><span class="toc-num">15.2</span><span class="toc-title">AI가 하지 않는 것</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s16"><span class="toc-num">16</span><span class="toc-title">Functional Requirements</span></a>
+<ul class="toc-sub">
+<li><a href="#s16-1"><span class="toc-num">16.1</span><span class="toc-title">Acceptance Criteria</span></a></li>
+<li><a href="#s16-2"><span class="toc-num">16.2</span><span class="toc-title">MoSCoW 및 스프린트 구현 가능성 매핑</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s17"><span class="toc-num">17</span><span class="toc-title">Screen Requirements</span></a>
+<ul class="toc-sub">
+<li><a href="#s17-1"><span class="toc-num">17.1</span><span class="toc-title">기기 전제</span></a></li>
+<li><a href="#s17-2"><span class="toc-num">17.2</span><span class="toc-title">A · 초대자 및 공통 화면</span></a></li>
+<li><a href="#s17-3"><span class="toc-num">17.3</span><span class="toc-title">B · 수신자 화면</span></a></li>
+<li><a href="#s17-4"><span class="toc-num">17.4</span><span class="toc-title">시스템·공통 상태</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s18"><span class="toc-num">18</span><span class="toc-title">Empty / Error / Edge Cases</span></a>
+<ul class="toc-sub">
+<li><a href="#s18-1"><span class="toc-num">18.1</span><span class="toc-title">MVP 필수 예외</span></a></li>
+<li><a href="#s18-2"><span class="toc-num">18.2</span><span class="toc-title">빈 상태·후순위 예외</span></a></li>
+<li><a href="#s18-3"><span class="toc-num">18.3</span><span class="toc-title">공통 오류 판정 원칙</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s19"><span class="toc-num">19</span><span class="toc-title">Cost / Assumption Handling</span></a>
+<ul class="toc-sub">
+<li><a href="#s19-1"><span class="toc-num">19.1</span><span class="toc-title">실부담 구성</span></a></li>
+<li><a href="#s19-2"><span class="toc-num">19.2</span><span class="toc-title">통근 여부에 따른 교통비 처리</span></a></li>
+<li><a href="#s19-3"><span class="toc-num">19.3</span><span class="toc-title">현재 전제값</span></a></li>
+<li><a href="#s19-4"><span class="toc-num">19.4</span><span class="toc-title">자차 비용 포함·제외</span></a></li>
+<li><a href="#s19-5"><span class="toc-num">19.5</span><span class="toc-title">숫자 표현 원칙</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s20"><span class="toc-num">20</span><span class="toc-title">Non-Functional Requirements</span></a>
+<ul class="toc-sub">
+<li><a href="#s20-1"><span class="toc-num">20.1</span><span class="toc-title">성능 (Performance)</span></a></li>
+<li><a href="#s20-2"><span class="toc-num">20.2</span><span class="toc-title">가용성 (Availability) &amp; 의존성</span></a></li>
+<li><a href="#s20-3"><span class="toc-num">20.3</span><span class="toc-title">보안·개인정보 (Security &amp; Privacy)</span></a></li>
+<li><a href="#s20-4"><span class="toc-num">20.4</span><span class="toc-title">비용·용량 (Cost &amp; Capacity)</span></a></li>
+<li><a href="#s20-5"><span class="toc-num">20.5</span><span class="toc-title">정확성 (Accuracy)</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s21"><span class="toc-num">21</span><span class="toc-title">Data Requirements</span></a>
+<ul class="toc-sub">
+<li><a href="#s21-1"><span class="toc-num">21.1</span><span class="toc-title">사용자 입력 데이터</span></a></li>
+<li><a href="#s21-2"><span class="toc-num">21.2</span><span class="toc-title">네이버 매물 데이터</span></a></li>
+<li><a href="#s21-3"><span class="toc-num">21.3</span><span class="toc-title">계산·파생 데이터</span></a></li>
+<li><a href="#s21-4"><span class="toc-num">21.4</span><span class="toc-title">외부·기준 데이터</span></a></li>
+<li><a href="#s21-5"><span class="toc-num">21.5</span><span class="toc-title">저장 원칙</span></a></li>
+<li><a href="#s21-6"><span class="toc-num">21.6</span><span class="toc-title">네이버 내부 의존성</span></a></li>
+<li><a href="#s21-7"><span class="toc-num">21.7</span><span class="toc-title">재탐색 필터 변환 규칙</span></a></li>
+<li><a href="#s21-8"><span class="toc-num">21.8</span><span class="toc-title">경로 계산·캐시 요구</span></a></li>
+<li><a href="#s21-9"><span class="toc-num">21.9</span><span class="toc-title">Entity Relationship Model</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s22"><span class="toc-num">22</span><span class="toc-title">MVP Scope</span></a>
+<ul class="toc-sub">
+<li><a href="#s22-1"><span class="toc-num">22.1</span><span class="toc-title">MVP 단계 1 — 검증 코어</span></a></li>
+<li><a href="#s22-2"><span class="toc-num">22.2</span><span class="toc-title">MVP 단계 1의 확정 수치·경계</span></a></li>
+<li><a href="#s22-3"><span class="toc-num">22.3</span><span class="toc-title">단계 1 필수 예외</span></a></li>
+<li><a href="#s22-4"><span class="toc-num">22.4</span><span class="toc-title">MVP 단계 2 — 종료점 완성</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s23"><span class="toc-num">23</span><span class="toc-title">Out of Scope</span></a>
+<ul class="toc-sub">
+<li><a href="#s23-1"><span class="toc-num">23.1</span><span class="toc-title">제품 범위 밖</span></a></li>
+<li><a href="#s23-2"><span class="toc-num">23.2</span><span class="toc-title">MVP 단계 1 밖 또는 후순위</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s24"><span class="toc-num">24</span><span class="toc-title">KPI / Success Metrics</span></a>
+<ul class="toc-sub">
+<li><a href="#s24-1"><span class="toc-num">24.1</span><span class="toc-title">North Star</span></a></li>
+<li><a href="#s24-2"><span class="toc-num">24.2</span><span class="toc-title">검증 지표</span></a></li>
+<li><a href="#s24-3"><span class="toc-num">24.3</span><span class="toc-title">후보 지표와 후행 지표</span></a></li>
+<li><a href="#s24-4"><span class="toc-num">24.4</span><span class="toc-title">기준선·목표 수립 프로토콜과 가드레일 지표</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s25"><span class="toc-num">25</span><span class="toc-title">Validation Plan / Open Hypotheses</span></a>
+<ul class="toc-sub">
+<li><a href="#s25-1"><span class="toc-num">25.1</span><span class="toc-title">가설 현황</span></a></li>
+<li><a href="#s25-2"><span class="toc-num">25.2</span><span class="toc-title">실행 순서</span></a></li>
+<li><a href="#s25-3"><span class="toc-num">25.3</span><span class="toc-title">H2-b-2 인터뷰 조건</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s26"><span class="toc-num">26</span><span class="toc-title">Risks</span></a>
+<ul class="toc-sub">
+<li><a href="#s26-0"><span class="toc-num">26.0</span><span class="toc-title">설계 결정 근거 요약 (ADR)</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#s27"><span class="toc-num">27</span><span class="toc-title">Open Questions / TBD</span></a>
+<ul class="toc-sub">
+<li><a href="#s27-1"><span class="toc-num">27.1</span><span class="toc-title">팀이 결정할 수 있는 항목</span></a></li>
+<li><a href="#s27-2"><span class="toc-num">27.2</span><span class="toc-title">네이버 내부 확인이 필요한 항목</span></a></li>
+<li><a href="#s27-3"><span class="toc-num">27.3</span><span class="toc-title">실측·사용자 조사 필요</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sx28"><span class="toc-num"></span><span class="toc-title">PRD 정합성 검수 결과</span></a>
+<ul class="toc-sub">
+<li><a href="#sx29"><span class="toc-num"></span><span class="toc-title">통과 항목</span></a></li>
+<li><a href="#sx30"><span class="toc-num"></span><span class="toc-title">발견된 문서 충돌과 적용 결과</span></a></li>
+<li><a href="#sx31"><span class="toc-num"></span><span class="toc-title">남은 확인 필요사항</span></a></li>
+</ul></li>
+<li class="toc-h2"><a href="#sx32"><span class="toc-num"></span><span class="toc-title">기준 문서</span></a>
+</li>
+<li class="toc-h2"><a href="#sx33"><span class="toc-num"></span><span class="toc-title">Acceptance Criteria 요약</span></a>
+</li>
+<li class="toc-h2"><a href="#sx34"><span class="toc-num"></span><span class="toc-title">PRD 완성도 재검토 (v0.2)</span></a>
+</li>
+</ul>
+  </nav>
+  <main class="content">
+    <blockquote><strong>v0.2 — PRD 완성도 재검토 반영본</strong><br><code>prd_v0.1_20260820_with_AC.md</code>(AC 확장본)의 본문과 FR-01~FR-25 요구사항은 그대로 두고, 2026-08-24 자체 검토에서 미흡으로 지적된 4개 항목 — KPI 수치화 프로토콜(§24.4), MoSCoW·스프린트 구현 가능성(§16.2), 비기능요구(§20), 엔터티 관계도(§21.9) — 를 추가했다. 근거는 우선 이 폴더의 handoff 원본(<code>_handoff_extracted/</code>)과 <code>Day4_KPI_설계_보강(가드레일_포함).md</code>, <code>docs/04-benchmarks.md</code>에서 찾아 반영했고, 원본에 근거가 없는 항목은 새 수치를 지어내지 않고 <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span>로 표시했다. 상세 변경 로그는 문서 끝 "PRD 완성도 재검토 (v0.2)" 참고.</blockquote>
+<h2 id="s1">1. Document Overview</h2>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>문서명</td><td>네이버 부동산 공동 주거 의사결정 기능 PRD</td></tr><tr><td>버전</td><td><code>v0.2</code> (AC 확장본 <code>v0.1</code> 기반, 비기능요구·MoSCoW·KPI 프로토콜·엔터티 관계도 추가)</td></tr><tr><td>기준 handoff</td><td><code>real-estate-joint-decision_CHATGPT_HANDOFF_20260820_1333.zip</code> (폴더 내 실물은 <code>..._1007.zip</code> — 정합성 원칙에 따라 파일명 시각 차이는 §1.2에 준해 처리)</td></tr><tr><td>기준 commit</td><td><code>10b64551ed10a88616791b3a9798f53b50b01ed9</code></td></tr><tr><td>작성 기준일</td><td>2026-08-20 (v0.2 개정 2026-08-24)</td></tr><tr><td>문서 목적</td><td>최신 handoff에서 확정된 Problem, Target, Value Proposition, 기능·화면·데이터·검증 범위를 제품 요구사항으로 정리한다.</td></tr><tr><td>확정 범위</td><td>네이버 부동산 관심매물 저장 이후, 두 사람의 조건 입력·비교·충돌/양보 설명·방문 후보 2개 결정과 단계 2의 방문 전후 기록</td></tr><tr><td>문서 상태</td><td>구현 전 <code>v0.2</code>. 미결정 사항과 외부 의존성은 <span class="pill pill-hypothesis">[검증 가설]</span>·<span class="pill pill-tbd">[TBD]</span>로 유지한다.</td></tr></tbody></table></div>
+<h3 id="s1-1">1.1 상태 표기</h3>
+<div class="table-scroll"><table><thead><tr><th>상태</th><th>의미</th></tr></thead><tbody><tr><td><span class="pill pill-confirmed">[확정]</span></td><td><code>docs/11-decision-status.md</code> 또는 채택된 decision에서 현재 결정으로 명시</td></tr><tr><td><span class="pill pill-evidence">[근거 있음]</span></td><td>Evidence Log에서 사실·확인된 근거가 있으나 적용 범위와 한계가 존재</td></tr><tr><td><span class="pill pill-hypothesis">[검증 가설]</span></td><td>참·거짓 또는 효과가 아직 측정되지 않음</td></tr><tr><td><span class="pill pill-tbd">[TBD]</span></td><td>팀 결정, 정책 확인, 내부 데이터 또는 리서치가 더 필요</td></tr><tr><td><span class="pill pill-outscope">[Out of Scope]</span></td><td>현재 제품 또는 MVP 범위에서 명시적으로 제외</td></tr></tbody></table></div>
+<h3 id="s1-2">1.2 정합성 적용 원칙</h3>
+<p>이 PRD는 <code>현재 지시 → docs/11-decision-status.md → 최신 decisions → 최신 docs → 그 외 참고자료</code> 순으로 판단했다.</p>
+<ul><li><span class="pill pill-confirmed">[확정]</span> 예산은 모든 사용자의 공통 필수 조건이다.</li><li><span class="pill pill-confirmed">[확정]</span> 첫 단계에서 정기적 출퇴근 여부를 확인하고, 출퇴근하는 사람에게만 출근지와 이동수단을 받는다.</li><li><span class="pill pill-confirmed">[확정]</span> <code>출근 안 함</code>은 정상 경로다. 통근·교통비를 판정하지 않으며 비교표에서 해당 행을 제거한다.</li><li><code>docs/01-team-brief.md</code>, <code>docs/02-hypotheses.md</code>, <code>docs/08-screen-design.md</code>에 남은 “출근지·예산 2개 필수” 및 일부 2개 입력 기준 문구는 최신 <code>decision-status</code>와 충돌하므로 사용하지 않는다.</li><li><code>docs/07-cjm.md</code>라는 파일은 handoff에 없으며, 실제 포함 파일인 <code>docs/07-cjm-opportunity-score.md</code>를 사용했다.</li></ul>
+<hr>
+<h2 id="s2">2. Product Summary</h2>
+<p>네이버 부동산의 기존 매물 탐색과 관심매물 저장 흐름 위에 추가되는 <strong>2인 공동 주거 의사결정 기능</strong>이다. 함께 살 집을 구하는 두 사람이 각자의 조건을 한 번씩 입력하면, 관심매물별로 누구의 어떤 조건이 충족되고 어긋나는지와 양보 지점을 나란히 보여준다. 서비스는 정답 매물을 추천하거나 총점을 만들지 않고, 두 사람이 스스로 <strong>이번에 보러 갈 집 2개</strong>를 정할 수 있도록 비교 근거를 구조화한다.</p>
+<hr>
+<h2 id="s3">3. Background / Context</h2>
+<h3 id="s3-1">3.1 현재 집찾기 구조</h3>
+<p>현재 프로젝트가 관찰·정리한 AS-IS는 다음과 같다.</p>
+<pre class="codeblock"><code>네이버에서 매물 탐색·관심매물 저장
+→ 카카오톡 등으로 링크 공유
+→ 각자 매물 열람
+→ 지도에서 통근 확인
+→ 계산기·메모 등으로 비용과 장단점 비교
+→ 의견 교환
+→ 의견이 모이지 않으면 다시 탐색</code></pre>
+<ul><li><span class="pill pill-evidence">[근거 있음]</span> 집 탐색에는 반복 비교가 존재한다. 당근부동산 조사에서 전세 계약자는 평균 2.5개월 동안 4.1곳, 30대는 2.7개월 동안 4.1곳을 방문했다. 단, 당근 이용자 표본이며 2인 탐색만을 측정한 자료는 아니다.</li><li><span class="pill pill-evidence">[근거 있음]</span> 파트너와 집을 선택할 때 크기·스타일, 필수 조건, 위치, 예산 등의 충돌이 발생한다는 해외 조사 근거가 있다. 단, 미국·2020년·매매 기준이며 국내 전·월세에 그대로 일반화하지 않는다.</li><li><span class="pill pill-inference">[추론]</span> 관심매물 저장 이후 비교·통근·비용 계산·의견 조율의 결과가 네이버 부동산 안에 하나의 공동 결정 구조로 남지 않는다.</li><li><span class="pill pill-hypothesis">[일화/검증 가설]</span> 링크와 판단 근거가 여러 채널에 분산되고 상대의 기준이 말로만 존재하면, 매물별로 누가 무엇을 양보하는지 확인하기 어렵다는 것이 현재 팀의 문제 정의다.</li></ul>
+<h3 id="s3-2">3.2 기회 구간</h3>
+<pre class="codeblock"><code>매물 확보 → 검색·지도 → 상세 → 관심매물 저장 → [공유·비교·공동 결정] → 문의·방문
+                                                   ↑ 현재 제품 범위</code></pre>
+<p><span class="pill pill-confirmed">[확정]</span> 이 제품은 매물 탐색을 새로 만들지 않는다. 네이버 부동산의 관심매물 데이터를 활용해 <strong>저장 이후 공동 결정 구간</strong>만 담당한다.</p>
+<h3 id="s3-3">3.3 확인된 것과 아직 모르는 것</h3>
+<div class="table-scroll"><table><thead><tr><th>구분</th><th>현재 상태</th></tr></thead><tbody><tr><td>여러 매물을 반복 비교하는 행동</td><td><span class="pill pill-evidence">[근거 있음]</span></td></tr><tr><td>두 사람이 집을 고를 때 조건 충돌이 존재함</td><td><span class="pill pill-evidence">[근거 있음]</span></td></tr><tr><td>그 충돌이 실제 의사결정을 지연시킴</td><td><span class="pill pill-hypothesis">[검증 가설]</span> 직접 근거 없음</td></tr><tr><td>본 기능이 결정 시간을 단축함</td><td><span class="pill pill-hypothesis">[검증 가설]</span> 효과 미측정</td></tr><tr><td>본 기능이 갈등·탐색 기간·방문 횟수를 줄임</td><td><span class="pill pill-hypothesis">[검증 가설]</span> 효과 미측정</td></tr></tbody></table></div>
+<hr>
+<h2 id="s4">4. Target User</h2>
+<h3 id="s4-1">4.1 Primary User — 제품 정의</h3>
+<ul><li><span class="pill pill-confirmed">[확정]</span> <strong>함께 살 집을 구하는 두 사람</strong></li><li><span class="pill pill-confirmed">[확정]</span> 제품 정의상 주거 형태는 제한하지 않는다.</li><li><span class="pill pill-confirmed">[확정]</span> 두 사람이 각자 조건을 내고 대칭적으로 선택하는 <code>완전공동형</code> 관계를 전제로 한다.</li><li><span class="pill pill-confirmed">[확정]</span> 1인 사용은 독립 제품 모드가 아니라 상대가 아직 참여하지 않은 <strong>빈 경로</strong>다.</li></ul>
+<h3 id="s4-2">4.2 Initial Validation Segment — 검증 집단</h3>
+<div class="table-scroll"><table><thead><tr><th>구분</th><th>집단</th><th>목적</th></tr></thead><tbody><tr><td>1차 검증 집단</td><td><span class="pill pill-confirmed">[확정]</span> 예비부부·신혼부부</td><td>H1 초대 참여의 상한을 확인할 집단</td></tr><tr><td>2차 검증 집단</td><td><span class="pill pill-confirmed">[확정]</span> 친구·룸메이트</td><td>H1 초대 참여의 하한을 비교할 대조군</td></tr></tbody></table></div>
+<p>예비부부·신혼부부를 제품 전체의 유일한 Primary User로 재정의하지 않는다. 친구·룸메이트 역시 확장 타깃이 아니라 현재 검증 설계의 비교 집단이다.</p>
+<h3 id="s4-3">4.3 주거 형태 구분</h3>
+<ul><li>제품 정의 범위: <span class="pill pill-confirmed">[확정]</span> 주거 형태 무관</li><li>초기 시장·검증 범위: <span class="pill pill-confirmed">[확정]</span> 전·월세 공동 주거 탐색자 2인 중심</li></ul>
+<h3 id="s4-4">4.4 현재 제외 사용자</h3>
+<ul><li><span class="pill pill-outscope">[Out of Scope]</span> 3인 이상 공동 탐색</li><li><span class="pill pill-outscope">[Out of Scope]</span> 부모–자녀 관계</li><li><span class="pill pill-outscope">[Out of Scope]</span> 한 사람이 고르고 다른 사람이 승인만 하는 주도–승인형 관계</li></ul>
+<hr>
+<h2 id="s5">5. User Job / JTBD</h2>
+<h3 id="s5-1">5.1 Core Job</h3>
+<blockquote>함께 살 집을 고를 때, 두 사람 각자의 조건을 관심매물에 함께 대입해 누가 무엇을 감수하는지 이해하고, <strong>서로 납득 가능한 상태에서 이번에 보러 갈 집 2개를 정하고 싶다.</strong></blockquote>
+<h3 id="s5-2">5.2 Job 구조</h3>
+<div class="table-scroll"><table><thead><tr><th>Job</th><th>사용자가 이루려는 결과</th></tr></thead><tbody><tr><td>Functional Job</td><td>저장한 관심매물 중 이번에 실제로 방문할 두 곳을 정한다.</td></tr><tr><td>Decision Job</td><td>후보별 조건 충족·미충족·미달량과 양보 관계를 확인한 뒤 선택한다.</td></tr><tr><td>Relational Job</td><td>어느 한쪽의 기준이나 시스템의 추천에 끌려가지 않고 각자의 기준을 같은 비중으로 드러낸다.</td></tr><tr><td>Continuity Job</td><td>매물이 바뀌어도 사람의 조건은 유지해 다음 후보에 다시 적용한다.</td></tr><tr><td>B의 보조 Job</td><td><span class="pill pill-hypothesis">[검증 가설]</span> 매물마다 장황하게 이유를 설명하지 않고 자신의 조건을 한 번 입력해 판단 근거를 전달한다.</td></tr></tbody></table></div>
+<h3 id="s5-3">5.3 <code>납득</code>의 정의</h3>
+<p><span class="pill pill-confirmed">[확정]</span> 납득은 모든 조건을 만족하거나 추천 결과를 그대로 수용하는 상태가 아니다.</p>
+<blockquote><strong>이 집을 고르면 내가 무엇을 감수하는지 알고, 그 사실을 알고도 방문 후보로 동의할 수 있는 상태</strong></blockquote>
+<p>따라서 <code>한쪽만 충족</code>인 매물도 최종 방문 후보가 될 수 있다.</p>
+<hr>
+<h2 id="s6">6. Problem Definition</h2>
+<h3 id="s6-1">6.1 확인된 문제</h3>
+<div class="table-scroll"><table><thead><tr><th>문제</th><th>상태</th><th>한계</th></tr></thead><tbody><tr><td>주거 탐색에서 여러 매물을 반복 비교한다</td><td><span class="pill pill-evidence">[근거 있음]</span></td><td>2인만을 분리한 조사 아님</td></tr><tr><td>2인 주거 선택에서 서로 다른 조건·선호로 충돌이 발생한다</td><td><span class="pill pill-evidence">[근거 있음]</span></td><td>미국·매매 기준 조사</td></tr><tr><td>공동 저장·단방향 공유·개인 점수 도구는 존재하지만, 상대가 자기 조건을 입력하는 국내 주요 부동산 기능은 확인되지 않았다</td><td><span class="pill pill-evidence">[근거 있음]</span></td><td>조사 범위 내 확인이며 수요의 증거는 아님</td></tr><tr><td>선택에는 조건 간 trade-off와 양보가 발생한다</td><td><span class="pill pill-evidence">[근거 있음]</span></td><td>발생 사실과 제품 효과는 별개</td></tr></tbody></table></div>
+<h3 id="s6-2">6.2 검증 중인 문제</h3>
+<ul><li><span class="pill pill-hypothesis">[검증 가설]</span> 서로의 조건이 말과 여러 채널에 흩어져 있어 매물별 충돌과 양보 지점을 한 구조에서 보기 어렵다.</li><li><span class="pill pill-hypothesis">[검증 가설]</span> 단순 공동 찜이나 링크 공유만으로는 상대가 왜 선호하거나 거부하는지 이해하기 어렵다.</li><li><span class="pill pill-hypothesis">[검증 가설]</span> 이 조건 충돌이 실제 선택·방문·계약 결정의 지연을 만든다.</li><li><span class="pill pill-hypothesis">[검증 가설]</span> 조건 충돌이 일정 조율이나 비용 분담보다 더 큰 지연 원인이다.</li></ul>
+<h3 id="s6-3">6.3 Problem Statement</h3>
+<blockquote><span class="pill pill-hypothesis">[검증 가설]</span> 함께 살 집을 구하는 두 사람은 관심매물마다 각자의 조건과 판단을 수동으로 맞춰야 하며, 특정 후보를 선택할 때 <strong>누구의 어떤 조건이 어긋나고 무엇을 양보해야 하는지</strong> 명확히 보기 어려워 방문 후보를 공동으로 정하는 과정의 부담이 커진다.</blockquote>
+<p>이 문장은 현재 제품 방향을 정하는 문제 정의이며, <code>결정 지연</code>의 인과와 크기는 H2-b-2에서 별도로 검증한다.</p>
+<hr>
+<h2 id="s7">7. Value Proposition</h2>
+<h3 id="s7-1">7.1 Primary Value Proposition</h3>
+<blockquote><strong>함께 살 집을 구하는 두 사람이 관심매물별 조건 충돌과 양보 지점을 한눈에 확인하고, 서로 납득할 수 있는 방문 후보를 함께 결정하도록 돕는다.</strong></blockquote>
+<h3 id="s7-2">7.2 Short Value Proposition</h3>
+<blockquote><strong>각자의 조건과 양보 지점을 보고, 함께 보러 갈 집을 정합니다.</strong></blockquote>
+<h3 id="s7-3">7.3 핵심 사용자 가치</h3>
+<ol><li>상대의 조건과 선호를 사람 단위로 이해한다.</li><li>매물별로 <code>누구에게 무엇이 맞고 어긋나는지</code> 확인한다.</li><li>조건의 실제 미달량과 양보 주체를 확인한다.</li><li>조건을 완화하면 후보 상태가 어떻게 달라지는지 양쪽 안을 비교한다.</li><li>자동 판정할 수 없는 항목을 중개사 질문과 현장 확인으로 분리한다.</li><li>AI나 총점의 정답이 아니라 두 사람이 판단할 근거를 얻는다.</li><li>이번에 보러 갈 두 곳을 직접 정한다.</li></ol>
+<h3 id="s7-4">7.4 기존 탐색·공유 기능과의 차이</h3>
+<div class="table-scroll"><table><thead><tr><th>일반적 기능</th><th>본 제품</th></tr></thead><tbody><tr><td>매물을 탐색·추천</td><td>기존 관심매물에 두 사람의 조건을 적용</td></tr><tr><td>관심매물 공동 저장·링크 공유</td><td>두 사람 모두 자기 조건을 입력하고 양방향으로 비교</td></tr><tr><td>개인별 별점·가중치·총점</td><td>조건별 충족·미충족·미달량을 합산 없이 제시</td></tr><tr><td>AI가 최적 매물 추천</td><td>AI가 충돌·양보 관계를 설명하고 결정은 두 사람이 수행</td></tr><tr><td>가장 좋은 집 찾기</td><td>두 사람이 무엇을 감수하는지 알고 방문 후보를 정하기</td></tr></tbody></table></div>
+<hr>
+<h2 id="s8">8. Product Goal</h2>
+<h3 id="s8-1">8.1 MVP 사용자 결과</h3>
+<blockquote><span class="pill pill-confirmed">[확정]</span> 두 사람이 각자의 조건을 기준으로 관심매물 최대 5개를 비교하고, 매물별 조건 충돌과 양보 지점을 이해한 뒤 <strong>이번에 보러 갈 집 2개를 직접 정할 수 있게 한다.</strong></blockquote>
+<h3 id="s8-2">8.2 제품 종료점</h3>
+<ul><li>단계 1: <span class="pill pill-confirmed">[확정]</span> 방문 후보 2개 결정</li><li>단계 2: <span class="pill pill-confirmed">[확정]</span> 방문 전 확인 질문 정리 → 방문 후 현장 기록 → 유지·보류·제외</li><li><span class="pill pill-hypothesis">[검증 가설]</span> 위 결과가 결정 시간, 갈등, 방문 횟수 또는 계약 전환에 미치는 영향은 별도 검증 대상이다.</li></ul>
+<hr>
+<h2 id="s9">9. Non-goals</h2>
+<div class="table-scroll"><table><thead><tr><th>Non-goal</th><th>상태/설명</th></tr></thead><tbody><tr><td>AI가 최종 집 또는 방문 후보를 자동 선택</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>정답 매물·최적 매물 추천 또는 강제적 타협안 제시</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>두 사람의 조건을 합산한 종합점수·공동 적합도·자동 랭킹</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>신규 매물 DB, 별도 매물 검색, 탐색 보드, 아이소크론 중심 지도 기능 구축</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>계약 실행, 전자계약, 등기, 보증보험, 전세사기 확정 진단</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>대출 상품 추천, 대출 실행, 확정 대출 한도·금리 제시</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>법률·금융 판단 대행</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr><tr><td>3인 이상 의사결정, 비용 분담 비율, 방 배정</td><td><span class="pill pill-outscope">[Out of Scope]</span></td></tr></tbody></table></div>
+<hr>
+<h2 id="s10">10. Core User Scenario</h2>
+<h3 id="sx2">대표 시나리오: A와 B가 전·월세 집을 함께 구하는 경우</h3>
+<ol><li>A는 네이버 부동산에서 관심매물을 저장한 뒤 <code>같이 고르기</code>에 진입한다.</li><li>A는 관심매물 중 최대 5개를 이번 비교 후보로 선택한다.</li><li>A는 자신의 예산 상한을 입력한다. 시스템은 정기적 출퇴근 여부를 묻고, A가 출퇴근한다고 답한 경우에만 출근지와 이동수단을 받는다.</li><li>A는 필요하면 판정 가능한 필수 조건을 최대 4개 추가하고, 자유 문장 선호 0~3개와 확인 필요 항목을 입력한다.</li><li>A는 관계 유형을 선택하고 초대 링크를 B에게 보낸다. 링크가 기본이며 코드는 보조 수단이다.</li><li>B는 모바일에서 링크를 열어 A가 고른 후보와 A의 선호 맥락을 먼저 본다.</li><li>B도 예산을 입력하고 출퇴근 여부에 따라 출근지를 입력하거나 <code>출근 안 함</code>을 선택한다. 필요하면 필수 조건·선호·확인 항목을 추가한다.</li><li>시스템은 각 사람의 조건을 관심매물에 적용해 <code>둘 다 충족 / 한쪽만 충족 / 둘 다 불충족 / 확인 필요</code>를 보여준다.</li><li>한쪽만 충족하는 매물에서는 누가 어떤 조건을 얼마나 감수하는지와, 같은 후보 5개 안에서 상대적으로 나은 점을 설명한다.</li><li>두 사람은 필요한 경우 양쪽 조건 완화안을 동시에 살펴본다. 각자는 자기 조건만 바꿀 수 있고 상대 조건에는 제안만 보낼 수 있다.</li><li>자동 판정할 수 없는 항목은 방문 전 중개사 질문으로 분리한다.</li><li>두 사람은 각자 방문하고 싶은 후보 2개를 고른다. 겹치면 확정하고, 일부만 겹치면 남은 한 자리를 한 번 더 비교한다. 끝까지 겹치지 않으면 각자 한 곳씩 선택한다.</li><li>단계 2에서는 방문 후 공통 체크리스트를 기록하고 각 후보를 유지·보류·제외한다.</li></ol>
+<p><span class="pill pill-hypothesis">[검증 가설]</span> 이 흐름이 실제 갈등 또는 의사결정 시간을 줄이는지는 본 시나리오의 확정 결과가 아니다.</p>
+<hr>
+<h2 id="s11">11. End-to-End User Flow</h2>
+<div class="table-scroll"><table><thead><tr><th>단계</th><th>사용자 행동</th><th>시스템 반응</th><th>다음 단계 진입 조건</th><th>상태</th></tr></thead><tbody><tr><td>1. 진입</td><td>A가 네이버 부동산에서 <code>같이 고르기</code> 선택</td><td>A의 관심매물 목록 조회</td><td>A 로그인 및 관심매물 접근 가능</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>2. 후보 선택</td><td>관심매물 중 1~5개 선택</td><td>후보 선택 상태와 5개 상한 표시</td><td>1개 이상 선택</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>3. A 기본 입력</td><td>예산 입력, 출퇴근 여부 응답</td><td>예산 저장. 출퇴근 여부에 따라 출근지 경로 분기</td><td>예산 입력 완료</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>4. A 통근 입력</td><td>출퇴근 시 출근지와 이동수단 선택</td><td>후보별 실제 통근시간·교통비 계산 준비. 출근 안 함이면 통근 축 제거</td><td>해당자만 출근지 입력</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>5. A 확장 입력</td><td>필수 조건 0~4개, 선호 0~3개, 확인 필요 항목 선택</td><td>판정 조건·사람 카드·질문 항목 분리 저장</td><td>사용자가 확장 입력 종료</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>6. 초대</td><td>A가 관계 유형 선택 후 링크 공유</td><td>매물 ID 최대 5개와 연결 상태를 가진 공유 객체 생성, 링크·보조 코드 발급</td><td>초대 발송</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>7. B 진입</td><td>B가 링크 또는 코드로 참여</td><td>조건 입력 전 후보와 A의 선호 맥락 표시</td><td>링크 유효 또는 코드 확인</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>8. B 기본 입력</td><td>예산 입력, 출퇴근 여부 응답</td><td>A와 동일한 분기. 비로그인 입력은 초대 코드에 임시 저장</td><td>예산 입력 완료</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>9. B 통근·확장 입력</td><td>해당자만 출근지·이동수단 입력, 조건 추가</td><td>양쪽 입력분으로 판정 갱신</td><td>B가 현재 입력을 마침</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>10. 첫 결과</td><td>A/B가 후보별 실제값과 판정 확인</td><td>조건별 결과, 미달량, 확인 필요 상태 표시</td><td>계산 성공 또는 일부 계산 가능</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>11. 상세 비교</td><td>후보 선택</td><td>A/B 조건을 같은 비중으로 나란히 표시하고 양보 문장 생성</td><td>상세 진입</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>12. 조건 완화</td><td>자기 조건 슬라이더 조정 또는 상대에게 변경 제안</td><td>실제 미달량 기준으로 후보 등급 변화를 실시간 미리보기</td><td>적용·제안·취소 중 선택</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>13. 0건 분기</td><td>살아남는 후보가 없는 상태 확인</td><td>한 조건 완화로 살아나면 완화, 아니면 네이버 재탐색 필터 제안</td><td>사용자 선택</td><td><span class="pill pill-confirmed">[확정]</span> 행동 / <span class="pill pill-tbd">[TBD]</span> A-13b-2 상세 화면</td></tr><tr><td>14. 방문 후보 선택</td><td>각자 후보 2개 선택</td><td>일치 수에 따라 확정·한 자리 재비교·분할 처리</td><td>최대 2라운드</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>15. 방문 전</td><td>확인 필요 질문 검토</td><td>중개사 질문 카드 제공, 답변 기록 시 판정 갱신</td><td>단계 2 진입</td><td><span class="pill pill-confirmed">[확정]</span> 단계 2</td></tr><tr><td>16. 방문 후</td><td>공통 체크리스트 작성, 유지·보류·제외</td><td>사용자 생성 기록 보존, 전부 제외 시 재탐색 경로</td><td>기록 완료 또는 재탐색</td><td><span class="pill pill-confirmed">[확정]</span> 단계 2</td></tr><tr><td>17. 반복 세션</td><td>새 관심매물 추가·교체</td><td>기존 사람 조건을 새 매물에 자동 적용</td><td>새 매물 등록</td><td><span class="pill pill-confirmed">[확정]</span></td></tr></tbody></table></div>
+<h3 id="s11-1">11.1 로그인 원칙</h3>
+<ul><li>A의 관심매물 조회는 개인 데이터이므로 로그인 전제다.</li><li>B는 A의 개인 관심매물 목록이 아니라 A가 만든 공유 객체를 본다.</li><li><span class="pill pill-confirmed">[확정 방향]</span> B의 로그인은 첫 결과를 본 뒤 저장·재방문 시점으로 미룬다.</li><li><span class="pill pill-tbd">[TBD — 네이버 정책]</span> 공유 객체를 실제로 비로그인 열람할 수 있는지 확인이 필요하다. 불가능하면 B 로그인 시점이 변경된다.</li></ul>
+<hr>
+<h2 id="s12">12. Condition Model</h2>
+<h3 id="s12-1">12.1 기본 원칙</h3>
+<p><span class="pill pill-confirmed">[확정]</span> 조건은 매물이 아니라 <strong>사람</strong>에게 귀속된다.</p>
+<pre class="codeblock"><code>사람 A의 조건 ─┐
+               ├─ 관심매물 1~5에 각각 적용 → 조건별 결과
+사람 B의 조건 ─┘</code></pre>
+<p>매물이 삭제되거나 교체되어도 사람의 조건은 남는다. 새 매물이 들어오면 별도 재입력 없이 자동 적용한다.</p>
+<h3 id="s12-2">12.2 사람별 조건 구조</h3>
+<div class="table-scroll"><table><thead><tr><th>데이터</th><th>입력 규칙</th><th>판정 사용</th><th>귀속</th><th>상태</th></tr></thead><tbody><tr><td>예산</td><td><strong>항상 필수</strong>. 월 실부담 상한</td><td>예</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>출퇴근 여부</td><td>첫 단계에서 명시적으로 질문</td><td>통근 축 적용 여부 결정</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>출근지</td><td>출퇴근하는 경우에만 입력</td><td>통근시간·교통비 계산 기준점</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>이동수단</td><td>출근지가 있을 때만 입력. 대중교통 기본, 자차 선택 가능</td><td>경로·교통비 계산</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>추가 필수 조건</td><td>0~4개, 사용자가 선택</td><td>예</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>선호</td><td>자유 문장 0~3개</td><td>아니오</td><td>사람</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>확인 필요</td><td>현재 정의된 항목 중 선택, 상한 없음</td><td>자동 판정하지 않음</td><td>사람의 확인 요구</td><td><span class="pill pill-confirmed">[확정]</span></td></tr></tbody></table></div>
+<h3 id="s12-3">12.3 판정 가능한 여섯 항목</h3>
+<div class="table-scroll"><table><thead><tr><th>조건</th><th>타입</th><th>사용자 기준</th><th>미달 표현</th><th>적용 조건</th></tr></thead><tbody><tr><td>예산</td><td>상한형</td><td>월 실부담 O만원 이하</td><td><code>+월 15만</code></td><td>모든 사용자</td></tr><tr><td>통근시간</td><td>상한형</td><td>O분 이내</td><td><code>+7분</code></td><td>출근지가 있고 통근 조건을 설정한 사용자</td></tr><tr><td>역 도보</td><td>상한형</td><td>O분 이내</td><td><code>+3분</code></td><td>추가 조건 선택 시</td></tr><tr><td>전용면적</td><td>하한형</td><td>O㎡ 이상</td><td><code>−7㎡</code></td><td>추가 조건 선택 시</td></tr><tr><td>주차</td><td>유무형</td><td>있음</td><td><code>없음</code></td><td>추가 조건 선택 시</td></tr><tr><td>매물 유형</td><td>일치형</td><td><code>= 아파트</code> 등</td><td>실제 매물값 <code>빌라</code></td><td>추가 조건 선택 시</td></tr></tbody></table></div>
+<p>예산을 제외한 판정 축 중 사용자가 원하는 항목을 최대 4개까지 추가한다. 방 개수·건물 연식·엘리베이터·층수·방향 등은 현재 자동 판정 항목이 아니며 선호 카드 또는 네이버 재탐색 필터 맥락으로 분리한다.</p>
+<h3 id="s12-4">12.4 선호·확인·현장 항목 분리</h3>
+<div class="table-scroll"><table><thead><tr><th>층</th><th>항목</th><th>처리</th></tr></thead><tbody><tr><td>선호 카드</td><td>층수, 방향, 편의시설, 방 개수, 학군·육아환경, 옵션 등</td><td>상대가 읽는 자유 문장. 매물별 ✓/✗ 금지</td></tr><tr><td>방문 전 확인 필요</td><td>반려동물, 즉시 입주, 전입신고, 근저당·융자</td><td>중개사 질문 카드. 자동 판정 보류</td></tr><tr><td>방문 후 공통 체크리스트</td><td>층간소음, 실제 채광, 곰팡이, 주차 난이도, 주변 소음, 내부 상태</td><td>두 사람이 현장에서 기록. 항목을 고르는 것이 아니라 전부 표시</td></tr></tbody></table></div>
+<h3 id="s12-5">12.5 입력이 없거나 적용되지 않는 경우</h3>
+<div class="table-scroll"><table><thead><tr><th>상태</th><th>의미</th><th>시스템 처리</th></tr></thead><tbody><tr><td>미충족</td><td>실제값을 계산했고 기준에 못 미침</td><td>미달량과 함께 표시</td></tr><tr><td>계산 불가</td><td>계산을 시도했지만 경로·데이터 문제로 실패</td><td><code>계산 불가</code>, 미충족 처리 금지</td></tr><tr><td>확인 필요</td><td>데이터가 없어 자동 판정할 수 없음</td><td>질문 카드 또는 확인 상태로 분리</td></tr><tr><td>해당 없음</td><td>출근지가 없는 등 측정 대상 자체가 없음</td><td>비교표에서 해당 행 제거</td></tr><tr><td>추가 조건 0개</td><td>예산 이외 필수 조건을 선택하지 않음</td><td>예산 중심 결과 유지. 출근지가 있으면 실제 통근값을 보조 정보로 표시</td></tr></tbody></table></div>
+<h3 id="s12-6">12.6 1단계와 확장 단계</h3>
+<ul><li>1단계: 예산 + 출퇴근 여부 분기, 해당자만 출근지·이동수단</li><li>첫 결과: 보유한 실제값을 우선 표시하며, 사용자가 임계값을 설정한 조건만 판정한다.</li><li>확장 단계: 사용자가 원할 때 추가 필수 조건·선호·확인 항목 입력</li></ul>
+<hr>
+<h2 id="s13">13. Listing Comparison Model</h2>
+<h3 id="s13-1">13.1 비교 질문</h3>
+<pre class="codeblock"><code>금지: 어떤 매물이 우리에게 최고인가?
+사용: 이 매물을 선택하면 A와 B에게 각각 무엇이 맞고 무엇이 어긋나는가?</code></pre>
+<h3 id="s13-2">13.2 후보와 결과 구조</h3>
+<ul><li><span class="pill pill-confirmed">[확정]</span> 한 비교 세션의 관심매물은 최대 5개다.</li><li><span class="pill pill-confirmed">[확정]</span> 후보는 네이버 부동산의 기존 관심매물에서 선택한다.</li><li><span class="pill pill-confirmed">[확정]</span> 후보별 결과는 <code>둘 다 충족 / 한쪽만 충족 / 둘 다 불충족</code>으로 그룹화하고 <code>확인 필요</code>를 별도 상태로 표시한다.</li><li><span class="pill pill-confirmed">[확정]</span> 매물에 종합점수·공동 적합도·복합 순위를 부여하지 않는다.</li><li><span class="pill pill-confirmed">[확정]</span> 조건별 실제값·임계값·미달량을 한 줄 텍스트로 보여준다. 예: <code>13분 &gt; 10분 ✗ +3분</code>.</li><li><span class="pill pill-confirmed">[확정]</span> 조건 표시 순서는 <code>예산 → 통근 → 추가 필수①~④ → 확인 필요</code>로 고정한다.</li><li><span class="pill pill-confirmed">[확정]</span> 미충족 조건만 위로 올려 A/B 행 순서를 다르게 만들지 않는다.</li><li><span class="pill pill-confirmed">[확정]</span> 선호는 매물 비교표에 넣지 않고 사람 단위 카드로 한 번만 보여준다.</li></ul>
+<h3 id="s13-3">13.3 정렬과 시각화</h3>
+<ul><li>복합 점수 정렬은 금지한다.</li><li>단일 조건 값 또는 <code>한쪽만 충족</code> 그룹 안의 실제 미달량 기준 정렬은 가능하며, 정렬 기준을 화면에 밝힌다.</li><li>후보 위치 지도는 판정 결과를 부가적으로 매핑하는 용도다. 판정은 리스트가 담당한다.</li><li>레이더, 종합 게이지, 후보 순위 리스트, 별점, 누적막대, 이중축은 사용하지 않는다.</li><li>A/B는 위치와 라벨로 구분하고, 색은 충족·미충족·확인 상태에 사용한다. 지도 경로선만 A/B 구분을 위해 동일 굵기·투명도의 색을 사용할 수 있다.</li></ul>
+<h3 id="s13-4">13.4 예산과 실부담</h3>
+<p>실부담은 가구 총액이므로 한 매물의 계산 결과는 A와 B에게 동일하다. 다만 A와 B가 허용하는 예산 상한이 다를 수 있어 한쪽만 충족 상태가 발생할 수 있다.</p>
+<hr>
+<h2 id="s14">14. Trade-off / Compromise Model</h2>
+<h3 id="s14-1">14.1 기본 출력 구조</h3>
+<p>한쪽만 충족하는 매물을 설명 대상으로 승격한다.</p>
+<pre class="codeblock"><code>[누가] [무엇을] [얼마나] 감수하고,
+[대신] [같은 후보 5개 안에서] [어떤 조건이 얼마나 상대적으로 낫다]</code></pre>
+<div class="table-scroll"><table><thead><tr><th>구성요소</th><th>데이터 원천</th><th>규칙</th></tr></thead><tbody><tr><td>A에게 충족되는 조건</td><td>A 조건 × 매물 실제값</td><td>조건별로 표시, 합산 금지</td></tr><tr><td>A가 감수하는 조건</td><td>A의 미충족 조건과 실제 미달량</td><td>사람·조건·미달량 명시</td></tr><tr><td>B에게 충족되는 조건</td><td>B 조건 × 매물 실제값</td><td>A와 동일 구조</td></tr><tr><td>B가 감수하는 조건</td><td>B의 미충족 조건과 실제 미달량</td><td>A와 동일 구조</td></tr><tr><td>얻는 점</td><td>후보 5개 안에서의 조건별 상대 위치</td><td>절대적으로 좋다고 단정 금지</td></tr><tr><td>확인 필요</td><td>자동 판정 불가 항목</td><td>손실로 계산하지 않고 질문으로 분리</td></tr></tbody></table></div>
+<h3 id="s14-2">14.2 문장 생성 규칙</h3>
+<ul><li>A와 B 양쪽 문장에서 손실·이득 순서와 시각 비중을 동일하게 유지한다.</li><li>얻는 점이 없으면 <code>대신</code> 절을 제거한다. 장점을 만들어내지 않는다.</li><li>미충족 조건이 3개 이상이면 고정된 조건 순서상 앞 2개만 문장에 넣고 나머지는 목록으로 보여준다.</li><li><code>이 집이 더 좋다</code>, <code>이 타협이 공정하다</code>처럼 선택을 유도하는 결론을 붙이지 않는다.</li></ul>
+<h3 id="s14-3">14.3 조건 완화</h3>
+<ul><li>완화폭은 임의 제안값이 아니라 현재 후보의 <strong>실제 미달량</strong>에서 가져온다.</li><li>A안과 B안을 항상 동시에 보여준다.</li><li>슬라이더 조작 중 후보의 등급 이동을 실시간 미리보기한다.</li><li>사용자는 자기 조건만 직접 변경할 수 있다.</li><li>상대 조건은 변경 제안만 가능하며 적용은 상대가 수락한다.</li><li>후보 전부 불충족 시 한 조건만 완화해 살아나는 후보가 있으면 완화 경로를 제시한다.</li><li>두 조건을 동시에 낮추는 제안은 하지 않는다.</li></ul>
+<h3 id="s14-4">14.4 최종 두 후보 비교</h3>
+<p>방문 후보 결정 단계에서는 행을 조건, 열을 후보로 둔 Option Grid 형식의 비교표를 사용한다. 총점 행과 추천 배지는 두지 않는다. 양보 관계를 설명한 뒤 선택은 각 사용자가 직접 수행한다.</p>
+<hr>
+<h2 id="s15">15. AI Role</h2>
+<h3 id="s15-1">15.1 AI가 하는 것</h3>
+<ul><li>두 사람의 구조화된 조건을 매물 실제값과 대조한다.</li><li>어떤 조건이 충족·미충족·확인 필요인지 설명한다.</li><li>미충족 조건의 실제 미달량을 계산 가능한 형태로 보여준다.</li><li>특정 매물을 선택할 때 누가 무엇을 감수하는지 설명한다.</li><li>후보 5개 안에서 조건별 상대 위치를 설명한다.</li><li>실제 미달량만큼 조건을 완화했을 때 후보 상태가 어떻게 바뀌는지 설명한다.</li><li>자동 판정이 불가능한 항목을 중개사 질문과 현장 확인 항목으로 구조화한다.</li></ul>
+<h3 id="s15-2">15.2 AI가 하지 않는 것</h3>
+<ul><li>최종 집 또는 방문 후보를 대신 선택하지 않는다.</li><li>정답·최적·추천 매물을 만들지 않는다.</li><li>두 사람의 조건을 하나의 총점·적합도·일치율로 합산하지 않는다.</li><li>한쪽 사용자에게만 양보를 요구하지 않는다.</li><li>강제적인 타협안이나 조건 완화를 제시하지 않는다.</li><li>상대방의 조건을 대신 변경하지 않는다.</li><li>계약·대출·법률 판단을 내리지 않는다.</li><li>실제로 존재하지 않는 장점, 비용, 데이터 또는 근거를 생성하지 않는다.</li></ul>
+<hr>
+<h2 id="s16">16. Functional Requirements</h2>
+<p>우선순위는 새로운 P0/P1 점수를 만들지 않고 handoff의 <code>MVP 단계 1 / 단계 2 / 후순위</code>를 그대로 사용한다.</p>
+<div class="table-scroll"><table><thead><tr><th>ID</th><th>기능·목적</th><th>Trigger / User Action</th><th>System Behavior / Output</th><th>우선순위</th><th>상태</th></tr></thead><tbody><tr><td>FR-01</td><td>관심매물에서 비교 후보 구성</td><td>A가 <code>같이 고르기</code> 진입 후 1~5개 선택</td><td>관심매물 ID로 공유 객체 초안 구성, 최대 5개 제한</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-02</td><td>A 기본 조건 입력</td><td>A가 예산 입력 및 출퇴근 여부 응답</td><td>예산 저장, 출퇴근 시에만 출근지·이동수단 요청</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-03</td><td>점진적 조건 확장</td><td>A/B가 결과 후 <code>더 좁히기</code> 선택</td><td>추가 필수 0~4개를 한 번에 하나씩 저장·재판정</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-04</td><td>선호·확인 항목 분리</td><td>사용자가 선택 입력</td><td>선호는 사람 카드, 확인 항목은 질문 목록으로 저장</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-05</td><td>2인 초대</td><td>A가 관계 유형 선택 후 공유</td><td>링크 기본·코드 보조로 초대 발급, 대기 상태 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-06</td><td>B의 맥락 있는 진입</td><td>B가 링크/코드로 참여</td><td>조건 입력 전에 후보 최대 5개와 A의 선호 카드 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-07</td><td>B 조건 입력 및 임시 보관</td><td>B가 비로그인 상태로 예산·조건 입력</td><td>초대 코드에 조건 임시 저장, 마지막 접근 +30일 삭제, 로그인 시 이관</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-08</td><td>결과 후 로그인</td><td>B가 결과 저장·재방문 시도</td><td>첫 결과 이후 로그인 요청</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정 방향]</span> / 비로그인 열람 정책 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>FR-09</td><td>1인 빈 경로</td><td>B 미참여 또는 입력 전</td><td>A 조건만으로 실부담·통근·판정 표시, 1인분 전제 명시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-10</td><td>매물별 자동 판정</td><td>조건 또는 후보가 추가·수정됨</td><td>조건별 충족·미충족·미달량·확인 필요 산출</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-11</td><td>후보 목록 그룹화</td><td>양쪽 조건이 현재 상태까지 입력됨</td><td>둘 다/한쪽만/둘 다 불충족 그룹과 최소 확인 배지 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-12</td><td>매물 상세 trade-off 설명</td><td>사용자가 후보 상세 진입</td><td>A/B 조건 대조, 양보 문장, 조건별 실제값 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-13</td><td>조건 완화 미리보기</td><td>사용자가 완화 화면 진입·슬라이더 조작</td><td>실제 미달량 기준 등급 변화, A/B안 동시 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-14</td><td>상대 조건 완화 제안</td><td>사용자가 상대 조건 변경을 원함</td><td>직접 변경 대신 제안 발송, 상대 수락 전 미적용</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-15</td><td>전부 불충족 분기</td><td>둘 다 충족·한쪽 충족 후보가 0개</td><td>한 조건 완화로 회복되면 완화, 아니면 재탐색 필터 제안</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span> 동작 / 화면 상세 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>FR-16</td><td>재탐색 필터 전달</td><td>완화로 후보 회복 불가, 사용자가 필터 적용 선택</td><td>적용 가능한 공동 조건을 네이버 필터로 제안하고 사용자가 누르면 이동</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span> / 네이버 파라미터·count <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>FR-17</td><td>방문 후보 2개 결정</td><td>각자 후보 2개 선택</td><td>일치 2개 확정, 일치 1개 한 자리 재비교, 0개 또는 2라운드 불일치 시 분할</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-18</td><td>조건 지속·자동 재판정</td><td>새 매물 추가 또는 기존 매물 교체</td><td>사람 조건을 유지해 새 매물에 자동 적용</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-19</td><td>매물 소진 처리</td><td>거래완료·삭제 감지</td><td>즉시 후보 제거·알림, 확정 후보면 남은 한 자리 선택으로 복귀</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-20</td><td>상태·계산 오류 분리</td><td>데이터 누락·경로 실패·출근 안 함</td><td>미충족/계산 불가/확인 필요/해당 없음을 서로 다르게 처리</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-21</td><td>숫자 전제 공개</td><td>실부담·교통비·금리 기반 수치 표시</td><td>모든 숫자 옆에 기준 시점·가정·한계를 표시</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-22</td><td>중개사 질문 카드</td><td>확인 필요 항목이 있고 단계 2 진입</td><td>질문 목록 표시, 답변 기록 시 보류 상태 갱신</td><td>단계 2</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-23</td><td>방문 후 기록</td><td>방문 완료</td><td>공통 체크리스트와 유지·보류·제외 상태 저장</td><td>단계 2</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>FR-24</td><td>선택·조건 변경 알림</td><td>상대 조건 입력·변경, 완화 제안, 후보 변경·소진</td><td>상대에게 해당 상태 변화 알림</td><td>단계 1</td><td><span class="pill pill-confirmed">[확정]</span> 화면/흐름</td></tr><tr><td>FR-25</td><td>균형 제시 가드레일</td><td>판정·trade-off·최종 비교 화면 렌더링</td><td>A/B 동일 비중, 총점·추천 배지·복합 순위 금지</td><td>전 단계</td><td><span class="pill pill-confirmed">[확정]</span></td></tr></tbody></table></div>
+<h3 id="s16-1">16.1 Acceptance Criteria</h3>
+<p>AC는 기능이 정상 동작했는지를 판정하는 최소 조건이다. 사용자 만족, 갈등 감소, 결정 시간 단축, 계약 전환과 같은 미검증 효과는 포함하지 않는다. 아래 <code>Requirement</code>는 기존 FR 표의 문구를 그대로 옮겼다.</p>
+<h4 id="sx3"><span class="fr-badge">FR-01</span> 관심매물에서 비교 후보 구성</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 관심매물에서 비교 후보 구성<br><strong>Trigger / User Action:</strong> A가 <code>같이 고르기</code> 진입 후 1~5개 선택<br><strong>System Behavior / Output:</strong> 관심매물 ID로 공유 객체 초안 구성, 최대 5개 제한<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-01-01:</strong> A가 <code>같이 고르기</code>에 진입해 관심매물 1~5개를 선택하면, 시스템은 선택한 매물 ID만 포함한 공유 객체 초안을 구성한다.</li><li><strong>AC-01-02:</strong> A가 6개째 매물을 추가하려 하면 시스템은 해당 매물을 초안에 추가하지 않고 최대 5개 제한을 표시한다.</li></ul>
+<h4 id="sx4"><span class="fr-badge">FR-02</span> A 기본 조건 입력</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> A 기본 조건 입력<br><strong>Trigger / User Action:</strong> A가 예산 입력 및 출퇴근 여부 응답<br><strong>System Behavior / Output:</strong> 예산 저장, 출퇴근 시에만 출근지·이동수단 요청<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-02-01:</strong> A는 다른 기본 조건보다 먼저 예산을 입력해야 하며, 유효한 예산이 없으면 기본 입력을 완료할 수 없다.</li><li><strong>AC-02-02:</strong> A가 예산을 입력하면 시스템은 출퇴근 여부를 질문하고, <code>출근함</code>을 선택한 경우에만 출근지와 이동수단 입력을 요청한다.</li><li><strong>AC-02-03:</strong> A가 <code>출근 안 함</code>을 선택하면 출근지·이동수단을 요구하지 않고 통근시간과 교통비를 판정 대상에서 제외한다.</li></ul>
+<h4 id="sx5"><span class="fr-badge">FR-03</span> 점진적 조건 확장</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 점진적 조건 확장<br><strong>Trigger / User Action:</strong> A/B가 결과 후 <code>더 좁히기</code> 선택<br><strong>System Behavior / Output:</strong> 추가 필수 0~4개를 한 번에 하나씩 저장·재판정<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-03-01:</strong> A 또는 B가 첫 결과 후 <code>더 좁히기</code>를 선택하면 추가 필수 조건을 한 번에 하나씩 추가할 수 있고, 추가하지 않고 종료하는 것도 가능하다.</li><li><strong>AC-03-02:</strong> 추가한 조건은 해당 사용자에게 귀속되어 저장되고 즉시 현재 후보에 재적용되며, 사용자당 4개를 초과해 추가할 수 없다.</li></ul>
+<h4 id="sx6"><span class="fr-badge">FR-04</span> 선호·확인 항목 분리</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 선호·확인 항목 분리<br><strong>Trigger / User Action:</strong> 사용자가 선택 입력<br><strong>System Behavior / Output:</strong> 선호는 사람 카드, 확인 항목은 질문 목록으로 저장<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-04-01:</strong> 사용자가 선호를 입력하면 시스템은 자유 문장 0~3개를 해당 사람의 카드에 저장하고 매물별 충족·미충족 판정에는 사용하지 않는다.</li><li><strong>AC-04-02:</strong> 사용자가 <code>확인 필요</code> 항목을 입력하면 시스템은 이를 방문 전 중개사 질문 목록으로 저장하며, 방문 후 공통 체크리스트와 동일한 항목이나 상태로 처리하지 않는다.</li></ul>
+<h4 id="sx7"><span class="fr-badge">FR-05</span> 2인 초대</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 2인 초대<br><strong>Trigger / User Action:</strong> A가 관계 유형 선택 후 공유<br><strong>System Behavior / Output:</strong> 링크 기본·코드 보조로 초대 발급, 대기 상태 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-05-01:</strong> A가 관계 유형을 선택하고 공유를 실행하면 시스템은 초대 링크와 보조 코드를 발급하고 B 참여 전까지 대기 상태를 표시한다.</li><li><strong>AC-05-02:</strong> 관계 유형은 A의 초대 생성 시 한 번 저장하며, B의 참여 과정에서 같은 관계 유형을 다시 입력하도록 요구하지 않는다.</li></ul>
+<h4 id="sx8"><span class="fr-badge">FR-06</span> B의 맥락 있는 진입</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> B의 맥락 있는 진입<br><strong>Trigger / User Action:</strong> B가 링크/코드로 참여<br><strong>System Behavior / Output:</strong> 조건 입력 전에 후보 최대 5개와 A의 선호 카드 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-06-01:</strong> B가 유효한 링크 또는 코드로 참여하면, 시스템은 B의 조건 입력 화면보다 먼저 공유된 후보 최대 5개와 A의 선호 카드를 표시한다.</li></ul>
+<h4 id="sx9"><span class="fr-badge">FR-07</span> B 조건 입력 및 임시 보관</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> B 조건 입력 및 임시 보관<br><strong>Trigger / User Action:</strong> B가 비로그인 상태로 예산·조건 입력<br><strong>System Behavior / Output:</strong> 초대 코드에 조건 임시 저장, 마지막 접근 +30일 삭제, 로그인 시 이관<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-07-01:</strong> 비로그인 B가 예산과 조건을 입력하면 시스템은 입력값을 해당 초대 코드에 연결해 임시 저장하고 다른 초대의 조건과 섞지 않는다.</li><li><strong>AC-07-02:</strong> B가 로그인하면 해당 초대 코드에 임시 저장된 조건을 B 계정으로 이관하고 이후 동일 조건을 계정 기준으로 사용할 수 있다.</li><li><strong>AC-07-03:</strong> 로그인으로 이관되지 않은 임시 조건은 마지막 접근일로부터 30일이 지나면 삭제한다.</li></ul>
+<p><span class="pill pill-tbd">[TBD — 네이버 공유 객체의 비로그인 열람 정책이 확정되어야 B가 이 입력 단계까지 비로그인으로 진입 가능한지 최종 판정할 수 있다.]</span></p>
+<h4 id="sx10"><span class="fr-badge">FR-08</span> 결과 후 로그인</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 결과 후 로그인<br><strong>Trigger / User Action:</strong> B가 결과 저장·재방문 시도<br><strong>System Behavior / Output:</strong> 첫 결과 이후 로그인 요청<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정 방향]</span> / 비로그인 열람 정책 <span class="pill pill-tbd">[TBD]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-08-01:</strong> 비로그인 열람이 허용되는 경우, B가 첫 결과를 보기 전에는 결과 저장·재방문 목적의 로그인을 요구하지 않고, 첫 결과 확인 후 저장 또는 재방문을 시도할 때 로그인 요청을 표시한다.</li></ul>
+<p><span class="pill pill-tbd">[TBD — 공유 객체 비로그인 열람 가능 여부와 이에 따른 실제 로그인 시점이 확정된 뒤 나머지 AC를 작성한다.]</span></p>
+<h4 id="sx11"><span class="fr-badge">FR-09</span> 1인 빈 경로</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 1인 빈 경로<br><strong>Trigger / User Action:</strong> B 미참여 또는 입력 전<br><strong>System Behavior / Output:</strong> A 조건만으로 실부담·통근·판정 표시, 1인분 전제 명시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-09-01:</strong> B가 참여하지 않았거나 아직 조건을 입력하지 않은 상태에서도 A는 막히지 않고, 자신의 조건만 적용된 후보별 실부담·판정과 해당하는 경우 통근 결과를 볼 수 있다.</li><li><strong>AC-09-02:</strong> 1인 빈 경로에서는 계산과 판정이 A 1인 입력만 반영한 결과임을 명시하고, A가 <code>출근 안 함</code>인 경우 통근·교통비 행을 표시하지 않는다.</li></ul>
+<h4 id="sx12"><span class="fr-badge">FR-10</span> 매물별 자동 판정</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 매물별 자동 판정<br><strong>Trigger / User Action:</strong> 조건 또는 후보가 추가·수정됨<br><strong>System Behavior / Output:</strong> 조건별 충족·미충족·미달량·확인 필요 산출<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-10-01:</strong> 사람의 조건이나 후보 매물이 추가·수정되면 시스템은 관련 후보에 예산·통근시간·역 도보·전용면적·주차·매물 유형 중 적용되는 조건을 다시 판정한다.</li><li><strong>AC-10-02:</strong> 판정 결과는 사람별·조건별 충족 또는 미충족과 실제 미달량을 표시하고, 자동 판정할 수 없는 항목은 <code>확인 필요</code>로 분리하며 하나의 공동 총점을 생성하지 않는다.</li></ul>
+<h4 id="sx13"><span class="fr-badge">FR-11</span> 후보 목록 그룹화</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 후보 목록 그룹화<br><strong>Trigger / User Action:</strong> 양쪽 조건이 현재 상태까지 입력됨<br><strong>System Behavior / Output:</strong> 둘 다/한쪽만/둘 다 불충족 그룹과 최소 확인 배지 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-11-01:</strong> A와 B의 현재 입력이 반영되면 시스템은 각 후보를 <code>둘 다 충족</code>, <code>한쪽만 충족</code>, <code>둘 다 불충족</code> 중 하나의 그룹에 표시한다.</li><li><strong>AC-11-02:</strong> 확인이 필요한 후보에는 목록에서 최소 수준의 <code>확인 필요</code> 배지를 별도로 표시하고, 해당 상태를 충족·미충족 그룹을 대체하는 종합 판정이나 점수로 사용하지 않는다.</li></ul>
+<h4 id="sx14"><span class="fr-badge">FR-12</span> 매물 상세 trade-off 설명</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 매물 상세 trade-off 설명<br><strong>Trigger / User Action:</strong> 사용자가 후보 상세 진입<br><strong>System Behavior / Output:</strong> A/B 조건 대조, 양보 문장, 조건별 실제값 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-12-01:</strong> 사용자가 후보 상세에 진입하면 시스템은 <code>예산 → 통근 → 추가 필수①~④ → 확인 필요</code> 순서를 유지해 A/B의 조건별 실제값·기준값·미달량을 나란히 표시한다.</li><li><strong>AC-12-02:</strong> 한쪽만 충족하는 후보의 양보 문장은 양보 주체·조건·실제 미달량을 밝히고, 이점이 있으면 후보 5개 안에서의 조건별 상대적 이점만 표시한다. 이점이 없으면 <code>대신</code> 절을 만들지 않으며, 미충족 조건이 3개 이상이면 문장에는 고정 순서상 앞 2개만 넣고 나머지는 목록으로 표시한다.</li><li><strong>AC-12-03:</strong> 상세 설명에는 특정 후보가 더 좋거나 공정하다는 결론, 추천 배지, 공동 적합도 총점을 표시하지 않는다.</li></ul>
+<h4 id="sx15"><span class="fr-badge">FR-13</span> 조건 완화 미리보기</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 조건 완화 미리보기<br><strong>Trigger / User Action:</strong> 사용자가 완화 화면 진입·슬라이더 조작<br><strong>System Behavior / Output:</strong> 실제 미달량 기준 등급 변화, A/B안 동시 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-13-01:</strong> 사용자가 조건 완화 화면에 진입하면 시스템은 A안과 B안을 동시에 표시하며, 각 완화폭은 현재 후보의 실제 미달량을 기준으로 한다.</li><li><strong>AC-13-02:</strong> 사용자가 슬라이더를 조작하면 조건 변경을 확정하기 전에 현재 후보의 판정 등급이 어떻게 바뀌는지 즉시 미리보기로 표시한다.</li><li><strong>AC-13-03:</strong> 시스템은 두 조건을 동시에 완화하는 안이나 실제 미달량과 무관한 임의 완화폭을 제시하지 않는다.</li></ul>
+<h4 id="sx16"><span class="fr-badge">FR-14</span> 상대 조건 완화 제안</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 상대 조건 완화 제안<br><strong>Trigger / User Action:</strong> 사용자가 상대 조건 변경을 원함<br><strong>System Behavior / Output:</strong> 직접 변경 대신 제안 발송, 상대 수락 전 미적용<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-14-01:</strong> 사용자가 상대의 조건을 완화하려 하면 시스템은 해당 조건을 직접 변경하지 않고 상대에게 변경 제안을 발송한다.</li><li><strong>AC-14-02:</strong> 제안은 상대가 수락하기 전까지 판정에 적용되지 않으며, 상대가 수락한 경우에만 해당 사람의 조건을 갱신하고 후보를 재판정한다.</li></ul>
+<h4 id="sx17"><span class="fr-badge">FR-15</span> 전부 불충족 분기</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 전부 불충족 분기<br><strong>Trigger / User Action:</strong> 둘 다 충족·한쪽 충족 후보가 0개<br><strong>System Behavior / Output:</strong> 한 조건 완화로 회복되면 완화, 아니면 재탐색 필터 제안<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span> 동작 / 화면 상세 <span class="pill pill-tbd">[TBD]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-15-01:</strong> <code>둘 다 충족</code>과 <code>한쪽만 충족</code> 후보가 모두 0개이면 시스템은 한 번에 한 조건만 완화하는 시뮬레이션을 실행하고, 후보가 살아나는 경우 해당 조건의 완화 경로를 표시한다.</li><li><strong>AC-15-02:</strong> 어떤 조건 하나를 완화해도 후보가 살아나지 않으면 시스템은 조건 완화 대신 재탐색 필터 제안 경로를 표시하며, 두 조건을 동시에 완화하는 안은 제시하지 않는다.</li></ul>
+<p><span class="pill pill-tbd">[TBD — A-13b-2 재탐색 필터 제안 화면의 상세 구성은 확정 후 별도 AC를 작성한다.]</span></p>
+<h4 id="sx18"><span class="fr-badge">FR-16</span> 재탐색 필터 전달</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 재탐색 필터 전달<br><strong>Trigger / User Action:</strong> 완화로 후보 회복 불가, 사용자가 필터 적용 선택<br><strong>System Behavior / Output:</strong> 적용 가능한 공동 조건을 네이버 필터로 제안하고 사용자가 누르면 이동<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span> / 네이버 파라미터·count <span class="pill pill-tbd">[TBD]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-16-01:</strong> 시스템은 제안 필터를 자동 적용하지 않고, 사용자가 <code>이 필터로 찾아보기</code>를 선택했을 때만 네이버 검색으로 이동시킨다.</li><li><strong>AC-16-02:</strong> 전달 가능한 조건은 예산의 더 낮은 상한, 전용면적의 더 높은 하한, 더 짧은 역 도보 기준, 한 명이라도 필요로 하는 주차 조건을 사용한다. 매물 유형은 하나의 필터로 표현 가능한 경우에만 전달하고 통근시간은 전달하지 않는다.</li></ul>
+<p><span class="pill pill-tbd">[TBD — 검색 결과 count 조회 가능 여부·부하, 정확/근사 표기, 실제 URL 파라미터 규격이 확정된 뒤 연동 AC를 작성한다.]</span></p>
+<h4 id="sx19"><span class="fr-badge">FR-17</span> 방문 후보 2개 결정</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 방문 후보 2개 결정<br><strong>Trigger / User Action:</strong> 각자 후보 2개 선택<br><strong>System Behavior / Output:</strong> 일치 2개 확정, 일치 1개 한 자리 재비교, 0개 또는 2라운드 불일치 시 분할<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-17-01:</strong> 선택 가능한 후보가 2개 이상일 때 A와 B는 각각 후보 2개를 선택할 수 있고, 두 선택이 모두 일치하면 시스템은 그 2개를 방문 후보로 확정한다.</li><li><strong>AC-17-02:</strong> 일치 후보가 1개이면 시스템은 일치한 후보를 유지하고 남은 한 자리에 대한 후보별 조건 차이를 보여준 뒤 한 번 더 선택하게 한다.</li><li><strong>AC-17-03:</strong> 일치 후보가 0개이거나 최대 2라운드 후에도 남은 자리가 일치하지 않으면 시스템은 각자가 선택한 한 곳씩을 방문 후보로 구성하며, 투표·순위·자동 선택으로 대체하지 않는다.</li></ul>
+<h4 id="sx20"><span class="fr-badge">FR-18</span> 조건 지속·자동 재판정</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 조건 지속·자동 재판정<br><strong>Trigger / User Action:</strong> 새 매물 추가 또는 기존 매물 교체<br><strong>System Behavior / Output:</strong> 사람 조건을 유지해 새 매물에 자동 적용<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-18-01:</strong> 새 매물을 추가하거나 기존 매물을 교체해도 A/B의 예산·통근·추가 필수·선호·확인 항목은 사람에게 유지되고 다시 입력하도록 요구하지 않는다.</li><li><strong>AC-18-02:</strong> 시스템은 유지된 사람 조건을 새 매물에 자동 적용해 조건별 판정·미달량·확인 필요 상태를 산출한다.</li></ul>
+<h4 id="sx21"><span class="fr-badge">FR-19</span> 매물 소진 처리</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 매물 소진 처리<br><strong>Trigger / User Action:</strong> 거래완료·삭제 감지<br><strong>System Behavior / Output:</strong> 즉시 후보 제거·알림, 확정 후보면 남은 한 자리 선택으로 복귀<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-19-01:</strong> 후보의 거래완료 또는 삭제가 감지되면 시스템은 해당 매물을 현재 후보에서 제거하고 두 사용자에게 상태 변화를 알리되 사람 조건과 나머지 후보의 판정은 유지한다.</li><li><strong>AC-19-02:</strong> 소진된 매물이 확정된 방문 후보였다면 시스템은 남아 있는 방문 후보를 유지하고 비어 있는 한 자리 선택 단계로 되돌린다.</li></ul>
+<h4 id="sx22"><span class="fr-badge">FR-20</span> 상태·계산 오류 분리</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 상태·계산 오류 분리<br><strong>Trigger / User Action:</strong> 데이터 누락·경로 실패·출근 안 함<br><strong>System Behavior / Output:</strong> 미충족/계산 불가/확인 필요/해당 없음을 서로 다르게 처리<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-20-01:</strong> 실제값을 계산했고 사용자 기준에 못 미친 경우에만 <code>미충족</code>으로 표시하고 실제 미달량을 함께 보여준다.</li><li><strong>AC-20-02:</strong> 경로 또는 데이터 계산을 시도했지만 실패한 경우 <code>계산 불가</code>로 표시하고 <code>미충족</code>으로 분류하지 않으며, 데이터가 없어 사람이 확인해야 하는 항목은 <code>확인 필요</code>로 분리한다.</li><li><strong>AC-20-03:</strong> 사용자가 <code>출근 안 함</code>을 선택한 경우 통근은 <code>해당 없음</code>으로 처리해 비교표의 통근 행 자체를 표시하지 않고 <code>계산 불가</code>로 표시하지 않는다.</li></ul>
+<h4 id="sx23"><span class="fr-badge">FR-21</span> 숫자 전제 공개</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 숫자 전제 공개<br><strong>Trigger / User Action:</strong> 실부담·교통비·금리 기반 수치 표시<br><strong>System Behavior / Output:</strong> 모든 숫자 옆에 기준 시점·가정·한계를 표시<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-21-01:</strong> 시스템이 실부담·교통비·금리 기반 수치를 표시할 때 각 수치와 함께 계산 기준 시점, 사용한 가정과 적용 한계를 확인할 수 있어야 한다.</li><li><strong>AC-21-02:</strong> 계산에 필요한 값이나 기준이 없어 확정적으로 산출할 수 없는 경우 전제 없는 숫자를 표시하지 않고 <code>계산 불가</code> 또는 <code>확인 필요</code>로 구분한다.</li></ul>
+<h4 id="sx24"><span class="fr-badge">FR-22</span> 중개사 질문 카드</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 중개사 질문 카드<br><strong>Trigger / User Action:</strong> 확인 필요 항목이 있고 단계 2 진입<br><strong>System Behavior / Output:</strong> 질문 목록 표시, 답변 기록 시 보류 상태 갱신<br><strong>우선순위:</strong> 단계 2<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-22-01:</strong> 단계 2 진입 시 <code>확인 필요</code> 항목이 있으면 시스템은 해당 항목을 방문 전 중개사 질문 목록으로 표시한다.</li><li><strong>AC-22-02:</strong> 사용자가 중개사 답변을 기록하면 시스템은 그 답변을 해당 매물과 질문에 연결해 저장하고 관련 보류 상태를 갱신한다. 답변이 없는 항목은 <code>확인 필요</code> 상태로 유지한다.</li><li><strong>AC-22-03:</strong> 중개사 질문 카드에는 방문 후 공통 체크리스트를 섞어 표시하지 않는다.</li></ul>
+<h4 id="sx25"><span class="fr-badge">FR-23</span> 방문 후 기록</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 방문 후 기록<br><strong>Trigger / User Action:</strong> 방문 완료<br><strong>System Behavior / Output:</strong> 공통 체크리스트와 유지·보류·제외 상태 저장<br><strong>우선순위:</strong> 단계 2<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-23-01:</strong> 방문 완료 후 시스템은 층간소음·실제 채광·곰팡이·주차 난이도·주변 소음·내부 상태의 공통 체크리스트를 모두 표시하며, 사용자가 체크리스트 항목 자체를 선택·삭제하도록 요구하지 않는다.</li><li><strong>AC-23-02:</strong> 사용자가 체크리스트와 <code>유지·보류·제외</code> 상태를 입력하면 시스템은 이를 해당 매물의 방문 후 사용자 생성 기록으로 저장하고 방문 전 <code>확인 필요</code> 기록과 분리한다.</li></ul>
+<p><span class="pill pill-tbd">[TBD — 단계 2 스냅샷과 방문 기록의 보관 기간은 정책 확정 후 별도 AC를 작성한다.]</span></p>
+<h4 id="sx26"><span class="fr-badge">FR-24</span> 선택·조건 변경 알림</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 선택·조건 변경 알림<br><strong>Trigger / User Action:</strong> 상대 조건 입력·변경, 완화 제안, 후보 변경·소진<br><strong>System Behavior / Output:</strong> 상대에게 해당 상태 변화 알림<br><strong>우선순위:</strong> 단계 1<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span> 화면/흐름</blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-24-01:</strong> 한 사용자의 조건 입력·변경 또는 조건 완화 제안이 발생하면 시스템은 다른 사용자에게 해당 상태 변화를 알린다.</li><li><strong>AC-24-02:</strong> 후보가 추가·교체·소진되거나 방문 후보 선택 상태가 바뀌면 시스템은 상대에게 어떤 후보 또는 선택 상태가 변경되었는지 알린다.</li></ul>
+<h4 id="sx27"><span class="fr-badge">FR-25</span> 균형 제시 가드레일</h4>
+<p><strong>Requirement</strong></p>
+<blockquote><strong>기능·목적:</strong> 균형 제시 가드레일<br><strong>Trigger / User Action:</strong> 판정·trade-off·최종 비교 화면 렌더링<br><strong>System Behavior / Output:</strong> A/B 동일 비중, 총점·추천 배지·복합 순위 금지<br><strong>우선순위:</strong> 전 단계<br><strong>상태:</strong> <span class="pill pill-confirmed">[확정]</span></blockquote>
+<p><strong>Acceptance Criteria</strong></p>
+<ul><li><strong>AC-25-01:</strong> 판정·trade-off·최종 비교 화면은 A와 B의 조건을 동일한 조건 순서와 시각적 비중으로 표시하며 한쪽 정보만 우선 배치하지 않는다.</li><li><strong>AC-25-02:</strong> 두 사람의 조건을 하나의 공동 적합도·총점·일치율로 합산하지 않고, 추천 배지·복합 순위·AI의 최종 선택을 표시하지 않는다.</li><li><strong>AC-25-03:</strong> A/B는 위치와 라벨로 구분하고 색은 충족·미충족·확인 상태에 사용한다. 겹치는 지도 경로선은 최신 결정의 예외에 따라 A/B 구분색을 사용할 수 있다.</li></ul>
+<h3 id="s16-2">16.2 MoSCoW 및 스프린트 구현 가능성 매핑</h3>
+<p>FR 표의 우선순위(<code>단계 1 / 단계 2 / 후순위</code>)는 <code>decision-status</code>가 이미 채택한 체계이므로 새 우선순위 체계로 대체하지 않는다. 아래는 그 위에 MoSCoW를 얹어 스프린트 계획에 쓰기 위한 매핑이며, 2주 스프린트·기능 개발자 2~3인을 가정해 "1스프린트 내 구현 가능성"을 함께 표시한다. 근거는 §5(JTBD)·§15(AI Role)·<code>decisions/0001~0004</code>에서 이미 확정된 이유를 그대로 인용했다.</p>
+<div class="table-scroll"><table><thead><tr><th>FR</th><th>MoSCoW</th><th>근거</th><th>의존성</th><th>1스프린트 내 구현 가능?</th></tr></thead><tbody><tr><td>FR-01</td><td>Must</td><td>후보 없이는 어떤 판정도 시작되지 않는다</td><td>—</td><td>가능</td></tr><tr><td>FR-02</td><td>Must</td><td>예산은 유일한 공통 필수 조건(§12.2)</td><td>FR-01</td><td>가능</td></tr><tr><td>FR-03</td><td>Should</td><td>점진적 확장은 H3 완화 설계의 핵심이나, FR-02만으로도 첫 판정은 성립한다</td><td>FR-10</td><td>가능</td></tr><tr><td>FR-04</td><td>Should</td><td>선호·확인 분리는 Hero Feature 품질에 기여하나 판정 자체를 막지 않는다</td><td>FR-10</td><td>가능</td></tr><tr><td>FR-05</td><td>Must</td><td>2인 전제(<code>decisions/0002</code>)의 진입점</td><td>FR-01</td><td>가능</td></tr><tr><td>FR-06</td><td>Must</td><td>B가 조건 입력 전에 맥락을 보는 것이 H1 마찰을 줄이는 핵심 장치</td><td>FR-05</td><td>가능</td></tr><tr><td>FR-07</td><td>Should</td><td>비로그인 임시 저장은 H1 마찰을 낮추나, 네이버 비로그인 열람 정책이 <span class="pill pill-tbd">[TBD]</span>라 착수 시점이 유동적이다</td><td>FR-06, 네이버 정책 확인</td><td>조건부 — 정책 확정 후에만 가능</td></tr><tr><td>FR-08</td><td>Should</td><td>로그인 시점 자체가 방향만 확정이고 나머지는 정책 <span class="pill pill-tbd">[TBD]</span></td><td>FR-07</td><td>조건부 — FR-07과 동일 사유</td></tr><tr><td>FR-09</td><td>Must</td><td>H1이 실패해도 제품이 서는 최소 경로(<code>decisions/0002</code> 유지 조항)</td><td>FR-02</td><td>가능</td></tr><tr><td>FR-10</td><td><strong>Must</strong></td><td>판정 엔진 자체 — 없으면 Hero Feature와 North Star 모두 성립하지 않는다</td><td>FR-01, FR-02</td><td><strong>아니오 — 분할 필요.</strong> 상한형(예산) 판정만 먼저 구현하는 티켓(FR-10a)으로 시작하고, 하한형·유무형·일치형까지의 확장 판정(FR-10b)은 다음 스프린트로 분리한다</td></tr><tr><td>FR-11</td><td>Must</td><td>3분류 그룹이 없으면 사용자가 어디부터 봐야 할지 알 수 없다</td><td>FR-10 완료</td><td>가능</td></tr><tr><td>FR-12</td><td><strong>Must</strong></td><td>양보 문장이 이 제품의 존재 이유다(<code>decisions/0001</code>)</td><td>FR-10 완료</td><td>조건부 — 문장 생성 로직 자체는 1스프린트 내 가능하나 FR-10 선행 완료가 전제</td></tr><tr><td>FR-13</td><td>Should</td><td>완화 미리보기는 H2-b 검증에 필요하나 판정 자체보다 후행 기능이다</td><td>FR-10</td><td>가능</td></tr><tr><td>FR-14</td><td>Should</td><td>상대 조건 제안은 균형 가드레일(FR-25)의 연장이다</td><td>FR-13, FR-24</td><td>가능</td></tr><tr><td>FR-15</td><td>Could</td><td>0건 분기는 실제 발생 빈도가 낮은 예외 경로다</td><td>FR-13</td><td>가능</td></tr><tr><td>FR-16</td><td>Could</td><td>재탐색 필터 전달은 네이버 파라미터·count 조회 가능 여부가 <span class="pill pill-tbd">[TBD]</span>라 구현 범위가 정책에 좌우된다</td><td>네이버 내부 확인</td><td>조건부 — 내부 확인 완료 전에는 착수 불가</td></tr><tr><td>FR-17</td><td>Must</td><td>North Star("7일 내 방문 후보 2개 확정")를 직접 달성하는 화면이다(<code>decisions/0004</code>)</td><td>FR-11</td><td>가능</td></tr><tr><td>FR-18</td><td>Should</td><td>조건 지속은 2~3회 반복 세션(H5)에서만 체감되는 가치다</td><td>FR-10</td><td>가능</td></tr><tr><td>FR-19</td><td>Should</td><td>매물 소진은 실제 발생 전까지는 상대적으로 저빈도인 예외다</td><td>FR-17</td><td>가능</td></tr><tr><td>FR-20</td><td>Must</td><td>상태 오분류(미충족/계산 불가/확인 필요/해당 없음) 방지가 곧 판정 신뢰도다</td><td>FR-10</td><td>가능 — FR-10과 함께 구현</td></tr><tr><td>FR-21</td><td>Must</td><td>숫자 전제 공개는 H4 검증과 신뢰 리스크 대응의 최소 조건이다</td><td>FR-10</td><td>가능</td></tr><tr><td>FR-22</td><td>Could</td><td>단계 2 항목 — 단계 1 검증(H1·H2-b-2·H3)의 성립 여부와 무관하다</td><td>FR-04</td><td>가능</td></tr><tr><td>FR-23</td><td>Could</td><td>단계 2 항목, 보관 기간 정책이 <span class="pill pill-tbd">[TBD]</span>이나 기록 자체 구현은 정책과 독립적이다</td><td>FR-17</td><td>가능</td></tr><tr><td>FR-24</td><td>Should</td><td>알림이 없으면 상대의 turn을 놓쳐 H1 퍼널이 끊긴다</td><td>FR-05, FR-14</td><td>가능</td></tr><tr><td>FR-25</td><td>Must</td><td>총점·추천 배지 금지 가드레일 — 위반하면 <code>decisions/0001</code>이 화면 단위로 무효화된다</td><td>전 화면</td><td>가능 — 다만 1회성 구현이 아니라 신규 화면마다 지속 검증이 필요하다</td></tr></tbody></table></div>
+<p><strong>Won't(이번 릴리즈)</strong> = §23 Out of Scope 전체(매물 DB, 종합점수, AI 최종 선택, 계약·대출 등). 이 매핑에서 새로 추가한 Won't 항목은 없다.</p>
+<hr>
+<h2 id="s17">17. Screen Requirements</h2>
+<p><code>docs/08-screen-design.md</code>는 정상 화면과 하위 상태·예외를 합쳐 100개 상태를 관리한다. 이 PRD에서는 새 화면을 만들지 않고, 하위 상태를 해당 상위 화면의 <code>주요 예외</code>에 묶어 요구사항으로 정리한다.</p>
+<p>핵심 와이어프레임 8장은 <code>B-01</code>, <code>B-02</code>, <code>B-05</code>, <code>A-14b</code>, <code>A-15a</code>, <code>A-13b</code>, <code>A-13b-2</code>, <code>A-16e</code>다.</p>
+<h3 id="s17-1">17.1 기기 전제</h3>
+<ul><li><span class="pill pill-confirmed">[확정]</span> A는 PC 웹 우선: 후보 선택, 목록, 상세 판정, 완화처럼 정보 밀도가 높은 화면 중심</li><li><span class="pill pill-confirmed">[확정]</span> B는 모바일 우선: 카카오톡 링크로 초대 진입할 가능성이 높은 경로</li><li><span class="pill pill-confirmed">[확정]</span> 제품 형태는 별도 앱이 아니라 네이버 앱/서비스 안의 기능이다.</li></ul>
+<h3 id="s17-2">17.2 A · 초대자 및 공통 화면</h3>
+<div class="table-scroll"><table><thead><tr><th>화면</th><th>목적</th><th>주요 정보·행동</th><th>진입 조건</th><th>다음 화면</th><th>주요 예외</th></tr></thead><tbody><tr><td>A-01</td><td>기능 진입</td><td>기존 필터 영역의 <code>같이 고르기</code></td><td>관심매물 탐색 중</td><td>A-02</td><td>—</td></tr><tr><td>A-02</td><td>후보 선택</td><td>관심매물 중 최대 5개 선택</td><td>A-01</td><td>A-03/A-04</td><td>0개 A-02a, 1~2개 A-02b, 6개째 A-02c</td></tr><tr><td>A-03</td><td>출퇴근 분기</td><td>출퇴근 여부, 해당자만 출근지·이동수단</td><td>후보 선택 후 기본 입력</td><td>A-04/A-05</td><td>검색 실패 A-03a, 출근 안 함 A-03d</td></tr><tr><td>A-04</td><td>예산 입력</td><td>보증금·월세·실부담 상한과 전제</td><td>기본 입력</td><td>A-05</td><td>전제 패널 A-04a</td></tr><tr><td>A-05</td><td>첫 결과 미리보기</td><td>현재 확보한 실제값과 가능한 판정</td><td>예산 입력 완료</td><td>A-06 또는 초대</td><td>출근지 없는 경우 통근 행 없음</td></tr><tr><td>A-06~07</td><td>필수 조건 추가</td><td>판정 조건 0~4개 점진 입력</td><td>첫 결과 확인 후</td><td>A-08/A-09/초대</td><td>4개 상한</td></tr><tr><td>A-08</td><td>선호 카드</td><td>자유 문장 0~3개, 상대에게 전달</td><td>선택 입력</td><td>A-09/초대</td><td>매물별 판정 금지</td></tr><tr><td>A-09</td><td>확인 항목</td><td>방문 전 질문 항목과 자동 판정 불가 설명</td><td>선택 입력</td><td>A-10</td><td>A-09a 설명 상태</td></tr><tr><td>A-10</td><td>초대 생성</td><td>관계 유형, 링크·코드·공유 시트</td><td>A 입력 종료</td><td>A-11/B-01</td><td>링크 공유 실패는 오류 처리</td></tr><tr><td>A-11</td><td>초대 대기</td><td>대기 상태, 재초대·링크 복사</td><td>초대 발송</td><td>A-12/A-13</td><td>취소 A-11b 후순위</td></tr><tr><td><strong>A-12</strong></td><td>B 대기 중 후보 목록</td><td>A 단독 판정, 1인분 비용 전제</td><td>B 미참여</td><td>A-14e 또는 대기</td><td>H1 핵심 빈 경로</td></tr><tr><td><strong>A-13</strong></td><td>양쪽 완료 후보 목록</td><td>3분류 그룹, 조건 요약, 선호 카드, 인라인 미달 요약</td><td>양쪽 현재 입력 완료</td><td>A-14/A-15/A-16</td><td>A-13a~i 전체 상태</td></tr><tr><td><strong>A-13b</strong> ★</td><td>전부 불충족 막다른 길</td><td>한 조건 완화 가능 여부, 재탐색 분기</td><td>살아남는 후보 0개</td><td>A-15 또는 A-13b-2</td><td>2조건 동시 완화 제안 금지</td></tr><tr><td><strong>A-13b-2</strong> ★</td><td>재탐색 필터 제안</td><td>현재/제안 필터, 결과 수, 적용/그냥 찾기</td><td>한 조건 완화로도 회복 불가</td><td>네이버 탐색 → A-20</td><td><span class="pill pill-tbd">[TBD]</span> 상세 미설계, API 의존</td></tr><tr><td>A-13c</td><td>후보 집합 내 조건 충돌 설명</td><td>각 조건의 가장 가까운 후보와 미달량</td><td>현재 5개 중 동시 만족 없음</td><td>A-15/재탐색</td><td>전체 지역에 그런 집이 없다고 단정 금지</td></tr><tr><td><strong>A-14</strong> ★★</td><td>매물 상세 판정</td><td>조건별 실제값·임계값·미달량, A/B 대조</td><td>후보 선택</td><td>A-15/A-16</td><td>a 둘 다, b 한쪽, c 둘 다 불충족, d 보류, e 상대 미입력</td></tr><tr><td><strong>A-14b</strong> ★★</td><td>Hero trade-off</td><td>양보 문장과 상대적 이점</td><td>한쪽만 충족</td><td>A-15/A-16</td><td>얻는 점 없으면 <code>대신</code> 제거</td></tr><tr><td><strong>A-15</strong> ★</td><td>조건 완화</td><td>A/B 슬라이더와 등급 이동</td><td>상세·0건 화면</td><td>결과 목록/제안 대기</td><td>변화 없음, 취소, 상대 제안·거절</td></tr><tr><td><strong>A-16</strong> ★</td><td>이번에 보러 갈 집 정하기</td><td>각자 2개 선택, 일치 상태, 최대 2라운드</td><td>비교 완료</td><td>A-17 또는 확정</td><td>선택 수 초과, 불일치, 매물 소진</td></tr><tr><td><strong>A-16e</strong> ★★</td><td>남은 한 자리 비교</td><td>두 후보의 대가를 Option Grid로 대조</td><td>일치 1개</td><td>2라운드 또는 분할</td><td>2라운드 불일치 시 분할</td></tr><tr><td>A-17</td><td>중개사 질문 카드</td><td>확인 필요 목록, 답변 기록</td><td>방문 전 단계 2</td><td>A-18/판정 갱신</td><td>질문 없음 A-17a</td></tr><tr><td>A-18</td><td>방문 후 기록</td><td>공통 체크리스트, 유지·보류·제외</td><td>방문 후</td><td>종료/재탐색</td><td>한 명만 방문, 둘 다 제외, 계약 후순위</td></tr><tr><td>A-19</td><td>내 조건 수정</td><td>변경 영향 미리보기, 상대 알림</td><td>재진입·결과·방문 후</td><td>전체 재판정</td><td>변경 취소·알림</td></tr><tr><td>A-20</td><td>매물 추가·교체</td><td>기존 조건 자동 적용</td><td>재탐색·소진 후</td><td>A-13</td><td>매물 나감 A-20a, 자동 판정 A-20b</td></tr></tbody></table></div>
+<h3 id="s17-3">17.3 B · 수신자 화면</h3>
+<div class="table-scroll"><table><thead><tr><th>화면</th><th>목적</th><th>주요 정보·행동</th><th>진입 조건</th><th>다음 화면</th><th>주요 예외</th></tr></thead><tbody><tr><td><strong>B-01</strong> ★</td><td>초대 진입</td><td>링크 열기, 보조 코드 입력</td><td>A 초대</td><td>B-02</td><td>만료·오류, 앱 미설치 모바일 웹, 재진입</td></tr><tr><td><strong>B-02</strong> ★</td><td>조건 입력 전 맥락 제공</td><td>후보 최대 5개와 A의 선호 카드 미리보기</td><td>유효 초대</td><td>B-03/B-04</td><td>초대 거절 후순위</td></tr><tr><td>B-03/B-04</td><td>B 기본 입력</td><td>예산 필수, 출퇴근 여부와 해당자 출근지·이동수단</td><td>B-02</td><td>B-05</td><td>출근 안 함 정상 경로</td></tr><tr><td><strong>B-05</strong> ★</td><td>B의 첫 결과</td><td>현재 입력으로 계산된 실제값·판정</td><td>기본 입력 완료</td><td>B-06/B-07~10</td><td>부분 입력·계산 실패</td></tr><tr><td>B-06</td><td>결과 후 로그인</td><td>저장·재방문을 위한 로그인</td><td>첫 결과 확인 후</td><td>공통 결과</td><td>비로그인 정책 <span class="pill pill-tbd">[TBD]</span>, 임시 저장 B-06a</td></tr><tr><td>B-07~10</td><td>조건 확장</td><td>필수·선호·확인 항목 추가</td><td>첫 결과 후</td><td>A-13 공통 결과</td><td>입력 중 이탈 시 부분 판정</td></tr></tbody></table></div>
+<h3 id="s17-4">17.4 시스템·공통 상태</h3>
+<div class="table-scroll"><table><thead><tr><th>화면</th><th>요구사항</th></tr></thead><tbody><tr><td>S-01</td><td>경로·판정 계산 중 로딩 상태 표시</td></tr><tr><td>S-02</td><td>네트워크·계산 실패를 <code>미충족</code>이 아닌 <code>계산 불가</code>로 표시</td></tr><tr><td>S-03</td><td>실제 통근 경로 없음은 후순위 예외이며 계산 불가 처리</td></tr><tr><td>S-04</td><td>상대 조건 입력 완료 알림</td></tr><tr><td>S-05</td><td>상대 조건 변경 알림</td></tr><tr><td>S-06</td><td>조건 완화 제안 도착 알림</td></tr><tr><td>S-07</td><td>세션 만료·재로그인 후순위 처리</td></tr><tr><td>S-08</td><td>상대 이탈·관계 종료 상태. 데이터 처리 정책은 출시 전 <span class="pill pill-tbd">[TBD]</span></td></tr></tbody></table></div>
+<hr>
+<h2 id="s18">18. Empty / Error / Edge Cases</h2>
+<h3 id="s18-1">18.1 MVP 필수 예외</h3>
+<div class="table-scroll"><table><thead><tr><th>상황</th><th>처리</th><th>상태</th></tr></thead><tbody><tr><td>B가 초대에 들어오지 않음</td><td>A에게 자기 조건 판정·실부담·해당 시 통근을 보여주는 1인 빈 경로 유지</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>B가 조건 입력 중 이탈</td><td>입력된 항목까지만 부분 판정하고 비어 있는 조건 표시</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>매물 거래완료·삭제</td><td>후보에서 즉시 제거, 사람 조건 유지, 나머지 후보 판정 유지</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>5개 전부 불충족</td><td>한 조건 완화로 회복 가능하면 완화, 아니면 재탐색 필터 제안</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>현재 후보 5개에서 조건 동시 충족 불가</td><td>각 조건에 가장 가까운 후보와 미달량을 텍스트로 설명</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>출근지가 없음</td><td>정상 경로. 통근·교통비 계산 및 행 자체 제거</td><td><span class="pill pill-confirmed">[확정]</span></td></tr></tbody></table></div>
+<h3 id="s18-2">18.2 빈 상태·후순위 예외</h3>
+<div class="table-scroll"><table><thead><tr><th>상황</th><th>처리 방향</th><th>상태</th></tr></thead><tbody><tr><td>관심매물 0개</td><td>먼저 관심매물을 저장하도록 네이버 탐색으로 안내</td><td><span class="pill pill-confirmed">[확정]</span> 화면</td></tr><tr><td>후보 1~2개</td><td>진행은 허용하되 비교 후보가 적다는 안내</td><td><span class="pill pill-confirmed">[확정]</span> 화면</td></tr><tr><td>6개째 후보 선택</td><td>5개 상한 안내와 교체 유도</td><td>후순위</td></tr><tr><td>5개 전부 둘 다 충족</td><td>논의할 충돌이 없음을 알리고 방문 후보 선택으로 이동</td><td>후순위</td></tr><tr><td>후보가 소진돼 1개만 남음</td><td>비교 대상 부족 상태 표시, 추가·교체 경로</td><td><span class="pill pill-confirmed">[확정]</span> 화면 상태</td></tr><tr><td>조건 변경</td><td>전체 재판정, 변경 영향 미리보기와 상대 알림</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>통근 경로를 계산할 수 없음</td><td><code>계산 불가</code>; 미충족·출근 안 함과 구분</td><td>후순위 원칙 확정</td></tr><tr><td>관리비·주차 등 데이터 누락</td><td><code>확인 필요</code> 또는 계산 한계 표시</td><td><span class="pill pill-confirmed">[확정]</span> 원칙</td></tr><tr><td>상대가 나가거나 관계 종료</td><td>조건·공유 객체·현장 기록 처리 정책 필요</td><td><span class="pill pill-tbd">[TBD]</span> 출시 전 필수</td></tr><tr><td>계약 완료</td><td>현재 제품 종료점 밖. 데이터 보관 정책 필요</td><td><span class="pill pill-outscope">[Out of Scope]</span> / <span class="pill pill-tbd">[TBD]</span> 보관</td></tr></tbody></table></div>
+<h3 id="s18-3">18.3 공통 오류 판정 원칙</h3>
+<pre class="codeblock"><code>재봤고 기준에 못 미침  → 미충족
+재려 했지만 실패       → 계산 불가
+데이터가 없어 확인 필요 → 확인 필요
+잴 대상 자체가 없음     → 해당 없음, 행 제거</code></pre>
+<hr>
+<h2 id="s19">19. Cost / Assumption Handling</h2>
+<h3 id="s19-1">19.1 실부담 구성</h3>
+<p><span class="pill pill-confirmed">[확정]</span> 월 실질 주거비는 다음 여섯 항목을 동일한 전제 아래 추정한다.</p>
+<pre class="codeblock"><code>월 실질 주거비
+= 자기자금 보증금의 기회비용
++ 대출 이자
++ 월세
++ 관리비
++ 출퇴근하는 사람의 교통비
++ 초기비용의 월 분할액</code></pre>
+<p>거주 기간을 <code>T</code>개월이라고 할 때:</p>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>계산 원칙</th></tr></thead><tbody><tr><td>보증금 기회비용</td><td><code>자기자금 보증금 × 연 기회비용률 ÷ 12</code></td></tr><tr><td>대출 이자</td><td><code>대출 원금 × 연 대출금리 ÷ 12</code></td></tr><tr><td>월세</td><td>매물 월세 그대로</td></tr><tr><td>관리비</td><td>표시 관리비 + 별도 항목 추정. 세부 추정 범위는 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>대중교통비</td><td><code>Σ(1인당 왕복 요금 × 월 근무일수)</code></td></tr><tr><td>자차 통근비</td><td><code>Σ(편도거리 × 2 × 근무일수 ÷ 실연비 × 유가 + 통행료)</code></td></tr><tr><td>초기비용 월분할</td><td><code>(중개보수 + 이사비 + 입주청소 + 부대비용) ÷ T</code></td></tr></tbody></table></div>
+<p>보증금은 자기자금과 대출금으로 분리한다. 대출 부분에는 이미 이자가 적용되므로 자기자금 기회비용을 중복 적용하지 않는다.</p>
+<h3 id="s19-2">19.2 통근 여부에 따른 교통비 처리</h3>
+<div class="table-scroll"><table><thead><tr><th>사용자 상태</th><th>교통비 처리</th></tr></thead><tbody><tr><td>둘 다 출퇴근</td><td>A 교통비 + B 교통비</td></tr><tr><td>한 명만 출퇴근</td><td>해당 사용자 교통비만 포함</td></tr><tr><td>둘 다 출퇴근하지 않음</td><td>교통비 항목 자체를 표시하지 않음</td></tr></tbody></table></div>
+<p>출퇴근하지 않는 사람의 통근비는 <code>0원</code>으로 계산하지 않는다. 통근 목적의 측정 대상이 없는 <code>해당 없음</code> 상태다.</p>
+<h3 id="s19-3">19.3 현재 전제값</h3>
+<div class="table-scroll"><table><thead><tr><th>전제</th><th>현재값</th><th>성격·표시 원칙</th></tr></thead><tbody><tr><td>기회비용률</td><td>연 3.08%</td><td><span class="pill pill-evidence">[근거 있음]</span> 2026-06 예금은행 저축성수신금리. 기준 시점 표시, 사용자 변경 가능</td></tr><tr><td>전세대출 금리</td><td>연 4.00%, 범위 3.8~4.2%</td><td><span class="pill pill-evidence">[근거 있음]</span> 2026-07 공사 보증서 담보 상품 평균. 실제 심사 결과와 다름</td></tr><tr><td>거주 기간 <code>T</code></td><td>24개월</td><td>표준 임대차 기간 전제</td></tr><tr><td>월 근무일수</td><td>20일</td><td>계산 전제</td></tr><tr><td>휘발유 가격</td><td>전국 1,864원/L, 서울 1,910원/L</td><td><span class="pill pill-evidence">[근거 있음]</span> 2026-08 2주차. 주간 변동, 시점 표시</td></tr><tr><td>자차 실연비</td><td>10km/L</td><td><span class="pill pill-inference">[가정]</span> 신뢰도 낮음. 사용자 조정 가능</td></tr><tr><td>자차 통행료</td><td>0원 기본</td><td><span class="pill pill-inference">[가정]</span> 사용자 입력 시 반영. 입력 위치 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>중개보수</td><td>서울시·국토부 구간별 법정 상한</td><td>확정 비용이 아니라 <code>상한 기준 최대</code>로 표현</td></tr><tr><td>이사비</td><td>원룸 40~60만, 투룸 50~110만, 34평 100~150만</td><td><span class="pill pill-evidence">[근거 있음/신뢰도 중간]</span> 범위만 제시</td></tr><tr><td>입주청소</td><td>평당 1.2~1.5만, 신축 1.8만까지</td><td><span class="pill pill-evidence">[근거 있음/신뢰도 중간]</span> 범위만 제시</td></tr></tbody></table></div>
+<p>금리·유가 등 시점 의존 값은 상수로 고정하지 않는다. 갱신 주기와 연동 방식은 <span class="pill pill-tbd">[TBD]</span>다.</p>
+<h3 id="s19-4">19.4 자차 비용 포함·제외</h3>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>포함 여부</th><th>이유</th></tr></thead><tbody><tr><td>유류비</td><td>포함</td><td>매물 위치에 따라 달라짐</td></tr><tr><td>통행료</td><td>포함</td><td>경로에 따라 달라짐</td></tr><tr><td>보험·감가·정비</td><td>제외</td><td>현재 모델에서는 집 위치와 무관한 고정·2차 비용으로 봄</td></tr><tr><td>직장 주차비</td><td>제외</td><td>집 위치와 무관</td></tr><tr><td>집 주차비</td><td>관리비에 포함된 경우 관리비에서 반영</td><td>중복 계산 방지</td></tr></tbody></table></div>
+<h3 id="s19-5">19.5 숫자 표현 원칙</h3>
+<p>모든 숫자 옆에 기준 시점·가정·한계를 예외 없이 표시한다.</p>
+<div class="table-scroll"><table><thead><tr><th>금지 표현</th><th>허용 표현</th></tr></thead><tbody><tr><td><code>월 실질 주거비는 92만원입니다</code></td><td><code>월 약 92만원으로 추정됩니다 · 전제 보기</code></td></tr><tr><td><code>A가 더 저렴합니다</code></td><td><code>이 전제에서는 A가 월 12만원 낮습니다</code></td></tr><tr><td><code>대출 가능액은 1억 2천입니다</code></td><td>확정 한도를 제시하지 않으며 심사 전 추정임을 명시</td></tr></tbody></table></div>
+<p>본 계산은 금융 조언이나 대출 가능성 판단이 아니다. H4에서 전제 공개 후 신뢰도가 어떻게 변하는지 검증한다.</p>
+<hr>
+<h2 id="s20">20. Non-Functional Requirements</h2>
+<p>이 섹션의 수치는 새로 만들지 않고 <code>docs/10-data-integration.md</code>, <code>docs/01-team-brief.md</code>, <code>docs/04-benchmarks.md</code>의 실측·설계 근거에서 가져왔다. 근거가 없는 항목은 <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span>로 표시하고 확정 수치로 쓰지 않는다.</p>
+<h3 id="s20-1">20.1 성능 (Performance)</h3>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>임계치</th><th>근거</th><th>모니터링</th></tr></thead><tbody><tr><td>초대 링크 클릭 → B 첫 화면(B-02) 응답</td><td><span class="pill pill-proposal">[제안]</span> 30초 이내</td><td>진짜 대체재인 카카오톡의 초대→첫 반응 시간이 3초이며 "30초 넘기면 진다"는 것이 팀의 경쟁 기준(<code>01-team-brief.md</code> "0·진짜 대체재", <code>04-benchmarks.md</code>)</td><td>서버 응답시간 P95, 30초 초과 비율</td></tr><tr><td>조건 완화 슬라이더 조작 → 등급 재계산</td><td>경로 API 재호출 0회, 클라이언트에서 즉시 반영</td><td>통근시간은 <code>(출근지, 매물좌표, 이동수단)</code>의 함수라 임계값만 바뀌는 완화 조작은 경로가 그대로다(<code>10-data-integration.md</code> §4 "조건 완화가 0회")</td><td>완화 조작 1건당 경로 API 호출 수(0 유지 여부)</td></tr><tr><td>재탐색 필터 결과 수 조회</td><td>정확한 수보다 응답 속도 우선, 필요 시 디바운스 + 근사치</td><td><code>10-data-integration.md</code> §2③ "부하가 크면 디바운스 + 근사치"</td><td>조회 응답 지연·타임아웃 비율</td></tr><tr><td>매물 자동 판정(FR-10) 재계산</td><td><span class="pill pill-proposal">[제안]</span> 조건·후보 변경 후 다음 사용자 조작 전에 결과 반영</td><td>FR-10 AC-10-01</td><td>판정 실패·타임아웃 건수</td></tr></tbody></table></div>
+<h3 id="s20-2">20.2 가용성 (Availability) &amp; 의존성</h3>
+<ul><li>관심매물 조회·경로 계산·검색 결과 수 조회·검색 필터 전달 네 가지 모두 네이버 내부 API에 전면 의존하며, 자체 매물 DB나 크롤링으로 대체하지 않는다(<code>decisions</code> G5, <code>10-data-integration.md</code> §1·§4-1). 외부에는 네이버 부동산 공식 오픈 API가 없다는 것이 2026-08-19 확인됐다(F20) — 즉 이 의존은 선택이 아니라 전제다.</li><li>위 API가 실패하면 해당 결과는 <code>미충족</code>이 아니라 <code>계산 불가</code>로 표시한다(§18.3 원칙 재확인). 관심매물 조회 자체가 실패하면 기능 진입을 막고 재시도를 안내한다.</li><li>공유 객체 비로그인 열람 가능 여부(<span class="pill pill-tbd">[TBD]</span>)에 따라 B 온보딩 경로 전체의 가용성이 달라진다 — 이 정책이 확정되기 전에는 FR-07·FR-08의 실제 동작 시점을 최종 확정할 수 없다(16.1 FR-07/FR-08 AC의 TBD 메모와 동일).</li></ul>
+<h3 id="s20-3">20.3 보안·개인정보 (Security &amp; Privacy)</h3>
+<ul><li>사람 조건(예산, 출근지, 필수 조건, 선호, 확인 필요 항목)은 해당 공유 객체에 연결된 두 사람만 열람할 수 있다. 제3자·미초대 사용자는 접근할 수 없다.</li><li>초대 코드는 추측으로 타인이 공유 객체에 들어올 수 없을 만큼의 무작위성을 가져야 한다. 구체적인 자릿수·생성 방식은 <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span>다.</li><li>B가 비로그인으로 입력한 조건은 해당 초대 코드 단위로 격리 저장하고 다른 초대의 조건과 섞지 않으며(FR-07 AC-07-01), 로그인 이관 후 원본은 삭제하고 이관되지 않은 조건은 마지막 접근일로부터 30일이 지나면 삭제한다(FR-07 AC-07-03).</li><li>예산·직장 위치 등 민감 정보의 노출 범위는 초대된 상대 1인으로 한정한다. 관계 종료 후 이 데이터의 처리 정책은 아직 <span class="pill pill-tbd">[TBD]</span>이며 출시 전 필수 결정 항목이다(§26 리스크 "관계 종료 시 데이터 소유 불명확").</li></ul>
+<h3 id="s20-4">20.4 비용·용량 (Cost &amp; Capacity)</h3>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>값·정책</th><th>근거</th></tr></thead><tbody><tr><td>경로 API 호출량(1쌍 기준)</td><td>회차 3회·출근지 변경 1회·매물 추가 2개 가정 시 약 39회/쌍</td><td><code>10-data-integration.md</code> §4 여정 전체 추정</td></tr><tr><td>캐시 없을 때 월간 규모</td><td>SOM 3.4만~10.1만 쌍 대입 시 월 52만~157만 호출</td><td>동일 문서 "규모 감"</td></tr><tr><td>캐시 요건</td><td><code>(출근지, 매물좌표, 이동수단)</code> 키로 결과를 캐시해 재진입·조건 완화 시 호출 0회를 유지한다</td><td>동일 문서 "효율화 1번 — 확실"</td></tr><tr><td>프로토타입 한도</td><td>ODsay LAB Basic 일 1,000회 무료 = 하루 25쌍 분량</td><td>동일 문서 §4-2</td></tr><tr><td>실서비스 규모</td><td>네이버 내부 대중교통 엔진을 쓰므로 쿼터 협의 대상이 아님(외부 API 제약이 아니다)</td><td>동일 문서 §4-2</td></tr></tbody></table></div>
+<p>모니터링 항목: 쌍당 평균 경로 호출 수, 캐시 히트율, 좌표 그리드 반올림 절감율(실측 필요 — <code>decision-status</code> §3), 검색 결과 수 조회 실패율·지연.</p>
+<h3 id="s20-5">20.5 정확성 (Accuracy)</h3>
+<ul><li>실질 주거비·통근·미달량 수치는 예외 없이 기준 시점·가정·한계를 함께 표시한다(FR-21, §19.5 금지 표현 재확인). 전제 없는 숫자를 화면에 노출하지 않는다.</li><li>계산에 필요한 값이 없어 확정적으로 산출할 수 없는 경우 <code>계산 불가</code> 또는 <code>확인 필요</code>로 구분하고, 추정치를 확정값처럼 표시하지 않는다.</li></ul>
+<hr>
+<h2 id="s21">21. Data Requirements</h2>
+<h3 id="s21-1">21.1 사용자 입력 데이터</h3>
+<div class="table-scroll"><table><thead><tr><th>데이터</th><th>주체</th><th>저장/사용</th></tr></thead><tbody><tr><td>예산 상한</td><td>A/B 각각</td><td>사람 조건, 예산 판정</td></tr><tr><td>출퇴근 여부</td><td>A/B 각각</td><td>통근 축 적용 여부</td></tr><tr><td>출근지·이동수단</td><td>출퇴근하는 사용자</td><td>통근시간·교통비 계산</td></tr><tr><td>추가 필수 조건 0~4개</td><td>A/B 각각</td><td>매물별 판정</td></tr><tr><td>선호 자유 문장 0~3개</td><td>A/B 각각</td><td>상대에게 사람 카드로 표시</td></tr><tr><td>확인 필요 항목</td><td>A/B 각각</td><td>중개사 질문 카드</td></tr><tr><td>관계 유형</td><td>A</td><td>예비부부/동거/친구·룸메이트 검증 구분. B에게 다시 묻지 않음</td></tr><tr><td>후보·방문 선택</td><td>A/B 각각</td><td>방문 후보 결정 로직</td></tr><tr><td>현장 기록·유지/보류/제외</td><td>단계 2 사용자</td><td>매물에 귀속되는 사용자 생성 기록</td></tr><tr><td>보증금 조달 구성</td><td>비용 비교가 필요한 사용자</td><td>자기자금 보증금과 대출 원금을 분리해 기회비용·대출이자 계산. 입력 시점 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>기회비용률 조정값</td><td>변경하려는 사용자</td><td>기본 3.08% 대신 사용자 전제를 적용. 입력 위치 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>자차 실연비·통행료</td><td>자차 통근 사용자</td><td>유류비·통행료 계산. 입력 위치와 통행료 수집 여부 <span class="pill pill-tbd">[TBD]</span></td></tr></tbody></table></div>
+<p>닉네임·표시 이름, 입주 목표일, 실연비 입력 위치, 통행료 입력 방식은 <span class="pill pill-tbd">[TBD]</span>다.</p>
+<h3 id="s21-2">21.2 네이버 매물 데이터</h3>
+<div class="table-scroll"><table><thead><tr><th>데이터</th><th>사용 목적</th><th>상태</th></tr></thead><tbody><tr><td>매물 ID, 관심 저장 시각</td><td>후보 선택·공유 객체 구성</td><td>필요</td></tr><tr><td>주소·좌표</td><td>식별·통근 경로</td><td>필요</td></tr><tr><td>보증금·월세·관리비</td><td>실부담 계산</td><td>필요</td></tr><tr><td>전용면적</td><td>하한형 판정</td><td>필요</td></tr><tr><td>매물 유형</td><td>일치형 판정</td><td>필요</td></tr><tr><td>주차 유무</td><td>유무형 판정</td><td>필요</td></tr><tr><td>세대당 주차대수</td><td>참고 정보 병기, 판정에는 미사용</td><td>가능한 경우</td></tr><tr><td>역 도보 시간·최근접역</td><td>상한형 판정</td><td>필요</td></tr><tr><td>방 개수·준공연도·층수·방향·엘리베이터</td><td>선호 입력 보조 또는 재탐색 필터 맥락</td><td>판정에는 미사용</td></tr><tr><td>거래 상태</td><td>매물 소진 감지</td><td>필요</td></tr></tbody></table></div>
+<p><span class="pill pill-confirmed">[확정]</span> 판정에 쓰지 않는 사진·설명·중개사 정보는 데이터 요구 범위에 포함하지 않는다. 사진은 판정 화면에서 평가적 조건화 위험이 있어 노출 범위가 별도 <span class="pill pill-tbd">[TBD]</span>다.</p>
+<h3 id="s21-3">21.3 계산·파생 데이터</h3>
+<ul><li>후보별 A/B 통근시간과 교통비</li><li>월 실질 주거비 추정값과 전제</li><li>조건별 충족·미충족·확인 필요·계산 불가 상태</li><li>조건별 미달량</li><li>양보 문장</li><li>조건 완화 전후 후보 등급 이동</li><li>후보 5개 안에서의 조건별 상대 위치</li><li>방문 후보 선택의 일치 수·라운드 상태</li><li>재탐색 제안용 필터와 검색 결과 수</li></ul>
+<p>복합 총점, 공동 적합도, 자동 추천 순위는 생성하지 않는다.</p>
+<h3 id="s21-4">21.4 외부·기준 데이터</h3>
+<ul><li>금리·기회비용률 기준값</li><li>중개보수 상한요율</li><li>이사비·입주청소 범위</li><li>유가</li><li>대중교통·자차 경로 결과</li></ul>
+<p>프로토타입 대중교통 경로는 ODsay LAB Basic을 사용할 수 있다는 근거가 있으나, 실서비스는 네이버 내부 지도 엔진을 전제로 한다. 새로운 API·크롤링 구현안은 본 PRD에서 설계하지 않는다.</p>
+<h3 id="s21-5">21.5 저장 원칙</h3>
+<div class="table-scroll"><table><thead><tr><th>데이터</th><th>저장 원칙</th></tr></thead><tbody><tr><td>사람 조건·선호·확인 항목</td><td>사람에 저장</td></tr><tr><td>공유 객체</td><td>매물 ID 최대 5개와 두 사람 연결 상태를 별도 프로젝트 데이터로 저장</td></tr><tr><td>B 로그인 전 조건</td><td>초대 코드에 임시 저장, 마지막 접근일 +30일 삭제, 로그인 시 계정으로 이관</td></tr><tr><td>판정·미달량·양보 문장</td><td>계산 결과. 필요 시 캐시 가능</td></tr><tr><td>네이버 매물 원본</td><td>별도 DB로 저장하지 않음. 필요한 필드 읽기 중심</td></tr><tr><td>현장 기록·유지/보류/제외</td><td>단계 2에서 사용자 생성 기록으로 보존</td></tr></tbody></table></div>
+<p>단계 1에서는 매물 스냅샷을 만들지 않는다. 단계 2에서는 현장 기록을 이해하기 위한 최소 식별 정보와 시점·거래 상태 보존이 필요하며 보관 기간은 <span class="pill pill-tbd">[TBD]</span>다.</p>
+<h3 id="s21-6">21.6 네이버 내부 의존성</h3>
+<div class="table-scroll"><table><thead><tr><th>의존성</th><th>상태</th></tr></thead><tbody><tr><td>관심매물 조회 API 존재·권한</td><td><span class="pill pill-tbd">[TBD — 제품 전제]</span></td></tr><tr><td>공유 객체 비로그인 열람 정책</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>검색 결과 수 조회 가능 여부·부하</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>검색 필터 URL 파라미터 규격</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>경로 API 비용·쿼터</td><td><span class="pill pill-tbd">[TBD]</span></td></tr></tbody></table></div>
+<p>외부에는 공식 네이버 부동산 오픈 API가 없으므로 별도 앱에서 링크 파싱·크롤링하는 방식은 사용하지 않는다.</p>
+<h3 id="s21-7">21.7 재탐색 필터 변환 규칙</h3>
+<p><span class="pill pill-confirmed">[확정]</span> 필터도 의사결정이므로 시스템이 자동 적용하지 않고, 사용자가 <code>이 필터로 찾아보기</code>를 눌렀을 때만 네이버 검색으로 전달한다.</p>
+<div class="table-scroll"><table><thead><tr><th>조건</th><th>전달</th><th>변환 규칙</th></tr></thead><tbody><tr><td>예산</td><td>예</td><td>두 사람 중 더 낮은 상한</td></tr><tr><td>전용면적</td><td>예</td><td>두 사람 중 더 높은 하한</td></tr><tr><td>역 도보</td><td>예</td><td>더 짧은 기준</td></tr><tr><td>주차</td><td>예</td><td>한 명이라도 필요하면 필요</td></tr><tr><td>매물 유형</td><td>조건부</td><td>두 사람 요구가 다르면 하나의 필터로 표현하지 않음</td></tr><tr><td>통근시간</td><td>아니오</td><td>출근지가 서로 달라 단일 검색 필터로 표현 불가</td></tr><tr><td>거래유형·기존 매물유형</td><td>유지</td><td>우리 조건이 아니라 사용자가 기존 검색에서 건 필터</td></tr></tbody></table></div>
+<p>검색 결과 수가 0이면 해당 필터를 적용 제안하지 않고, 어느 조건이 결과를 0으로 만드는지 보여주는 방향을 따른다. 정확한 수와 근사치 중 무엇을 표시할지는 <span class="pill pill-tbd">[TBD]</span>다.</p>
+<h3 id="s21-8">21.8 경로 계산·캐시 요구</h3>
+<ul><li>통근 결과의 계산 키는 <code>(출근지, 매물 좌표, 이동수단)</code>이다.</li><li>동일 키는 재진입과 화면 이동에서 다시 호출하지 않고 결과를 재사용한다.</li><li>통근 임계값만 완화할 때 실제 경로는 변하지 않으므로 경로 API를 다시 호출하지 않는다.</li><li>출근지가 없는 사용자는 경로 호출 대상에서 제외한다.</li><li>경로 계산 실패는 <code>미충족</code>이 아니라 <code>계산 불가</code>다.</li><li>좌표 그리드 반올림과 전역 캐시는 절감폭 실측이 필요한 <span class="pill pill-hypothesis">[검증 가설]</span>이며 확정 구현 요구사항이 아니다.</li></ul>
+<h3 id="s21-9">21.9 Entity Relationship Model</h3>
+<p>21.1~21.8에서 정의한 데이터를 하나의 엔터티 관계로 합친 것이다. 엔터티 경계는 새로 설계하지 않고 <code>decisions/0003</code>(조건은 사람에 저장)·<code>decisions/0004</code>(방문 후보는 분할로 결정)·§20.5(저장 원칙)의 결정을 그대로 옮겼다.</p>
+<div class="diagram-frame"><div class="diagram-scroll"><pre class="mermaid">
+erDiagram
+    PERSON {
+        string person_id PK
+        string role "A 또는 B"
+        string relationship_type "예비부부 등, A가 초대 시 1회 선택"
+        int budget_cap "월 실부담 상한, 항상 필수"
+        boolean commutes "출퇴근 여부"
+        string commute_origin "출퇴근 시에만"
+        string commute_mode "대중교통 기본, 자차 선택"
+        string required_conditions "0~4개, 항목+연산자+값"
+        string preferences "자유 문장 0~3개, 판정 미사용"
+        string confirmation_items "상한 없음, 판정 미사용"
+    }
+    SHARED_SPACE {
+        string space_id PK
+        string person_a_id FK
+        string person_b_id FK
+        string connection_status
+    }
+    INVITE {
+        string invite_code PK
+        string space_id FK
+        string link_url
+        string temp_condition_ref "B 비로그인 임시조건, +30일 삭제"
+    }
+    LISTING_REF {
+        string listing_id PK
+        string space_id FK
+        string coordinates
+        int deposit
+        int rent
+        int maintenance_fee
+        float area
+        string listing_type
+        boolean parking
+        int walk_to_station_min
+        string transaction_status
+    }
+    JUDGMENT_RESULT {
+        string result_id PK
+        string person_id FK
+        string listing_id FK
+        string condition_key
+        string status "충족·미충족·확인필요·계산불가·해당없음"
+        string gap_amount "미달량"
+    }
+    COMPROMISE_SENTENCE {
+        string sentence_id PK
+        string listing_id FK
+        string losing_person_id FK
+        string lost_condition
+        string relative_rank "후보 5개 안 상대 순위, 절대값 아님"
+    }
+    RELAXATION_PROPOSAL {
+        string proposal_id PK
+        string proposer_id FK
+        string target_person_id FK
+        string condition_key
+        string proposed_value "실제 미달량에서 산출"
+        string status "대기·수락·거절"
+    }
+    VISIT_SELECTION {
+        string selection_id PK
+        string space_id FK
+        int round "최대 2라운드"
+        string final_candidates "최대 2개, 분할 포함"
+    }
+    BROKER_QUESTION {
+        string question_id PK
+        string listing_id FK
+        string confirmation_item
+        string answer
+        string status
+    }
+    FIELD_RECORD {
+        string record_id PK
+        string listing_id FK
+        string checklist "층간소음 등 6항목, 전부 표시"
+        string outcome "유지·보류·제외"
+    }
+
+    SHARED_SPACE ||--|| PERSON : "A(초대자) 보유"
+    SHARED_SPACE ||--o| PERSON : "B(참여자) 참여"
+    SHARED_SPACE ||--|| INVITE : "초대 발급"
+    SHARED_SPACE ||--o{ LISTING_REF : "후보 최대 5개"
+    SHARED_SPACE ||--|| VISIT_SELECTION : "방문 후보 결정"
+    PERSON ||--o{ JUDGMENT_RESULT : "조건을 대입"
+    LISTING_REF ||--o{ JUDGMENT_RESULT : "판정 대상"
+    JUDGMENT_RESULT ||--o| COMPROMISE_SENTENCE : "한쪽만 충족 시 생성"
+    PERSON ||--o{ RELAXATION_PROPOSAL : "발신 또는 수신"
+    LISTING_REF ||--o{ BROKER_QUESTION : "확인 필요 항목"
+    LISTING_REF ||--o| FIELD_RECORD : "방문 후, 단계 2"
+</pre></div></div>
+<p><strong>읽는 법</strong></p>
+<div class="table-scroll"><table><thead><tr><th>엔터티</th><th>한글 용어</th><th>저장 위치·근거</th></tr></thead><tbody><tr><td>PERSON</td><td>사람(A/B)</td><td>조건은 매물이 아니라 사람에 귀속(<code>decisions/0003</code>)</td></tr><tr><td>SHARED_SPACE</td><td>공유 객체(공동 공간)</td><td>A의 개인 관심매물이 아니라 별도 프로젝트 데이터(§21.5) — B 로그인을 뒤로 미루는 근거</td></tr><tr><td>LISTING_REF</td><td>매물 참조</td><td>네이버 매물 원본은 저장하지 않고 필요한 필드만 참조(§21.5, §21.6) — 단계 1은 스냅샷을 만들지 않는다</td></tr><tr><td>JUDGMENT_RESULT</td><td>판정 결과</td><td>계산 결과이며 캐시 가능, 저장이 필수는 아님(§21.5)</td></tr><tr><td>COMPROMISE_SENTENCE</td><td>양보 문장</td><td>총점으로 합산하지 않고 문장으로만 존재(<code>decisions/0001</code>)</td></tr><tr><td>RELAXATION_PROPOSAL</td><td>조건 완화 제안</td><td>상대 조건은 제안만 가능, 수락 전 미적용(FR-14)</td></tr><tr><td>VISIT_SELECTION</td><td>방문 후보 선택</td><td>겹치면 확정, 안 겹치면 분할(<code>decisions/0004</code>)</td></tr><tr><td>BROKER_QUESTION</td><td>중개사 질문 카드</td><td>자동 판정 불가 항목의 보류 상태(§12.4)</td></tr><tr><td>FIELD_RECORD</td><td>현장 기록</td><td>매물에 귀속되는 사용자 생성 기록, 단계 2에서만 생성(§21.5)</td></tr></tbody></table></div>
+<p>이 다이어그램에 없는 것 — 종합 점수·공동 적합도·자동 추천 순위 엔터티는 만들지 않는다(§21.3, <code>decisions/0001</code>).</p>
+<hr>
+<h2 id="s22">22. MVP Scope</h2>
+<h3 id="s22-1">22.1 MVP 단계 1 — 검증 코어</h3>
+<div class="table-scroll"><table><thead><tr><th>기능</th><th>범위</th></tr></thead><tbody><tr><td>FT1</td><td>관심매물 후보 담기, 최대 5개</td></tr><tr><td>FT2</td><td>예산 필수 + 출퇴근 여부 분기 + 해당자 출근지·이동수단 + 선택 조건 입력</td></tr><tr><td>FT3</td><td>초대 링크 1회, 코드 보조</td></tr><tr><td>FT4</td><td>자동 판정 + 실부담·통근 계산</td></tr><tr><td>FT5</td><td>양보 지점 문장</td></tr><tr><td>FT6</td><td>조건 완화와 0건 분기</td></tr><tr><td>FT7</td><td>방문 후보 2개 결정</td></tr></tbody></table></div>
+<h3 id="s22-2">22.2 MVP 단계 1의 확정 수치·경계</h3>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>값</th></tr></thead><tbody><tr><td>참여 인원</td><td>2인 전제. 1인은 B 미참여 빈 경로</td></tr><tr><td>관심매물</td><td>비교 세션당 최대 5개</td></tr><tr><td>추가 필수 조건</td><td>사람당 0~4개</td></tr><tr><td>선호 카드</td><td>사람당 0~3개</td></tr><tr><td>방문 후보 결과</td><td>2개</td></tr><tr><td>선택 라운드</td><td>최대 2라운드</td></tr><tr><td>정상 반복</td><td>전체 탐색 여정에서 2~3회 세션 반복 가능</td></tr><tr><td>기기</td><td>A PC 웹 우선, B 모바일 우선</td></tr><tr><td>제품 위치</td><td>네이버 앱/부동산 안의 기능</td></tr></tbody></table></div>
+<h3 id="s22-3">22.3 단계 1 필수 예외</h3>
+<ul><li>B 미참여 1인 빈 경로</li><li>B 입력 중 이탈과 부분 판정</li><li>매물 소진과 조건 유지</li><li>5개 전부 불충족</li><li>현재 후보 집합에서 조건 동시 충족 불가</li><li>출근지 없는 정상 경로</li></ul>
+<h3 id="s22-4">22.4 MVP 단계 2 — 종료점 완성</h3>
+<div class="table-scroll"><table><thead><tr><th>기능</th><th>범위</th></tr></thead><tbody><tr><td>FT8</td><td>방문 전 중개사 질문 카드, 답변 기록 시 판정 갱신</td></tr><tr><td>FT9</td><td>방문 후 공통 체크리스트와 유지·보류·제외</td></tr></tbody></table></div>
+<p>단계 1은 H1·H2-b-2·H3을 측정하는 검증 코어이고, 단계 2는 방문 이후 종료점과 사용자 생성 기록을 완성한다.</p>
+<hr>
+<h2 id="s23">23. Out of Scope</h2>
+<h3 id="s23-1">23.1 제품 범위 밖</h3>
+<ul><li>매물 DB 신규 구축</li><li>독립 매물 검색·탐색·추천</li><li>아이소크론 기반 후보 생성</li><li>종합점수·공동 적합도·자동 랭킹</li><li>AI 최종 선택·정답 추천·강제 타협</li><li>계약·대출 실행</li><li>등기·보증보험·전자계약</li><li>전세사기 확정 진단</li><li>법률·금융 판단</li><li>3인 이상 공동 의사결정</li><li>부모–자녀 및 주도–승인형 관계</li><li>비용 분담 비율·방 배정</li></ul>
+<h3 id="s23-2">23.2 MVP 단계 1 밖 또는 후순위</h3>
+<ul><li>방문 일정 조율</li><li>별도 공동 메모 기능</li><li>중개사 문의 실행 자체</li><li>초대 취소의 상세 흐름</li><li>계약 완료 이후 관리</li><li>관계 종료 시 데이터 처리 구현 — 단, 출시 전 정책 결정은 필수</li><li>현장 기록 스냅샷과 장기 보관 — 단계 2에서 처리</li></ul>
+<hr>
+<h2 id="s24">24. KPI / Success Metrics</h2>
+<p>수치 목표는 1차 측정 전에 만들지 않는다.</p>
+<h3 id="s24-1">24.1 North Star</h3>
+<blockquote><span class="pill pill-confirmed">[확정]</span> <strong>초대 발송 건 중 7일 안에 <code>보러 갈 집 2개</code>가 정해진 비율</strong></blockquote>
+<p>7일이 적절한 기간인지는 1차 측정 후 조정한다.</p>
+<h3 id="s24-2">24.2 검증 지표</h3>
+<div class="table-scroll"><table><thead><tr><th>지표</th><th>정의</th><th>측정 창구</th><th>목표값</th><th>가드레일 지표</th><th>상태</th></tr></thead><tbody><tr><td>H1 진입률(H1-a)</td><td>초대 발송 중 B가 공유 객체에 진입한 비율</td><td>이벤트 로그(발송·열람)</td><td>측정 필요 — §24.4 프로토콜로 baseline 확정</td><td>—</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>H1 조건 입력률(H1-b, 급소)</td><td>진입한 B 중 현재 필수 입력을 완료한 비율</td><td>이벤트 로그(입력 시작·완료)</td><td>측정 필요 — §24.4 프로토콜로 baseline 확정</td><td>조건 입력 중도이탈 지점</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>H1 로그인 전환(H1-c)</td><td>첫 결과 확인 후 저장·재방문을 위해 로그인한 비율</td><td>로그인 이벤트</td><td>출시 후 측정</td><td>—</td><td><span class="pill pill-confirmed">[확정]</span></td></tr><tr><td>조건 입력 완료율</td><td>입력 시작 대비 예산·해당자 출근지·추가 조건의 단계별 완료</td><td>이벤트 로그(단계별 입력)</td><td>측정 필요 — 세부 구간 <span class="pill pill-tbd">[TBD]</span></td><td>조건 재입력·재설정 비율</td><td><span class="pill pill-confirmed">[확정 방향]</span> 세부 구간 <span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>조건 완화 실행률</td><td>완화 화면 진입 대비 실제 완화를 적용한 비율</td><td>이벤트 로그</td><td>측정 필요</td><td>충돌 화면 노출 후 이탈률</td><td><span class="pill pill-tbd">[TBD]</span> 팀 대시보드 후보</td></tr><tr><td>방문 후보 2개 결정률 / North Star</td><td>초대 발송 후 7일 내 방문 후보 2개가 정해진 비율</td><td>이벤트 로그(발송~확정, 7일 창)</td><td>측정 필요 — §24.4 프로토콜로 baseline 확정</td><td>방문 후 제외 비율(헛방문)</td><td><span class="pill pill-confirmed">[확정]</span></td></tr></tbody></table></div>
+<p>기존 문서의 <code>2개/3개/4개 입력 완료율</code>은 출근지를 공통 필수로 보던 시점의 표현이 남아 있다. 최신 조건 모델에 맞춘 정확한 구간 정의는 <span class="pill pill-tbd">[TBD]</span>이며, 근거 없는 수치 목표는 설정하지 않는다.</p>
+<h3 id="s24-3">24.3 후보 지표와 후행 지표</h3>
+<div class="table-scroll"><table><thead><tr><th>지표</th><th>현재 취급</th></tr></thead><tbody><tr><td>완화 실행률</td><td>팀 대시보드 후보. <span class="pill pill-tbd">[TBD]</span> 확정 지표 아님</td></tr><tr><td>중개사 연락 비율</td><td>단계 2 후행 지표. 방향만 <code>높아지면 좋음</code></td></tr><tr><td>방문 후 제외 비율</td><td>헛걸음 참고 지표. 방향만 <code>낮아지면 좋음</code></td></tr><tr><td>한 달 이상 방치된 관심매물 비율</td><td>네이버 내부 baseline 필요</td></tr><tr><td>전월세대출 비교 이동 비율</td><td>후행 지표. 방향만 <code>높아지면 좋음</code></td></tr></tbody></table></div>
+<p><code>결정 시간 단축</code>, <code>갈등 감소</code>, <code>계약 전환율 상승</code>은 현재 성공 효과로 확정하지 않는다. 필요 시 별도 검증 가설로만 다룬다.</p>
+<h3 id="s24-4">24.4 기준선·목표 수립 프로토콜과 가드레일 지표</h3>
+<p>"수치 목표는 1차 측정 전에 만들지 않는다"(24절 상단)는 원칙은 유지한다. 다만 "언제, 무엇을 기준선으로 확정하는가"를 아래처럼 명시해 이 원칙이 목표 수치 자체의 부재로 남지 않게 한다.</p>
+<p><strong>기준선 확정 프로토콜</strong> <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span></p>
+<ol><li>초대 발송 세션이 누적 30건에 도달하거나 발송 시작 후 4주가 지나는 시점 중 먼저 오는 쪽을 1차 측정 시점으로 정한다.</li><li>그 시점까지 관측된 각 지표의 실측값을 해당 지표의 baseline으로 확정하고 문서에 기록한다.</li><li>목표값은 baseline 확정 이후에만 설정하며, 근거 없는 사전 수치는 채택하지 않는다 — "초대 수락률이 70%일 것"이라는 가정이 비교군 수치 비공개를 이유로 근거 없음으로 기각된 사례(<code>docs/03-evidence-log.md</code>)를 그대로 원칙으로 승계한다.</li><li>예비부부·신혼부부(1차 검증 집단)와 친구·룸메이트(2차 검증 집단) 간 비교가 가능한 지표는 절대 기준선보다 집단 간 상대 차이를 우선 판정 기준으로 쓴다(<code>decision-status</code> 검증 설계 "반증 방식").</li></ol>
+<p><strong>가드레일 지표</strong> — <code>Day4_KPI_설계_보강(가드레일_포함).md</code>의 분석을 그대로 가져왔다. North Star나 입력 지표를 올리려는 시도가 다른 지표를 망가뜨리는지 감시하는 용도이며, 24.2 표에도 같은 내용을 배치했다.</p>
+<div class="table-scroll"><table><thead><tr><th>가드레일 지표</th><th>감시 대상</th><th>무엇을 막나</th><th>판정 규칙</th></tr></thead><tbody><tr><td>방문 후 제외 비율(헛방문율)</td><td>North Star(방문 후보 2개 확정 비율)</td><td>확정은 됐지만 실제로는 맞지 않는 가짜 완주</td><td>North Star가 오르는데 헛방문율도 같이 나빠지면 개선이 아니라 "숫자만 맞춘 가짜 확정"이다</td></tr><tr><td>충돌 화면 노출 후 이탈률</td><td>조건 완화 실행률</td><td>충돌·양보 화면이 갈등을 키워 이탈을 유도하는 것</td><td>완화 실행률이 오르는데 이탈률도 같이 오르면 화면이 갈등을 키운 것이다</td></tr><tr><td>조건 재입력·재설정 비율</td><td>조건 입력 완료율(확장 3~4개)</td><td>입력 마찰을 줄이려 너무 단순화한 부작용으로 나중에 조건을 자꾸 고쳐야 하는 것</td><td>완료율이 오르는데 재입력률도 같이 오르면 초기 조건이 실제와 안 맞는 것이다</td></tr></tbody></table></div>
+<hr>
+<h2 id="s25">25. Validation Plan / Open Hypotheses</h2>
+<h3 id="s25-1">25.1 가설 현황</h3>
+<div class="table-scroll"><table><thead><tr><th>가설</th><th>내용</th><th>현재 상태</th><th>검증/통과 기준</th><th>거짓일 때</th></tr></thead><tbody><tr><td>H1</td><td>초대받은 상대가 들어와 조건을 입력한다</td><td><strong>미검증·최우선</strong></td><td>3단 깔때기와 예비부부/룸메이트 집단 간 비교. 절대 목표 없음</td><td>2인 전제 재검토. 개선 실험 2회 실패 시 decision 0002 되돌림 검토</td></tr><tr><td>H2-a</td><td>집 구할 때 여러 매물을 반복 비교한다</td><td><strong>확인됨</strong></td><td>당근부동산 실측</td><td>—</td></tr><tr><td>H2-b-1</td><td>2인이 집을 고를 때 조건 충돌이 존재한다</td><td><strong>확인됨</strong></td><td>Zillow 2020 근거</td><td>—</td></tr><tr><td>H2-b-2</td><td>조건 충돌이 실제 결정을 지연시킨다</td><td><strong>미검증·급소</strong></td><td>지연 경험 과반 + 지연 원인에서 조건 충돌이 일정 조율·비용 분담보다 많이 지목</td><td>Problem Statement 재작성</td></tr><tr><td>H3</td><td>사용자가 조건 입력을 감수한다</td><td><strong>설계로 완화 가능, 측정 필요</strong></td><td>최신 입력 단계별 완료율</td><td>추가 입력 범위 재검토</td></tr><tr><td>H4</td><td>보유 데이터와 전제로 의미 있는 비용 비교가 가능하다</td><td><strong>부분적으로 불가</strong></td><td>전제 문구를 본 뒤 신뢰도가 오르는지</td><td>절대 추정 대신 상대 차액 중심으로 후퇴</td></tr><tr><td>H5</td><td>매물 회전이 비교 주기보다 느리다</td><td><strong>부분 확인</strong></td><td>후보 등록→확정 중앙값 &lt; 매물 평균 게시 기간</td><td>실측 결과에 따라 매물 수명과 조건 지속 구조 재검토</td></tr></tbody></table></div>
+<p>H3의 기존 문서명 <code>출근지·예산 입력 의향</code>은 최신 결정에서 출근지가 조건부가 되었으므로, PRD에서는 <strong>예산 필수 및 해당자 통근·선택 조건 입력 의향</strong>으로 해석한다. 가설의 상태를 임의로 상향하지 않는다.</p>
+<h3 id="s25-2">25.2 실행 순서</h3>
+<ol><li>H1 선행 측정: 조건 대조 로직 없이 목록 공유 + 최소 반응 형태</li><li>H2-b-2 사용자 인터뷰: 제품 없이 병행 가능</li><li>H1이 성립하면 단계 1 프로토타입</li><li>H3 입력 완료율 측정</li><li>H4 비용 신뢰도와 H5 매물 수명 병행 측정</li></ol>
+<h3 id="s25-3">25.3 H2-b-2 인터뷰 조건</h3>
+<ul><li>최근 6개월 내 2인 이상이 함께 집을 구한 사용자</li><li>주도–승인형이 아닌 완전공동형</li><li>조건 충돌, 일정 조율, 승인 단계, 예산 합의를 지연 원인으로 구분</li><li><code>둘이 구하면 오래 걸린다</code>는 일화를 사실로 전제하지 않음</li></ul>
+<hr>
+<h2 id="s26">26. Risks</h2>
+<h3 id="s26-0">26.0 설계 결정 근거 요약 (ADR)</h3>
+<p>리스크 표 앞에 <code>decisions/0001~0004</code>를 요약해 배치한다. 각 결정이 어떤 리스크를 피하려고 나온 것인지, 그리고 무엇이 관찰되면 되돌리는지를 리스크 표와 나란히 두기 위함이다. 전체 근거·기각한 대안은 원문 파일에 있다.</p>
+<div class="table-scroll"><table><thead><tr><th>Decision</th><th>핵심 결정</th><th>근거(왜)</th><th>되돌릴 조건</th></tr></thead><tbody><tr><td><span class="ref" title="decisions/0001-no-total-score.md">0001</span> 종합점수를 내지 않는다</td><td>매물에 총점·순위를 부여하지 않고, 한쪽만 충족인 매물만 양보 문장으로 서술한다</td><td>총점은 누가 무엇을 포기하는지를 가리고, 두 사람의 가중치는 하나로 합칠 수 없다. 채점형 서비스(집노트)와는 정면경쟁하지 않는다</td><td>사용성 테스트에서 사용자가 명시적으로 순위를 요구하고 문장 서술만으로는 결정에 도달하지 못하는 것이 반복 관찰될 때, 또는 총점형 해외 선행사례(TwoKeys)가 유의미하게 성장할 때</td></tr><tr><td><span class="ref" title="decisions/0002-two-person-premise.md">0002</span> 2인을 전제로 간다</td><td>1인 기본 모드로 전환하지 않고, 1인 사용은 "상대가 아직 안 들어온" 빈 경로로만 지원한다</td><td>1인 기본으로 가면 이미 20개 이상 존재하는 1인 임장 앱과 차별점이 소멸하고, 내부적으로 "메모 기능"으로 축소 압력을 받는다</td><td>H1 실측에서 초대 수락률이 국내 비교군(결혼준비 앱) 대비 현저히 낮고, 개선 실험 2회가 모두 실패할 때</td></tr><tr><td><span class="ref" title="decisions/0003-conditions-belong-to-people.md">0003</span> 조건은 사람에 저장한다</td><td>조건을 매물이 아니라 사람에 저장해, 매물이 바뀌어도 조건이 유지된다</td><td>점수만 저장하면 "왜 4점?"에 답할 수 없다. 매물당 8항목 채점(최대 40회) 대신 사람당 4번 입력으로 상대의 부담을 10분의 1로 줄인다</td><td>사용자가 매물별 세세한 평가를 반복해서 요구하는 것이 관찰될 때 — 그 경우도 조건은 사람에 유지하고 매물별 메모만 추가한다</td></tr><tr><td><span class="ref" title="decisions/0004-agreement-by-split.md">0004</span> 합의는 분할로 끝낸다</td><td>방문 후보가 끝까지 안 겹치면 투표·순위·자동 선택 대신 각자 한 곳씩 나눠 갖는다(2라운드 상한)</td><td>제안-수락 구조는 비대칭이라 "네가 골라, 난 따를게"로 귀결되며 이는 제품이 풀려는 문제 자체를 재현한다. 순위 매기기(Borda)는 집계 전략이라 0001을 위반한다</td><td>사용자 테스트에서 분할 결과에 대한 불만("내 것만 보고 상대 것은 형식적으로 따라갔다")이 반복 관찰될 때 — 그 경우 2라운드를 늘리는 대신 재선택 시 상대의 이유를 함께 보여주는 방향으로 간다</td></tr></tbody></table></div>
+<div class="table-scroll"><table><thead><tr><th>Risk</th><th>영향</th><th>현재 신호/검증</th><th>현재 대응 방향</th><th>상태</th></tr></thead><tbody><tr><td>B가 초대에 들어오지 않음</td><td>치명적</td><td>H1 깔때기</td><td>1인 빈 경로, H1 선행 측정, 집단 비교</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr><tr><td>조건 충돌이 지연의 주원인이 아님</td><td>치명적</td><td>H2-b-2 인터뷰</td><td>일정 조율·비용 분담 등 원인 분리 후 Problem 재검토</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr><tr><td>조건 입력 부담으로 이탈</td><td>큼</td><td>단계별 입력 완료율</td><td>예산만 필수, 출근지는 해당자만, 점진적 공개</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr><tr><td>비용 계산값이 실제와 다름</td><td>큼</td><td>H4 신뢰도 질문</td><td>모든 숫자 옆 전제, 상대 차액으로 후퇴 가능</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr><tr><td>충돌 화면이 갈등을 키움</td><td>중간</td><td>화면 이후 이탈·사용성 반응</td><td>A/B 동일 비중, 승패 표현 금지, 손실·이득 프레임 균형</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr><tr><td>매물이 빨리 소진됨</td><td>중간</td><td>거래완료 비중·H5</td><td>조건을 사람에 저장, 매물 제거·재판정·재선택</td><td><span class="pill pill-evidence">[근거 있음/부분 확인]</span></td></tr><tr><td>예산·직장 정보 노출 부담</td><td>중간</td><td>입력 이탈</td><td>공개 범위 정책 필요</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>관심매물 API 권한 부재</td><td>제품 전제 실패</td><td>네이버 내부 확인</td><td>내부 기능 전제, 외부 링크 파싱·크롤링 사용 안 함</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>공유 객체 비로그인 열람 불가</td><td>H1 마찰 증가</td><td>네이버 정책 확인</td><td>로그인 위치 재조정 필요</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>검색 count·필터 파라미터 사용 불가</td><td>0건 재탐색 기능 축소</td><td>내부 API 확인</td><td>결과 수 미리보기 제거 또는 전달 방식 재검토</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>매물 누락 데이터·경로 실패</td><td>잘못된 후보 탈락</td><td>오류 로그</td><td>미충족과 계산 불가·확인 필요 구분</td><td><span class="pill pill-confirmed">[확정 대응]</span></td></tr><tr><td>관계 종료 시 데이터 소유 불명확</td><td>개인정보·정책 리스크</td><td>출시 전 정책 검토</td><td>조건·공유 객체·현장 기록 처리 결정</td><td><span class="pill pill-tbd">[TBD]</span></td></tr><tr><td>분할 결과가 실제 공동 결정으로 느껴지지 않음</td><td>사용자 불만</td><td>사용성 테스트</td><td>decision 0004 되돌림 조건에 따라 이유 제시 방식 재검토</td><td><span class="pill pill-hypothesis">[검증 가설]</span></td></tr></tbody></table></div>
+<hr>
+<h2 id="s27">27. Open Questions / TBD</h2>
+<h3 id="s27-1">27.1 팀이 결정할 수 있는 항목</h3>
+<div class="table-scroll"><table><thead><tr><th>영역</th><th>TBD</th></tr></thead><tbody><tr><td>사용자 입력</td><td>실연비 입력 위치, 자차 통행료 입력 여부·위치, 입주 목표일 수집 여부, 닉네임·표시 이름 수집 여부</td></tr><tr><td>화면</td><td>재탐색 필터 제안 A-13b-2 상세 화면, 조건 완화 화면의 상세 내부/별도 위치, 매물 사진 노출 범위, 지도 핀 라벨 밀도, 점 플롯 축 처리, 검색 count의 정확/근사 표기</td></tr><tr><td>지표</td><td>팀 대시보드 지표 선정, North Star 7일 적정성, 입력 완료 구간의 최신 정의</td></tr><tr><td>데이터 정책</td><td>단계 2 스냅샷 보관 기간, 관계 종료 시 조건·공유 객체·현장 기록 처리, 계약 후 보관 정책</td></tr><tr><td>비용</td><td>관리비 별도 항목 추정 범위, 금리 갱신 주기·방법</td></tr><tr><td>개인정보</td><td>예산·출근지·조건의 상대 공개 범위와 가림 정책</td></tr><tr><td>실패 판단</td><td>H1 개선 실험 2회 후 실패 판정 시점과 2인 전제 재검토 절차</td></tr></tbody></table></div>
+<h3 id="s27-2">27.2 네이버 내부 확인이 필요한 항목</h3>
+<ul><li>관심매물 조회 API의 존재와 권한</li><li>공유 객체 비로그인 열람 가능 여부</li><li>검색 결과 수 조회 가능 여부와 부하</li><li>검색 필터 URL 파라미터 규격</li><li>경로 API 비용·쿼터</li><li>관심매물 장기 방치 baseline</li><li>네이버 부동산 매물 평균 게시 기간</li></ul>
+<h3 id="s27-3">27.3 실측·사용자 조사 필요</h3>
+<ul><li>H1 초대 참여와 조건 입력</li><li>H2-b-2 조건 충돌과 지연의 인과</li><li>최신 조건 구조의 단계별 입력 완료율</li><li>전제 공개 후 비용 추정 신뢰도</li><li>후보 분포 대비 추가 필수 조건 통과율</li><li>좌표 그리드·전역 캐시 절감폭</li><li>양보 문장이 공정하고 이해 가능한지</li><li>분할 결정 결과가 실제 공동 선택으로 받아들여지는지</li></ul>
+<p>TBD는 본 PRD에서 임의로 해결하지 않는다.</p>
+<hr>
+<h2 id="sx28">PRD 정합성 검수 결과</h2>
+<h3 id="sx29">통과 항목</h3>
+<ul><li>최신 handoff와 commit <code>10b64551ed10a88616791b3a9798f53b50b01ed9</code>를 기준으로 작성했다.</li><li>예산은 공통 필수, 출근지는 해당 사용자만 입력하며 <code>출근 안 함</code>은 정상 경로로 반영했다.</li><li>공동 주거 의사결정과 방문 후보 2개 결정이라는 종료점을 유지했다.</li><li>공동 찜·매물 추천·AI 최종 선택·총점 서비스로 확장하지 않았다.</li><li>조건별 충족·미충족·감수 조건과 양보 지점을 유지했다.</li><li><code>갈등 존재</code>와 <code>갈등으로 인한 지연</code>을 분리했다.</li><li>결정 시간 단축, 갈등 감소, 계약 전환 상승을 확정 효과로 쓰지 않았다.</li><li>단계 1과 단계 2, MVP와 Out of Scope를 구분했다.</li><li>기존 docs와 decisions는 수정하지 않았다.</li></ul>
+<h3 id="sx30">발견된 문서 충돌과 적용 결과</h3>
+<div class="table-scroll"><table><thead><tr><th>충돌</th><th>적용 결과</th></tr></thead><tbody><tr><td><code>team-brief</code>, <code>hypotheses</code>, <code>screen-design</code> 일부의 <code>출근지·예산 2개 필수</code> vs <code>decision-status</code>의 예산 1개 필수</td><td><code>decision-status</code> 우선. 예산 필수 + 출퇴근 여부 + 해당자만 출근지로 통일</td></tr><tr><td><code>hypotheses/evidence</code> H3의 이전 실패 대응 문구</td><td>현재 결정과 충돌하므로 사용하지 않고 H3 상태만 유지</td></tr><tr><td><code>07-cjm</code>의 <code>조건 4번 입력</code></td><td>과거 CJM 표현으로 보고 최신 점진적 입력 구조로 대체</td></tr><tr><td><code>10-data-integration</code>의 <code>공동 공간</code> 용어 vs team-brief의 용어 통일</td><td><code>공유 객체</code>로 통일</td></tr><tr><td><code>09-edge-cases</code>의 지역 전체 조건 모순처럼 읽히는 예시 vs <code>08-screen-design</code>의 후보 5개 한정 설명</td><td>화면 정본에 따라 <code>현재 후보 5개 중 동시 만족 없음</code>으로 한정</td></tr><tr><td>privacy risk의 <code>항목별 공개 범위 선택</code> 방향은 있으나 최신 화면·decision에 확정 요구사항 없음</td><td>Functional Requirement로 승격하지 않고 <span class="pill pill-tbd">[TBD]</span>로 유지</td></tr></tbody></table></div>
+<h3 id="sx31">남은 확인 필요사항</h3>
+<ul><li>네이버 관심매물·공유 객체·검색 count·필터 파라미터 등 내부 연동 가능성</li><li>최신 조건 입력 구조에 맞춘 H3 완료 구간 정의</li><li>A-13b-2 재탐색 필터 제안 화면 상세</li><li>개인정보 공개 범위와 관계 종료 데이터 정책</li><li>비용 모델의 관리비 범위와 기준값 갱신 방식</li><li>H1 및 H2-b-2 사용자 검증 결과</li></ul>
+<hr>
+<h2 id="sx32">기준 문서</h2>
+<ol><li><code>_00_READ_FIRST.md</code></li><li><code>docs/11-decision-status.md</code></li><li><code>docs/01-team-brief.md</code></li><li><code>docs/02-hypotheses.md</code></li><li><code>docs/03-evidence-log.md</code></li><li><code>docs/05-tradeoff-patterns.md</code></li><li><code>docs/06-cost-model.md</code></li><li><code>docs/07-cjm-opportunity-score.md</code></li><li><code>docs/08-screen-design.md</code></li><li><code>docs/09-edge-cases.md</code></li><li><code>docs/10-data-integration.md</code></li><li><code>decisions/0001-no-total-score.md</code></li><li><code>decisions/0002-two-person-premise.md</code></li><li><code>decisions/0003-conditions-belong-to-people.md</code></li><li><code>decisions/0004-agreement-by-split.md</code></li><li><code>_03_RECENT_CHANGES.md</code></li><li><code>docs/04-benchmarks.md</code> (§20.1 성능 임계치 근거)</li><li><code>Day4_KPI_설계_보강(가드레일_포함).md</code> (§24.4 가드레일 지표 근거)</li></ol>
+<hr>
+<h2 id="sx33">Acceptance Criteria 요약</h2>
+<p>AC 개수는 작성이 완료된 <code>AC-XX-YY</code> 항목만 계산하며, 별도 <span class="pill pill-tbd">[TBD]</span> 메모는 포함하지 않는다.</p>
+<div class="table-scroll"><table><thead><tr><th>Requirement ID</th><th>AC 개수</th><th>상태</th><th>비고</th></tr></thead><tbody><tr><td>FR-01</td><td>2</td><td>확정</td><td>후보 1~5개·공유 객체 초안</td></tr><tr><td>FR-02</td><td>3</td><td>확정</td><td>예산 → 출퇴근 여부 → 해당자 출근지·이동수단</td></tr><tr><td>FR-03</td><td>2</td><td>확정</td><td>추가 필수 0~4개·사람 귀속·재판정</td></tr><tr><td>FR-04</td><td>2</td><td>확정</td><td>선호 카드와 방문 전 확인 항목 분리</td></tr><tr><td>FR-05</td><td>2</td><td>확정</td><td>링크 기본·코드 보조·대기 상태</td></tr><tr><td>FR-06</td><td>1</td><td>확정</td><td>조건 입력 전 후보·A 선호 맥락 표시</td></tr><tr><td>FR-07</td><td>3</td><td>일부 TBD</td><td>임시 저장 정책 확정, 비로그인 진입 가능 여부는 네이버 정책 TBD</td></tr><tr><td>FR-08</td><td>1</td><td>일부 TBD</td><td>결과 후 로그인 방향만 확정</td></tr><tr><td>FR-09</td><td>2</td><td>확정</td><td>B 미참여 시 A 1인 빈 경로</td></tr><tr><td>FR-10</td><td>2</td><td>확정</td><td>최신 여섯 판정 항목·총점 금지</td></tr><tr><td>FR-11</td><td>2</td><td>확정</td><td>3개 그룹·확인 필요 배지 분리</td></tr><tr><td>FR-12</td><td>3</td><td>확정</td><td>조건 대조·양보 문장·비추천 원칙</td></tr><tr><td>FR-13</td><td>3</td><td>확정</td><td>실제 미달량·A/B안 동시·2조건 완화 금지</td></tr><tr><td>FR-14</td><td>2</td><td>확정</td><td>상대 조건은 제안·수락 후 적용</td></tr><tr><td>FR-15</td><td>2</td><td>일부 TBD</td><td>분기 로직 확정, A-13b-2 상세 화면 TBD</td></tr><tr><td>FR-16</td><td>2</td><td>일부 TBD</td><td>적용 규칙 확정, 파라미터·count 연동 TBD</td></tr><tr><td>FR-17</td><td>3</td><td>확정</td><td>방문 후보 2개·최대 2라운드·분할</td></tr><tr><td>FR-18</td><td>2</td><td>확정</td><td>사람 조건 유지·새 매물 자동 재판정</td></tr><tr><td>FR-19</td><td>2</td><td>확정</td><td>소진 제거·알림·남은 한 자리 복귀</td></tr><tr><td>FR-20</td><td>3</td><td>확정</td><td>미충족/계산 불가/확인 필요/해당 없음 분리</td></tr><tr><td>FR-21</td><td>2</td><td>확정</td><td>숫자별 기준 시점·가정·한계</td></tr><tr><td>FR-22</td><td>3</td><td>확정</td><td>방문 전 중개사 질문·답변 반영</td></tr><tr><td>FR-23</td><td>2</td><td>일부 TBD</td><td>방문 후 기록 동작 확정, 보관 기간 TBD</td></tr><tr><td>FR-24</td><td>2</td><td>확정</td><td>조건·제안·후보·선택 상태 알림</td></tr><tr><td>FR-25</td><td>3</td><td>확정</td><td>A/B 균형·총점/추천/AI 최종 선택 금지</td></tr></tbody></table></div>
+<p><strong>합계:</strong> 작성 완료 AC 56개 · 확정 20개 FR · 일부 TBD 5개 FR · 전체 TBD 0개 FR</p>
+<hr>
+<h2 id="sx34">PRD 완성도 재검토 (v0.2)</h2>
+<p>2026-08-24 자체 검토에서 아래 6개 기준으로 v0.1(AC 확장본)을 평가했고, 이번 v0.2에서 미흡 판정을 받은 4개 항목을 보완했다. 새로 만든 수치는 없으며, 전부 이 폴더의 기존 파일에서 찾은 근거이거나 <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span>로 표시했다.</p>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>v0.1 판정</th><th>v0.2 보완</th><th>반영 위치</th><th>근거 출처</th></tr></thead><tbody><tr><td>목표·지표(북극성·보조 KPI 수치화, 기준선·목표·측정 창구)</td><td>미충족 — 목표값 전부 <code>측정 필요</code>, 측정 창구·기준선 확정 절차 없음</td><td>측정 창구를 24.2 표에 컬럼으로 명시하고, 기준선을 언제·어떻게 확정할지에 대한 프로토콜과 가드레일 지표 3종을 추가</td><td>§24.2, §24.4</td><td><code>Day4_KPI_설계_보강(가드레일_포함).md</code>, <code>docs/11-decision-status.md</code>, <code>docs/03-evidence-log.md</code></td></tr><tr><td>스토리·AC(GWT, SLO, 실패 케이스 2개 이상)</td><td>미충족 — GWT 형식·SLO 없음 (v0.1 AC 확장본에서 일부 보완됨)</td><td>이번 v0.2에서는 추가 변경 없음. FR별 AC는 <code>with_AC.md</code>에서 상속했고 실패 케이스는 각 AC 안에 서술형으로 포함되어 있으나 정식 GWT 표기는 아님</td><td>§16.1 (기존)</td><td>변경 없음 — 남은 과제로 유지</td></tr><tr><td>기능 요구(MoSCoW·근거·의존성, 1스프린트 내 구현 가능성)</td><td>부분 충족 — MoSCoW 미사용, 스프린트 단위 평가 없음</td><td>FR-01~25 전체를 MoSCoW로 매핑하고 의존성·1스프린트 구현 가능 여부를 표로 명시. FR-10처럼 1스프린트를 넘는 항목은 하위 티켓 분할을 제안</td><td>§16.2</td><td>§5, §15, <code>decisions/0001~0004</code> (기존 결정을 재인용)</td></tr><tr><td>비기능(성능·보안·가용성·비용, 임계치·모니터링)</td><td>미충족 — NFR 섹션 없음</td><td>성능·가용성·보안·비용·정확성 5개 축의 임계치와 모니터링 항목을 신설</td><td>§20 (신설)</td><td><code>docs/10-data-integration.md</code>, <code>docs/01-team-brief.md</code>, <code>docs/04-benchmarks.md</code></td></tr><tr><td>리스크·가정(ADR, 주요 리스크 3개 이상과 대응책)</td><td>충족 — 리스크 12개, 대응책 명시. ADR은 파일명 참조뿐</td><td>ADR 4건의 핵심 결정·근거·되돌릴 조건을 리스크 표 앞에 인라인으로 요약해 참조가 아니라 본문에서 바로 보이게 함</td><td>§26.0 (신설)</td><td><code>decisions/0001~0004</code> 원문</td></tr><tr><td>범위(In/Out 명확, PM 의사결정 충돌 없음)</td><td>충족</td><td>변경 없음</td><td>§22, §23, §9 (기존)</td><td>—</td></tr></tbody></table></div>
+<p><strong>남은 과제</strong> — 스토리·AC를 정식 Given-When-Then 표기로 재작성하는 것은 이번 v0.2에 포함하지 않았다. 기존 <code>with_AC.md</code>의 서술형 AC 56개를 GWT 3단으로 재구조화하는 작업은 별도 라운드로 남긴다.</p>
+<p><strong>엔터티 시각화</strong> — §21.9에 Mermaid ER 다이어그램을 추가했다. 새 엔터티를 만들지 않고 §21.1~21.8에서 이미 정의된 데이터를 관계로 재구성했으며, <code>decisions/0001·0003·0004</code>가 정한 저장 위치·금지 항목(총점 엔터티 없음)을 그대로 반영했다.</p>
+  </main>
+  <footer class="doc-footer">
+    <span>네이버 부동산 공동 주거 의사결정 PRD v0.2</span>
+    <span>prd_v0.2_20260824.md 기반 · Entity Model §21.9 포함</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  try {
+    if (typeof mermaid !== "undefined") {
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark" ||
+        (document.documentElement.getAttribute("data-theme") !== "light" &&
+         window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      mermaid.initialize({ startOnLoad: true, theme: isDark ? "dark" : "default" });
+    }
+  } catch (e) {}
+</script>
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll("nav.sidebar a"));
+    var targets = links
+      .map(function (a) {
+        var id = a.getAttribute("href").slice(1);
+        return document.getElementById(id);
+      })
+      .filter(Boolean);
+
+    function clearActive() {
+      links.forEach(function (a) { a.classList.remove("active"); });
+    }
+    function setActive(id) {
+      clearActive();
+      var link = links.find(function (a) { return a.getAttribute("href") === "#" + id; });
+      if (link) {
+        link.classList.add("active");
+        if (link.scrollIntoViewIfNeeded) { link.scrollIntoViewIfNeeded(); }
+      }
+    }
+
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          var visible = entries.filter(function (e) { return e.isIntersecting; });
+          if (visible.length) {
+            visible.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+            setActive(visible[0].target.id);
+          }
+        },
+        { rootMargin: "-10% 0px -70% 0px", threshold: 0 }
+      );
+      targets.forEach(function (t) { observer.observe(t); });
+    }
+
+    links.forEach(function (a) {
+      a.addEventListener("click", function () {
+        var toggle = document.getElementById("navToggle");
+        if (toggle) toggle.checked = false;
+      });
+    });
+  })();
+</script>
