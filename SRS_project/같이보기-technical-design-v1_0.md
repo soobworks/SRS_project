@@ -451,236 +451,236 @@ stateDiagram-v2
 
 ```mermaid
 classDiagram
-    class SharedSpaceController {
-        +createDraft(List~ListingId~) SharedSpace
-        +invite(SpaceId, RelationshipType) InviteBundle
-        +getContextForB(SpaceId) ContextView
+    class 공유공간컨트롤러 {
+        +초안생성(매물ID목록) 공유공간
+        +초대하기(공간ID, 관계유형) 초대묶음
+        +B맥락조회(공간ID) 맥락뷰
     }
-    class CandidateListingSelector {
-        +select(List~ListingId~) CandidateSet
-        -assertMaxFive(int count) void
+    class 후보매물선택기 {
+        +선택하기(매물ID목록) 후보집합
+        -최대5개검증(개수) void
     }
-    class InviteCodeIssuer {
-        +issueLink(SpaceId) InviteLink
-        +issueCode(SpaceId) InviteCode
-        -markAwaitingB(SpaceId) void
+    class 초대코드발급기 {
+        +링크발급(공간ID) 초대링크
+        +코드발급(공간ID) 초대코드
+        -B대기상태표시(공간ID) void
     }
-    class SharedSpaceContextRenderer {
-        +renderForB(SpaceId) ContextView
-        -orderBeforeConditionInput() void
+    class 공유공간맥락렌더러 {
+        +B용맥락렌더링(공간ID) 맥락뷰
+        -조건입력전순서보장() void
     }
-    class SoloPathRenderer {
-        +renderSoloResult(PersonId) SoloResultView
-        +excludeCommuteRow(boolean workless) void
+    class 1인경로렌더러 {
+        +1인결과렌더링(사람ID) 1인결과뷰
+        +통근행제외(출근안함여부) void
     }
 
-    SharedSpaceController --> CandidateListingSelector
-    SharedSpaceController --> InviteCodeIssuer
-    SharedSpaceController --> SharedSpaceContextRenderer
-    SharedSpaceController --> SoloPathRenderer
+    공유공간컨트롤러 --> 후보매물선택기
+    공유공간컨트롤러 --> 초대코드발급기
+    공유공간컨트롤러 --> 공유공간맥락렌더러
+    공유공간컨트롤러 --> 1인경로렌더러
 ```
 
-**`renderForB()`가 조건 입력 API보다 먼저 호출돼야 하는 이유** — B의 조건 입력 화면보다 먼저 후보 최대 5개와 A 선호 카드를 보여줘야 한다(REQ-FUNC-006 AC-06-01).
+**`B용맥락렌더링()`이 조건 입력 API보다 먼저 호출돼야 하는 이유** — B의 조건 입력 화면보다 먼저 후보 최대 5개와 A 선호 카드를 보여줘야 한다(REQ-FUNC-006 AC-06-01).
 
 ### 4.2 Condition Service — 사람귀속 조건을 저장하는 부품
 
 ```mermaid
 classDiagram
-    class ConditionController {
-        +saveBudgetAndCommute(PersonId, ConditionInput) Condition
-        +addRequiredCondition(PersonId, Condition) ConditionSet
-        +addPreference(PersonId, String) void
-        +addConfirmationItem(PersonId, String) void
+    class 조건컨트롤러 {
+        +예산통근저장(사람ID, 조건입력) 조건
+        +필수조건추가(사람ID, 조건) 조건집합
+        +선호추가(사람ID, 문자열) void
+        +확인항목추가(사람ID, 문자열) void
     }
-    class BudgetConditionValidator {
-        +validate(ConditionInput) ValidationResult
-        -requireBudget(ConditionInput) void
+    class 예산조건검증기 {
+        +검증하기(조건입력) 검증결과
+        -예산필수확인(조건입력) void
     }
-    class RequiredConditionEditor {
-        +add(PersonId, Condition) ConditionSet
-        -assertMaxFour(int count) void
-        +triggerReJudgment(PersonId) void
+    class 필수조건편집기 {
+        +추가하기(사람ID, 조건) 조건집합
+        -최대4개검증(개수) void
+        +재판정트리거(사람ID) void
     }
-    class PreferenceCardStore {
-        +add(PersonId, String text) void
-        -assertMaxThree(int count) void
+    class 선호카드저장소 {
+        +추가하기(사람ID, 문자열텍스트) void
+        -최대3개검증(개수) void
     }
-    class ConfirmationItemStore {
-        +add(PersonId, String item) void
+    class 확인항목저장소 {
+        +추가하기(사람ID, 항목문자열) void
     }
-    class TemporaryConditionStore {
-        +saveByInviteCode(InviteCode, ConditionInput) void
-        +migrateToAccount(InviteCode, PersonId) void
-        +purgeExpired(int days) int
+    class 임시조건저장소 {
+        +초대코드별저장(초대코드, 조건입력) void
+        +계정이관(초대코드, 사람ID) void
+        +만료삭제(일수) int
     }
 
-    ConditionController --> BudgetConditionValidator
-    ConditionController --> RequiredConditionEditor
-    ConditionController --> PreferenceCardStore
-    ConditionController --> ConfirmationItemStore
-    ConditionController --> TemporaryConditionStore
+    조건컨트롤러 --> 예산조건검증기
+    조건컨트롤러 --> 필수조건편집기
+    조건컨트롤러 --> 선호카드저장소
+    조건컨트롤러 --> 확인항목저장소
+    조건컨트롤러 --> 임시조건저장소
 ```
 
-**`TemporaryConditionStore.purgeExpired()`가 있는 이유** — B의 비로그인 조건은 초대 코드 단위로 격리 저장되며, 마지막 접근 +30일이 지나면 배치로 삭제해야 한다(REQ-FUNC-007 AC-07-03).
+**`임시조건저장소.만료삭제()`가 있는 이유** — B의 비로그인 조건은 초대 코드 단위로 격리 저장되며, 마지막 접근 +30일이 지나면 배치로 삭제해야 한다(REQ-FUNC-007 AC-07-03).
 
 ### 4.3 Judgment Engine — 조건을 판정하는 부품
 
 ```mermaid
 classDiagram
-    class JudgmentController {
-        +judge(SpaceId, ListingId) JudgmentResultSet
-        +reapplyOnListingChange(SpaceId) void
+    class 판정컨트롤러 {
+        +판정하기(공간ID, 매물ID) 판정결과집합
+        +매물변경시재적용(공간ID) void
     }
-    class BudgetJudgmentEvaluator {
-        +evaluate(Condition, ActualCost) JudgmentResult
+    class 예산판정평가기 {
+        +평가하기(조건, 실제비용) 판정결과
     }
-    class ExtendedConditionEvaluator {
-        +evaluate(Condition, ListingAttribute) JudgmentResult
-        -classifyByType(ConditionType) JudgmentResult
+    class 확장조건평가기 {
+        +평가하기(조건, 매물속성) 판정결과
+        -유형별분류(조건유형) 판정결과
     }
-    class ConditionTypeRegistry {
-        +register(ConditionType, Evaluator) void
-        +resolve(ConditionType) Evaluator
+    class 조건유형레지스트리 {
+        +등록하기(조건유형, 평가기) void
+        +조회하기(조건유형) 평가기
     }
-    class StatusClassifier {
-        +classify(RawResult) JudgmentStatus
-        -isConfirmationNeeded(RawResult) boolean
-        -isCalculationFailed(RawResult) boolean
+    class 상태분류기 {
+        +분류하기(원시결과) 판정상태
+        -확인필요여부(원시결과) boolean
+        -계산불가여부(원시결과) boolean
     }
-    class CandidateGroupClassifier {
-        +group(List~JudgmentResult~) CandidateGroup
+    class 후보그룹분류기 {
+        +그룹화하기(판정결과목록) 후보그룹
     }
-    class ConditionPersistenceReapplier {
-        +reapply(PersonId, ListingId) JudgmentResultSet
+    class 조건유지재적용기 {
+        +재적용하기(사람ID, 매물ID) 판정결과집합
     }
 
-    JudgmentController --> BudgetJudgmentEvaluator
-    JudgmentController --> ExtendedConditionEvaluator
-    ExtendedConditionEvaluator --> ConditionTypeRegistry
-    BudgetJudgmentEvaluator --> StatusClassifier
-    ExtendedConditionEvaluator --> StatusClassifier
-    StatusClassifier --> CandidateGroupClassifier
-    JudgmentController --> ConditionPersistenceReapplier
+    판정컨트롤러 --> 예산판정평가기
+    판정컨트롤러 --> 확장조건평가기
+    확장조건평가기 --> 조건유형레지스트리
+    예산판정평가기 --> 상태분류기
+    확장조건평가기 --> 상태분류기
+    상태분류기 --> 후보그룹분류기
+    판정컨트롤러 --> 조건유지재적용기
 ```
 
-**`StatusClassifier`가 `미충족`과 `확인 필요` · `계산 불가`를 분리하는 이유** — 데이터가 없어서 계산 못한 것과 계산해서 기준을 못 채운 것을 같은 상태로 두면 사용자가 잘못된 이유로 매물을 포기한다(REQ-FUNC-020, §4.1.1 결정 트리).
+**`상태분류기`가 `미충족`과 `확인 필요` · `계산 불가`를 분리하는 이유** — 데이터가 없어서 계산 못한 것과 계산해서 기준을 못 채운 것을 같은 상태로 두면 사용자가 잘못된 이유로 매물을 포기한다(REQ-FUNC-020, §4.1.1 결정 트리).
 
 ### 4.4 Compromise & Relaxation Service — 양보와 완화를 다루는 부품
 
 ```mermaid
 classDiagram
-    class CompromiseController {
-        +getCompromise(ListingId) CompromiseSentence
-        +previewRelaxation(PersonId, ConditionKey) PreviewResult
-        +proposeRelaxation(PersonId, PersonId, ConditionKey) RelaxationProposal
+    class 완화조정컨트롤러 {
+        +양보문장조회(매물ID) 양보문장
+        +완화미리보기(사람ID, 조건키) 미리보기결과
+        +완화제안하기(사람ID, 사람ID, 조건키) 완화제안
     }
-    class CompromiseSentenceGenerator {
-        +generate(JudgmentResult) CompromiseSentence
-        -truncateToTwoConditions(List~Condition~) List~Condition~
+    class 양보문장생성기 {
+        +생성하기(판정결과) 양보문장
+        -2개로제한(조건목록) 조건목록
     }
-    class RelaxationSimulator {
-        +preview(ConditionKey, GapAmount) PreviewResult
-        -rejectSimultaneousRelax(int count) void
+    class 완화시뮬레이터 {
+        +미리보기(조건키, 미달량) 미리보기결과
+        -동시완화거부(개수) void
     }
-    class RelaxationProposalCoordinator {
-        +propose(PersonId, PersonId, ConditionKey) RelaxationProposal
-        +accept(ProposalId) void
-        +reject(ProposalId) void
+    class 완화제안조정기 {
+        +제안하기(사람ID, 사람ID, 조건키) 완화제안
+        +수락하기(제안ID) void
+        +거절하기(제안ID) void
     }
-    class AllUnmetFallbackHandler {
-        +simulateOneByOne(CandidateSet) RelaxationPath
+    class 전부불충족대응처리기 {
+        +1개씩시뮬레이션(후보집합) 완화경로
     }
-    class SearchFilterTranslator {
-        +translate(ConditionSet) FilterUiSpec
-        -dropCommuteTime(FilterUiSpec) FilterUiSpec
+    class 검색필터변환기 {
+        +변환하기(조건집합) 필터UI사양
+        -통근시간제거(필터UI사양) 필터UI사양
     }
 
-    CompromiseController --> CompromiseSentenceGenerator
-    CompromiseController --> RelaxationSimulator
-    CompromiseController --> RelaxationProposalCoordinator
-    RelaxationSimulator --> AllUnmetFallbackHandler
-    AllUnmetFallbackHandler --> SearchFilterTranslator
+    완화조정컨트롤러 --> 양보문장생성기
+    완화조정컨트롤러 --> 완화시뮬레이터
+    완화조정컨트롤러 --> 완화제안조정기
+    완화시뮬레이터 --> 전부불충족대응처리기
+    전부불충족대응처리기 --> 검색필터변환기
 ```
 
-**`RelaxationProposalCoordinator.accept()`가 있어야만 조건이 바뀌는 이유** — 상대 조건은 직접 변경할 수 없고 제안-수락 구조를 거쳐야 한다(REQ-FUNC-014 AC-14-02).
+**`완화제안조정기.수락하기()`가 있어야만 조건이 바뀌는 이유** — 상대 조건은 직접 변경할 수 없고 제안-수락 구조를 거쳐야 한다(REQ-FUNC-014 AC-14-02).
 
 ### 4.5 Visit Selection Service · Field Record Service — 방문 후보 결정과 현장 기록
 
 ```mermaid
 classDiagram
-    class VisitSelectionController {
-        +submitSelection(SpaceId, PersonId, List~ListingId~) SelectionRound
-        +resolveRound(SpaceId) VisitSelection
+    class 방문후보선택컨트롤러 {
+        +선택제출(공간ID, 사람ID, 매물ID목록) 선택라운드
+        +라운드확정(공간ID) 방문후보선택
     }
-    class TwoRoundVisitSelector {
-        +match(List~ListingId~, List~ListingId~) MatchResult
-        -assertMaxTwoRounds(int round) void
-        +splitByFirstChoice(SpaceId) VisitSelection
+    class 두라운드방문선택기 {
+        +일치확인(매물ID목록, 매물ID목록) 일치결과
+        -최대2라운드검증(라운드) void
+        +1순위로분할(공간ID) 방문후보선택
     }
-    class ListingExhaustionHandler {
-        +onExhausted(ListingId) void
-        -reopenIfConfirmed(SpaceId, ListingId) void
+    class 매물소진처리기 {
+        +소진발생시(매물ID) void
+        -확정후보재개방(공간ID, 매물ID) void
     }
-    class BrokerQuestionCardService {
-        +buildQuestions(List~ConfirmationItem~) List~BrokerQuestion~
-        +recordAnswer(QuestionId, String) void
+    class 중개사질문카드서비스 {
+        +질문생성(확인항목목록) 중개사질문목록
+        +답변기록(질문ID, 문자열) void
     }
-    class FieldRecordStore {
-        +saveChecklist(ListingId, Checklist) void
-        +saveOutcome(ListingId, FieldRecordOutcome) void
+    class 현장기록저장소 {
+        +체크리스트저장(매물ID, 체크리스트) void
+        +결과저장(매물ID, 현장기록결과) void
     }
 
-    VisitSelectionController --> TwoRoundVisitSelector
-    VisitSelectionController --> ListingExhaustionHandler
-    TwoRoundVisitSelector --> BrokerQuestionCardService
-    BrokerQuestionCardService --> FieldRecordStore
+    방문후보선택컨트롤러 --> 두라운드방문선택기
+    방문후보선택컨트롤러 --> 매물소진처리기
+    두라운드방문선택기 --> 중개사질문카드서비스
+    중개사질문카드서비스 --> 현장기록저장소
 ```
 
-**`ListingExhaustionHandler.reopenIfConfirmed()`가 하는 일** — 소진된 매물이 이미 확정된 방문 후보였다면, 나머지는 유지하고 남은 한 자리만 재선택 단계로 되돌린다(REQ-FUNC-019 AC-19-02).
+**`매물소진처리기.확정후보재개방()`가 하는 일** — 소진된 매물이 이미 확정된 방문 후보였다면, 나머지는 유지하고 남은 한 자리만 재선택 단계로 되돌린다(REQ-FUNC-019 AC-19-02).
 
 ### 4.6 Notification Service · 횡단 관심사 — 알림 · 전제 공개 · 가드레일 · 성능
 
 ```mermaid
 classDiagram
-    class NotificationController {
-        +notifyPeer(SpaceId, PersonId, EventType) void
+    class 알림컨트롤러 {
+        +상대에게알리기(공간ID, 사람ID, 이벤트유형) void
     }
-    class ConditionChangeNotifier {
-        +onConditionChanged(PersonId) void
-        +onProposalSent(ProposalId) void
-        +onListingChanged(ListingId) void
-        +onVisitSelectionChanged(SpaceId) void
+    class 조건변경알림기 {
+        +조건변경시(사람ID) void
+        +제안발송시(제안ID) void
+        +매물변경시(매물ID) void
+        +방문후보변경시(공간ID) void
     }
-    class PremiseDisclosureFormatter {
-        +format(NumericValue) DisclosedValue
-        -attachAssumption(NumericValue) DisclosedValue
+    class 전제공개포맷터 {
+        +포맷하기(수치값) 공개값
+        -전제첨부(수치값) 공개값
     }
-    class BalanceGuardrailRenderer {
-        +renderSideBySide(PersonACondition, PersonBCondition) BalancedView
-        -forbidScoreOrBadge(BalancedView) void
+    class 균형가드레일렌더러 {
+        +나란히렌더링(A조건, B조건) 균형뷰
+        -총점배지금지(균형뷰) void
     }
-    class ResponseTimeMonitor {
-        +measure(RequestId) DurationMs
-        -alertIfOverBudget(DurationMs) void
+    class 응답시간모니터 {
+        +측정하기(요청ID) 소요시간ms
+        -예산초과시경보(소요시간ms) void
     }
-    class RouteCacheClient {
-        +get(RouteKey) RouteResult
-        +put(RouteKey, RouteResult) void
-        +hitRate() double
+    class 경로캐시클라이언트 {
+        +조회하기(경로키) 경로결과
+        +저장하기(경로키, 경로결과) void
+        +히트율() double
     }
-    class ExternalApiFallbackHandler {
-        +onNaverApiFailure(ApiName) FallbackResult
+    class 외부API폴백처리기 {
+        +네이버API실패시(API이름) 폴백결과
     }
-    class AccessControlGuard {
-        +assertInvitedOnly(SpaceId, PersonId) void
+    class 접근제어가드 {
+        +초대된사람만검증(공간ID, 사람ID) void
     }
 
-    NotificationController --> ConditionChangeNotifier
-    ResponseTimeMonitor --> RouteCacheClient
-    RouteCacheClient --> ExternalApiFallbackHandler
+    알림컨트롤러 --> 조건변경알림기
+    응답시간모니터 --> 경로캐시클라이언트
+    경로캐시클라이언트 --> 외부API폴백처리기
 ```
 
-**`RouteCacheClient`가 `ExternalApiFallbackHandler`와 이어지는 이유** — 경로 API 캐시가 미스이고 재호출도 실패하면 미충족이 아니라 계산 불가로 분리해야 한다(REQ-NF-002 · 004).
+**`경로캐시클라이언트`가 `외부API폴백처리기`와 이어지는 이유** — 경로 API 캐시가 미스이고 재호출도 실패하면 미충족이 아니라 계산 불가로 분리해야 한다(REQ-NF-002 · 004).
 
 ---
 
@@ -698,8 +698,8 @@ classDiagram
 sequenceDiagram
     autonumber
     participant A as A
-    participant CRS as Compromise & Relaxation Service
-    participant Notif as Notification Service
+    participant CRS as 완화조정서비스
+    participant Notif as 알림서비스
     participant B as B
 
     A->>CRS: 완화 제안 생성(상대 조건 대상)
@@ -718,7 +718,7 @@ sequenceDiagram
     end
 ```
 
-**설계 판단** — 제안자가 직접 상대 조건을 바꿀 수 있는 경로는 존재하지 않는다. `accept()`가 호출되기 전까지 `judgment_results`는 갱신되지 않는다(AC-14-02).
+**설계 판단** — 제안자가 직접 상대 조건을 바꿀 수 있는 경로는 존재하지 않는다. `수락하기()`가 호출되기 전까지 `judgment_results`는 갱신되지 않는다(AC-14-02).
 
 ### SD-03 매물 소진 처리 (REQ-FUNC-019)
 
@@ -726,9 +726,9 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant NV as 네이버 부동산(외부)
-    participant SSS as Shared Space Service
-    participant VSS as Visit Selection Service
-    participant Notif as Notification Service
+    participant SSS as 공유공간서비스
+    participant VSS as 방문후보선택서비스
+    participant Notif as 알림서비스
     participant A as A
     participant B as B
 
@@ -754,7 +754,7 @@ sequenceDiagram
     autonumber
     participant A as A
     participant B as B
-    participant FRS as Field Record Service
+    participant FRS as 현장기록서비스
 
     Note over A,B: 단계 2 진입 — 확인 필요 항목 존재
     FRS-->>A: 중개사 질문 카드 표시
@@ -774,9 +774,9 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     participant B as B(비로그인)
-    participant CS as Condition Service
+    participant CS as 조건서비스
     participant Auth as 로그인 처리
-    participant JE as Judgment Engine
+    participant JE as 판정엔진
 
     B->>CS: 예산 · 조건 입력(비로그인)
     CS->>CS: 초대 코드 단위로 임시 저장
@@ -795,15 +795,15 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor P as A 또는 B
-    participant SSS as Shared Space Service
-    participant CS as Condition Service
-    participant JE as Judgment Engine
+    participant SSS as 공유공간서비스
+    participant CS as 조건서비스
+    participant JE as 판정엔진
 
     P->>SSS: 매물 추가 또는 교체
     SSS->>CS: 저장된 사람 조건 조회
-    CS-->>SSS: Condition(재입력 요구 없음)
+    CS-->>SSS: 조건(재입력 요구 없음)
     SSS->>JE: 신규 매물에 대해 자동 판정 요청
-    JE->>JE: BudgetJudgmentEvaluator · ExtendedConditionEvaluator 실행
+    JE->>JE: 예산판정평가기 · 확장조건평가기 실행
     JE-->>P: 판정 · 미달량 · 확인 필요가 반영된 결과
     Note over P,JE: 매물 변경으로 인한 재입력 요구 0건(AC-18-01)
 ```
@@ -911,7 +911,7 @@ flowchart LR
 | 후보 매물 · A 선호 카드 조회 | ≤ 15,000ms(외부 API 의존) | 관심매물 API 지연 시 계산 불가 폴백(REQ-NF-004) | 외부 API 오류율 · 지연 로그(§10.3) |
 | 컨텍스트 조립 · 직렬화 | ≤ 1,000ms | 응답 payload 축소 검토 | APM 트레이스 |
 | 클라이언트 렌더링 | ≤ 2,000ms | 초기 렌더 리소스 점검 | 프런트엔드 RUM |
-| 전체 | P95 ≤ 30,000ms | 10분간 P95 초과 시 알림(채널 `[TBD]`) | `ResponseTimeMonitor` · §10.3 |
+| 전체 | P95 ≤ 30,000ms | 10분간 P95 초과 시 알림(채널 `[TBD]`) | `응답시간모니터` · §10.3 |
 
 ---
 
@@ -946,15 +946,15 @@ SRS의 모든 기능 · 비기능 요구사항이 최소 한 개의 설계 산�
 | REQ-FUNC-023 방문 후 기록 | UC-19 | §4.5 | SD-04 | — | — |
 | REQ-FUNC-024 상태 변화 알림 | UC-20 | §4.6 | — | FC-04 | — |
 | REQ-FUNC-025 균형 가드레일 | UC-20 | §4.6 | — | — | — |
-| REQ-NF-001 E2E 응답 시간 | — | §4.6(ResponseTimeMonitor) | SD-01 | — | §8 성능 예산 |
-| REQ-NF-002 경로 API 재호출 0회 | — | §4.6(RouteCacheClient) | — | — | — |
-| REQ-NF-003 캐시 확장성 | — | §4.6(RouteCacheClient) | — | — | — |
-| REQ-NF-004 외부 API 폴백 | — | §4.6(ExternalApiFallbackHandler) | — | FC-01 | — |
-| REQ-NF-005 접근 제어 | — | §4.6(AccessControlGuard) | — | — | §3.2.2 |
-| REQ-NF-006 전제 없는 숫자 금지 | — | §4.6(PremiseDisclosureFormatter) | — | — | — |
-| REQ-NF-007 판정 조건 타입 확장 | — | §4.3(ConditionTypeRegistry) | — | — | — |
+| REQ-NF-001 E2E 응답 시간 | — | §4.6(응답시간모니터) | SD-01 | — | §8 성능 예산 |
+| REQ-NF-002 경로 API 재호출 0회 | — | §4.6(경로캐시클라이언트) | — | — | — |
+| REQ-NF-003 캐시 확장성 | — | §4.6(경로캐시클라이언트) | — | — | — |
+| REQ-NF-004 외부 API 폴백 | — | §4.6(외부API폴백처리기) | — | FC-01 | — |
+| REQ-NF-005 접근 제어 | — | §4.6(접근제어가드) | — | — | §3.2.2 |
+| REQ-NF-006 전제 없는 숫자 금지 | — | §4.6(전제공개포맷터) | — | — | — |
+| REQ-NF-007 판정 조건 타입 확장 | — | §4.3(조건유형레지스트리) | — | — | — |
 
-**REQ-FUNC-021에 시퀀스 · 상태 다이어그램이 없는 이유** — 전제 공개는 특정 흐름이 아니라 숫자를 표시하는 모든 화면에 걸리는 횡단 규칙(`PremiseDisclosureFormatter`)이라, 하나의 시퀀스로 대표할 수 없다.
+**REQ-FUNC-021에 시퀀스 · 상태 다이어그램이 없는 이유** — 전제 공개는 특정 흐름이 아니라 숫자를 표시하는 모든 화면에 걸리는 횡단 규칙(`전제공개포맷터`)이라, 하나의 시퀀스로 대표할 수 없다.
 
 ---
 
