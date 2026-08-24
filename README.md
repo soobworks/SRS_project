@@ -18,7 +18,10 @@
 PRD (같이보기-prd-v1_0.md)
         │  위 "SRS 작업 목표" 원칙에 따라 변환
         ▼
-SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~12 표준 기반 확장
+SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표준 기반 확장
+        │  SRS 각 장의 요구사항을 다이어그램으로 재표현(새 요구사항 없음)
+        ▼
+기술 설계 문서 (같이보기-technical-design-v1_0.md) — UseCase / ERD / Component / Sequence / CLD / Flow Chart
         │
         ▼
 각 문서의 HTML 렌더링본 (다이어그램 포함, PC 로컬 뷰어용 — 이 저장소에는 없음)
@@ -30,7 +33,8 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~12 표
 | --- | --- |
 | `SRS_project/같이보기-prd-v1_0.md` | PRD v1.0 (마크다운 원본, 저장소에 커밋) |
 | `SRS_project/같이보기-srs-v1_0.md` | PRD 기반 SRS 문서 (마크다운 원본, 저장소에 커밋) |
-| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
+| `SRS_project/같이보기-technical-design-v1_0.md` | SRS 기반 기술 설계 문서 — UseCase·ERD·Component·Sequence·CLD·Flow Chart 다이어그램 모음 (마크다운 원본, 저장소에 커밋). 각 다이어그램은 SRS 해당 장에도 동일하게 삽입되어 있다 |
+| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
 PRD·SRS 이전 단계의 리서치 로그, 발표 덱, 프로토타입 등은 팀 작업 폴더에만 보관하며 이 저장소에는 포함하지 않는다. `SRS_project/29148-2018-ISOIECIEEE.pdf`(ISO/IEC/IEEE 29148:2018 표준 원문)도 저작권 문제로 이 저장소에는 커밋하지 않고 로컬에만 둔다.

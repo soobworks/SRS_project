@@ -164,6 +164,50 @@ flowchart LR
     SSS -. 초대 링크 .-> SHARECH -. 링크 클릭 .-> BW
 ```
 
+### 3.2 컴포넌트 다이어그램
+
+§3.1은 서비스 간 데이터 흐름 방향만 보여준다. 아래는 한 단계 더 들어가 각 컴포넌트가 **무엇을 제공(provided)**하고 **무엇을 요구(required)**하는지를 §6.1 API 목록 그대로 붙인 것이다(전체 판단 근거는 `같이보기-technical-design-v1_0.md` CMP-1).
+
+```mermaid
+flowchart TB
+    subgraph Clients["클라이언트"]
+        AW2["A · PC 웹"]
+        BW2["B · 모바일 웹"]
+    end
+
+    subgraph Components["같이보기 — 내부 컴포넌트"]
+        SSS2["Shared Space Service<br/>POST /shared-spaces<br/>POST .../invite<br/>GET /shared-spaces/{id}"]
+        CS2["Condition Service<br/>PUT .../conditions<br/>POST .../preferences<br/>POST .../confirmation-items"]
+        JE2["Judgment Engine<br/>GET .../judgments"]
+        CRS2["Compromise &amp; Relaxation Service<br/>GET .../compromise<br/>POST .../relaxation-proposals<br/>PATCH /relaxation-proposals/{id}"]
+        VSS2["Visit Selection Service<br/>POST .../visit-selections"]
+        FRS2["Field Record Service<br/>GET .../broker-questions<br/>POST /listings/{id}/field-records"]
+        NS2["Notification Service<br/>GET /persons/{id}/notifications"]
+    end
+
+    subgraph External2["외부 시스템"]
+        LISTAPI2[["네이버 관심매물 조회 API"]]
+        ROUTEAPI2[["네이버 경로 계산 엔진"]]
+        SEARCHAPI2[["네이버 검색결과수·필터 API"]]
+    end
+
+    AW2 -->|HTTPS| SSS2
+    BW2 -->|HTTPS| SSS2
+    SSS2 -->|"required: 매물 ID 목록"| LISTAPI2
+    SSS2 --> CS2 --> JE2
+    JE2 -->|"required: 통근시간"| ROUTEAPI2
+    JE2 --> CRS2
+    CRS2 -->|"required: 필터 결과 수"| SEARCHAPI2
+    CRS2 --> VSS2 --> FRS2
+    JE2 --> NS2
+    CRS2 --> NS2
+    VSS2 --> NS2
+    NS2 -->|"provided: 알림"| AW2
+    NS2 -->|"provided: 알림"| BW2
+```
+
+`required:` 라벨은 §11.2(외부 시스템발 제약)·§12.2(외부 의존성)와 대응하는 의존 지점이다.
+
 ---
 
 ## 4. 구체적 요구사항
@@ -599,6 +643,80 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 
 각 수용 기준은 **정상 흐름**과 **실패·예외·경계 흐름**으로 구분한다. 모든 요구사항 그룹은 실패 흐름을 **1건 이상** 보유한다.
 
+### 9.0 Use Case 개관
+
+아래 GWT 표로 바로 들어가기 전에, A·B가 시스템과 무엇을 하는지를 그림으로 먼저 보면 이해가 빠르다. 세 다이어그램은 §9.1~9.7과 1:1로 대응한다(전체 근거는 `같이보기-technical-design-v1_0.md` UC-1~3).
+
+```mermaid
+flowchart LR
+    a1(["👤 A 초대자"])
+    b1(["👤 B 참여자"])
+
+    subgraph UC1["조건 입력 및 판정 확인 — §9.1~9.3"]
+        direction TB
+        uc01((비교후보 구성))
+        uc02((기본조건 입력))
+        uc03((조건 확장))
+        uc04((선호·확인 등록))
+        uc05((상대 초대))
+        uc06((초대 참여))
+        uc07((비로그인 조건 입력))
+        uc08((결과 후 로그인))
+        uc09((1인 결과 보기))
+        uc10((자동 판정 조회))
+        uc11((양보 문장 확인))
+    end
+
+    a1 --> uc01 & uc02 & uc03 & uc04 & uc05 & uc09 & uc10 & uc11
+    b1 --> uc06 & uc02 & uc03 & uc04 & uc07 & uc08 & uc10 & uc11
+    uc06 -. include .-> uc02
+    uc07 -. extend .-> uc06
+    uc10 -. include .-> uc11
+```
+
+```mermaid
+flowchart LR
+    a2(["👤 A"])
+    b2(["👤 B"])
+
+    subgraph UC2["완화·재탐색·방문 후보 결정 — §9.4~9.5"]
+        direction TB
+        uc12((완화 미리보기))
+        uc13((완화 제안))
+        uc14((완화 수락·거절))
+        uc15((전부 불충족 시 완화·재탐색))
+        uc16((방문 후보 2개 결정))
+        uc17((매물 추가·교체·소진 대응))
+    end
+
+    a2 --> uc12 & uc13 & uc16 & uc17
+    b2 --> uc12 & uc14 & uc16 & uc17
+    uc13 -. include .-> uc12
+    uc14 -. extend .-> uc13
+    uc15 -. include .-> uc12
+```
+
+```mermaid
+flowchart LR
+    a3(["👤 A"])
+    b3(["👤 B"])
+    sys3(["⚙ Notification Service"])
+
+    subgraph UC3["균형·전제·방문 전후 기록 — §9.6~9.7"]
+        direction TB
+        uc21((전제·균형 화면 확인))
+        uc18((중개사 질문 답변))
+        uc19((방문 후 기록))
+        uc20((상태 변화 알림 수신))
+    end
+
+    a3 --> uc21 & uc18 & uc19
+    b3 --> uc21 & uc18 & uc19
+    sys3 --> uc20
+    uc20 -.-> a3
+    uc20 -.-> b3
+```
+
 ### 9.1 후보 구성 및 기본 조건 입력 (REQ-FUNC-001~004)
 
 조건은 매물이 아니라 사람에 귀속된다는 조건 모델(PRD §12.1~12.2)이 아래 AC들의 공통 전제다.
@@ -616,6 +734,26 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 | **AC-04-02** | **예외** | 사용자가 `확인 필요` 항목을 입력하는 상태 | 항목을 등록함 | 방문 전 중개사 질문 목록으로 저장하며 방문 후 체크리스트와 동일 상태로 처리하지 않는다 | 두 목록 간 항목 혼입 0건 |
 
 ### 9.2 초대 및 참여 (REQ-FUNC-005~009)
+
+B의 비로그인 입력이 로그인 후 어떻게 계정으로 이관되는지는 표보다 시퀀스로 보는 게 빠르다(REQ-FUNC-007, 008).
+
+```mermaid
+sequenceDiagram
+    participant B as B(비로그인)
+    participant CS as Condition Service
+    participant Auth as 로그인 처리
+    participant JE as Judgment Engine
+
+    B->>CS: 예산·조건 입력(비로그인)
+    CS->>CS: 초대 코드 단위로 임시 저장
+    CS->>JE: 임시 조건으로 1차 판정 요청
+    JE-->>B: 첫 결과 표시
+    Note over B: 저장·재방문 시도
+    B->>Auth: 로그인 요청
+    Auth->>CS: 로그인 완료 통지
+    CS->>CS: 임시 조건 → B 계정으로 이관
+    Note over CS: 마지막 접근 +30일 미이관 조건은 배치로 자동 삭제
+```
 
 | AC | 구분 | Given | When | Then | SLO |
 | --- | --- | --- | --- | --- | --- |
@@ -652,6 +790,31 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 
 양보 문장은 "[누가][무엇을][얼마나] 감수하고, [대신][같은 후보 5개 안에서][어떤 조건이] 낫다"의 고정 구조를 따르며(PRD §14.1), 완화폭은 항상 실제 미달량에서만 산출된다(PRD §14.3).
 
+상대에게 완화를 "제안"하고 상대가 "수락"해야만 조건이 갱신되는 흐름은 아래 시퀀스로 보면 명확하다(REQ-FUNC-014).
+
+```mermaid
+sequenceDiagram
+    participant A as A
+    participant CRS as Compromise & Relaxation Service
+    participant Notif as Notification Service
+    participant B as B
+
+    A->>CRS: 완화 제안 생성(상대 조건 대상)
+    CRS->>Notif: 제안 알림 트리거
+    Notif-->>B: 완화 제안 알림 전달
+    B->>CRS: 제안 확인
+    alt 수락
+        B->>CRS: 수락
+        CRS->>CRS: B의 조건 갱신
+        CRS->>CRS: 관련 후보 재판정 요청
+        CRS-->>A: 수락 결과 알림
+        CRS-->>B: 갱신된 판정 결과
+    else 거절
+        B->>CRS: 거절
+        CRS-->>A: 거절 결과 알림
+    end
+```
+
 | AC | 구분 | Given | When | Then | SLO |
 | --- | --- | --- | --- | --- | --- |
 | AC-12-01 | 정상 | 사용자가 후보 상세에 진입한 상태 | 조건별 실제값·기준값·미달량이 표시됨 | `예산 → 통근 → 추가 필수①~④ → 확인 필요` 순서로 A/B를 나란히 표시한다 | 조건 표시 순서 위반 0건 |
@@ -671,6 +834,32 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 
 겹치면 확정, 안 겹치면 최대 2라운드 내 분할로 종료한다(`decisions/0004`).
 
+방문 후보로 확정된 매물이 도중에 거래완료·삭제로 소진되는 경우의 처리 흐름은 아래와 같다(REQ-FUNC-019).
+
+```mermaid
+sequenceDiagram
+    participant NV as 네이버 부동산(외부)
+    participant SSS as Shared Space Service
+    participant VSS as Visit Selection Service
+    participant Notif as Notification Service
+    participant A as A
+    participant B as B
+
+    NV->>SSS: 매물 거래완료·삭제 감지
+    SSS->>SSS: 후보 목록에서 매물 제거
+    SSS->>Notif: 소진 알림 트리거
+    Notif-->>A: 후보 소진 알림
+    Notif-->>B: 후보 소진 알림
+    alt 소진 매물이 확정된 방문 후보였음
+        SSS->>VSS: 방문 후보 상태 갱신 요청
+        VSS->>VSS: 남은 한 자리 선택 단계로 되돌림
+        VSS-->>A: 재선택 요청
+        VSS-->>B: 재선택 요청
+    else 확정 전 후보였음
+        SSS->>SSS: 나머지 후보 판정 유지
+    end
+```
+
 | AC | 구분 | Given | When | Then | SLO |
 | --- | --- | --- | --- | --- | --- |
 | AC-17-01 | 정상 | 선택 가능한 후보가 2개 이상인 상태 | A·B가 각각 후보 2개를 선택하고 일치함 | 그 2개를 방문 후보로 확정한다 | 일치 2개 시 확정까지 0라운드 추가 |
@@ -685,6 +874,19 @@ field_records                -- 방문 후 체크리스트·유지/보류/제외
 
 AI는 조건을 대조하고 감수 관계를 설명할 뿐, 최종 선택·총점 합산·강제 타협을 만들지 않는다(PRD §15) — 이 원칙이 아래 AC들의 공통 근거다.
 
+어떤 이벤트가 상대에게 알림을 트리거하는지는 아래 흐름으로 정리한다(REQ-FUNC-024). 알림 채널(푸시·문자·앱 내)은 정책 확정 전이라 `[TBD]`로 남긴다.
+
+```mermaid
+flowchart TD
+    EVT{이벤트 발생}
+    EVT -->|조건 입력·변경| N1[상대에게 알림]
+    EVT -->|완화 제안 발송| N2[상대에게 알림]
+    EVT -->|후보 추가·교체·소진| N3[상대에게 알림]
+    EVT -->|방문 후보 선택 상태 변경| N4[상대에게 알림]
+    N1 & N2 & N3 & N4 --> Q{알림 채널 확정?}
+    Q -->|"[TBD]"| SEND[발송 방식은 정책 확정 후 결정]
+```
+
 | AC | 구분 | Given | When | Then | SLO |
 | --- | --- | --- | --- | --- | --- |
 | AC-21-01 | 정상 | 실부담·교통비·금리 기반 수치를 표시하는 상태 | 화면이 렌더링됨 | 각 수치와 함께 계산 기준 시점·가정·적용 한계를 표시한다 | 전제 없는 숫자 노출 0건 |
@@ -696,6 +898,26 @@ AI는 조건을 대조하고 감수 관계를 설명할 뿐, 최종 선택·총�
 | **AC-25-03** | **경계** | A/B 구분이 필요한 화면인 상태 | 구분 방식을 적용함 | 위치와 라벨로 구분하고 색은 충족·미충족·확인 상태에만 사용하며, 지도 경로선에만 예외적으로 구분색을 허용한다 | identity 목적의 색 사용 0건(지도 경로선 예외 제외) |
 
 ### 9.7 방문 전후 기록 — 단계 2 (REQ-FUNC-022, 023)
+
+방문 전 중개사 질문 답변과 방문 후 공통 체크리스트 기록이 서로 분리된 채 이어지는 흐름은 다음과 같다(REQ-FUNC-022, 023).
+
+```mermaid
+sequenceDiagram
+    participant A as A
+    participant B as B
+    participant FRS as Field Record Service
+
+    Note over A,B: 단계 2 진입 — 확인 필요 항목 존재
+    FRS-->>A: 중개사 질문 카드 표시
+    FRS-->>B: 중개사 질문 카드 표시
+    A->>FRS: 중개사 답변 기록
+    FRS->>FRS: 보류 상태 갱신(답변 없는 항목은 확인 필요 유지)
+    Note over A,B: 방문 완료
+    A->>FRS: 공통 체크리스트 작성
+    B->>FRS: 공통 체크리스트 작성
+    A->>FRS: 유지·보류·제외 선택
+    FRS->>FRS: 방문 후 사용자 생성 기록으로 저장(방문 전 기록과 분리)
+```
 
 | AC | 구분 | Given | When | Then | SLO |
 | --- | --- | --- | --- | --- | --- |
@@ -732,6 +954,40 @@ AI는 조건을 대조하고 감수 관계를 설명할 뿐, 최종 선택·총�
 | 충돌 화면 노출 후 이탈률 | 조건 완화 실행률 | 충돌·양보 화면이 갈등을 키워 이탈을 유도하는 것 | 완화 실행률과 이탈률이 함께 오르면 화면이 갈등을 키운 것이다 |
 | 조건 재입력·재설정 비율 | 조건 입력 완료율 | 입력 단순화의 부작용으로 조건을 자꾸 고쳐야 하는 것 | 완료율과 재입력률이 함께 오르면 초기 조건이 실제와 안 맞는 것이다 |
 
+가드레일 3종은 표만으로는 "한 지표를 올리려다 다른 지표를 망가뜨리는" 되먹임 관계가 눈에 잘 들어오지 않는다. 아래 인과 루프 다이어그램은 이 관계를 세 개의 **균형 루프(Balancing loop)**로 시각화한다.
+
+```mermaid
+flowchart LR
+    classDef var fill:#EEF3F8,stroke:#5C7F9C,color:#16324F;
+    classDef gate fill:#FBEEDA,stroke:#B5730E,color:#5C3A00;
+
+    NS["North Star<br/>방문후보 확정률"]:::var
+    HB["헛방문율<br/>(방문 후 제외)"]:::var
+    G1{"가드레일 경보<br/>B1"}:::gate
+
+    RA["조건 완화 실행률"]:::var
+    CE["충돌화면 이탈률"]:::var
+    G2{"가드레일 경보<br/>B2"}:::gate
+
+    CC["조건 입력 완료율"]:::var
+    RR["조건 재입력률"]:::var
+    G3{"가드레일 경보<br/>B3"}:::gate
+
+    NS -->|"+"| HB
+    HB -->|"+"| G1
+    G1 -->|"− 판정 로직 재검토 요구"| NS
+
+    RA -->|"+"| CE
+    CE -->|"+"| G2
+    G2 -->|"− 완화 유도 강도 조정"| RA
+
+    CC -->|"+"| RR
+    RR -->|"+"| G3
+    G3 -->|"− 입력 단순화 강도 조정"| CC
+```
+
+`+`는 두 변수가 같은 방향으로 움직인다는 뜻이고, `−`는 가드레일 경보가 원인 변수를 반대로 되돌리려는 교정 압력이다. 세 루프가 균형을 이루지 못하고 계속 같은 방향으로만 움직이면 "숫자만 맞춘 가짜 확정"(PRD §24.4)이 발생한 것으로 판정한다.
+
 ### 10.2 KPI 사용자 행동 카운팅 계획
 
 가설(H1~H5) 대비 검증 설계 — 통과 기준·실행 순서까지 미리 못박는 것 — 는 MVP 개발 착수 시점에는 시기상조다. 어떤 이벤트가 실제로 관측 가능한지조차 구현 전에는 확정할 수 없기 때문이다. 가설 자체와 그 통과 기준은 PRD §25.1에만 두고 여기서 재정의하지 않는다.
@@ -749,6 +1005,17 @@ AI는 조건을 대조하고 감수 관계를 설명할 뿐, 최종 선택·총�
 | 가드레일 (헛방문율) | `field_record_excluded` — 방문 후 기록에서 '제외' 상태 저장 · Field Record Service | `visit_candidates_confirmed`(확정된 후보 2개를 `listing_id` 단위로 펼침) | 단계 2(FT8~FT9) 진입 세션만 집계. `listing_id` 기준 |
 | 가드레일 (충돌 화면 이탈률) | `relaxation_screen_exited_without_action` — 완화 미적용 상태로 화면 이탈 · Compromise & Relaxation Service | `relaxation_screen_entered` | 이탈 판정 기준: 30분 무동작 또는 명시적 뒤로가기·화면 이동 |
 | 가드레일 (조건 재입력률) | `condition_value_modified_after_completion` — 완료 처리된 조건의 재수정 · Condition Service | `condition_step_completed`(확장 3~4개 단계만) | 최초 입력 직후 5초 이내 정정은 재입력으로 집계하지 않음(오타 정정 제외) |
+
+위 표의 이벤트들이 실제로 §10.1 표까지 이어지는 경로는 아래와 같다 — 적재 방식은 아직 `[TBD]`이지만, 어떤 단계를 거쳐 집계되는지는 지금도 고정할 수 있다.
+
+```mermaid
+flowchart LR
+    UA[사용자 행동] --> EV["이벤트 발생<br/>space_id·person_id 부착"]
+    EV --> LOG["이벤트 로그 적재<br/>적재 방식 [TBD]"]
+    LOG --> AGG["집계<br/>분자·분모 매칭, 윈도우 조인"]
+    AGG --> KPI["§10.1 KPI·가드레일 표"]
+    KPI --> DASH[팀 대시보드]
+```
 
 **공통 원칙**: 모든 이벤트는 `space_id`(공유 객체) 또는 `person_id`(A/B 개인) 중 하나를 필수 속성으로 갖는다. 이벤트 스키마·적재 방식(배치/실시간)은 구현 단계에서 확정하며, 이 표는 "무엇을 세는가"만 고정하고 "어떻게 적재하는가"는 `[TBD]`로 남긴다.
 
