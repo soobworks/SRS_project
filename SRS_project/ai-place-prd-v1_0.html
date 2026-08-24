@@ -1,4 +1,4 @@
-<title>같이 고르기 PRD</title>
+<title>ai-place PRD</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
   :root{
@@ -419,11 +419,11 @@
   <div class="masthead-inner">
     <div>
       <p class="kicker">같이 고르기 · 공동 주거 의사결정</p>
-      <h1 class="doctitle">네이버 부동산 공동 주거 의사결정 기능 PRD</h1>
+      <h1 class="doctitle">네이버 부동산 공동 주거 의사결정 기능 PRD (ai-place)</h1>
       <p class="doc-sub">두 사람이 조건을 입력하면 관심매물별로 무엇이 맞고 어긋나는지, 무엇을 감수하는지를 보여준다. 총점을 만들지 않고 방문 후보 2개를 스스로 정하도록 돕는다.</p>
     </div>
     <div class="meta-block">
-      <span class="ver">v0.2</span><br>
+      <span class="ver">v1.0</span><br>
       작성 기준일 2026-08-20<br>
       개정 2026-08-24
     </div>
@@ -612,9 +612,9 @@
 </ul>
   </nav>
   <main class="content">
-    <blockquote><strong>v0.2 — PRD 완성도 재검토 반영본</strong><br><code>prd_v0.1_20260820_with_AC.md</code>(AC 확장본)의 본문과 FR-01~FR-25 요구사항은 그대로 두고, 2026-08-24 자체 검토에서 미흡으로 지적된 4개 항목 — KPI 수치화 프로토콜(§24.4), MoSCoW·스프린트 구현 가능성(§16.2), 비기능요구(§20), 엔터티 관계도(§21.9) — 를 추가했다. 근거는 우선 이 폴더의 handoff 원본(<code>_handoff_extracted/</code>)과 <code>Day4_KPI_설계_보강(가드레일_포함).md</code>, <code>docs/04-benchmarks.md</code>에서 찾아 반영했고, 원본에 근거가 없는 항목은 새 수치를 지어내지 않고 <span class="pill pill-proposal">[제안 — 팀 확정 필요]</span>로 표시했다. 상세 변경 로그는 문서 끝 "PRD 완성도 재검토 (v0.2)" 참고.</blockquote>
+    <blockquote><strong>v1.0 — <code>ai-place-prd-v1_0.md</code></strong><br>이전 파일명 <code>prd_v0.2_20260824.md</code>를 이 파일명으로 변경하며 버전을 v1.0으로 올렸다. 내용은 v0.2의 두 라운드 보강(KPI 수치화 프로토콜 §24.4, MoSCoW·스프린트 구현 가능성 §16.2, 비기능요구 §20, 엔터티 관계도 §21.9, Given-When-Then-SLO 형식의 AC 61개, FR-10a/FR-10b 분할)을 그대로 담고 있으며 이번 리네임에서 내용을 추가로 바꾸지 않았다. 상세 변경 로그는 문서 끝 "PRD 완성도 재검토 (v0.2)" 참고.</blockquote>
 <h2 id="s1">1. Document Overview</h2>
-<div class="table-scroll"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>문서명</td><td>네이버 부동산 공동 주거 의사결정 기능 PRD</td></tr><tr><td>버전</td><td><code>v0.2</code> (AC 확장본 <code>v0.1</code> 기반, 비기능요구·MoSCoW·KPI 프로토콜·엔터티 관계도 추가)</td></tr><tr><td>기준 handoff</td><td><code>real-estate-joint-decision_CHATGPT_HANDOFF_20260820_1333.zip</code> (폴더 내 실물은 <code>..._1007.zip</code> — 정합성 원칙에 따라 파일명 시각 차이는 §1.2에 준해 처리)</td></tr><tr><td>기준 commit</td><td><code>10b64551ed10a88616791b3a9798f53b50b01ed9</code></td></tr><tr><td>작성 기준일</td><td>2026-08-20 (v0.2 개정 2026-08-24)</td></tr><tr><td>문서 목적</td><td>최신 handoff에서 확정된 Problem, Target, Value Proposition, 기능·화면·데이터·검증 범위를 제품 요구사항으로 정리한다.</td></tr><tr><td>확정 범위</td><td>네이버 부동산 관심매물 저장 이후, 두 사람의 조건 입력·비교·충돌/양보 설명·방문 후보 2개 결정과 단계 2의 방문 전후 기록</td></tr><tr><td>문서 상태</td><td>구현 전 <code>v0.2</code>. 미결정 사항과 외부 의존성은 <span class="pill pill-hypothesis">[검증 가설]</span>·<span class="pill pill-tbd">[TBD]</span>로 유지한다.</td></tr></tbody></table></div>
+<div class="table-scroll"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>문서명</td><td>네이버 부동산 공동 주거 의사결정 기능 PRD (ai-place)</td></tr><tr><td>버전</td><td><code>v1.0</code> (<code>prd_v0.2_20260824.md</code>를 리네임, 내용은 v0.2 보강 2라운드 결과를 그대로 유지)</td></tr><tr><td>기준 handoff</td><td><code>real-estate-joint-decision_CHATGPT_HANDOFF_20260820_1333.zip</code> (폴더 내 실물은 <code>..._1007.zip</code> — 정합성 원칙에 따라 파일명 시각 차이는 §1.2에 준해 처리)</td></tr><tr><td>기준 commit</td><td><code>10b64551ed10a88616791b3a9798f53b50b01ed9</code></td></tr><tr><td>작성 기준일</td><td>2026-08-20 (v0.2 개정 2026-08-24, v1.0 리네임 2026-08-24)</td></tr><tr><td>문서 목적</td><td>최신 handoff에서 확정된 Problem, Target, Value Proposition, 기능·화면·데이터·검증 범위를 제품 요구사항으로 정리한다.</td></tr><tr><td>확정 범위</td><td>네이버 부동산 관심매물 저장 이후, 두 사람의 조건 입력·비교·충돌/양보 설명·방문 후보 2개 결정과 단계 2의 방문 전후 기록</td></tr><tr><td>문서 상태</td><td>구현 전 <code>v1.0</code>. 미결정 사항과 외부 의존성은 <span class="pill pill-hypothesis">[검증 가설]</span>·<span class="pill pill-tbd">[TBD]</span>로 유지한다.</td></tr></tbody></table></div>
 <h3 id="s1-1">1.1 상태 표기</h3>
 <div class="table-scroll"><table><thead><tr><th>상태</th><th>의미</th></tr></thead><tbody><tr><td><span class="pill pill-confirmed">[확정]</span></td><td><code>docs/11-decision-status.md</code> 또는 채택된 decision에서 현재 결정으로 명시</td></tr><tr><td><span class="pill pill-evidence">[근거 있음]</span></td><td>Evidence Log에서 사실·확인된 근거가 있으나 적용 범위와 한계가 존재</td></tr><tr><td><span class="pill pill-hypothesis">[검증 가설]</span></td><td>참·거짓 또는 효과가 아직 측정되지 않음</td></tr><tr><td><span class="pill pill-tbd">[TBD]</span></td><td>팀 결정, 정책 확인, 내부 데이터 또는 리서치가 더 필요</td></tr><tr><td><span class="pill pill-outscope">[Out of Scope]</span></td><td>현재 제품 또는 MVP 범위에서 명시적으로 제외</td></tr></tbody></table></div>
 <h3 id="s1-2">1.2 정합성 적용 원칙</h3>
@@ -1165,8 +1165,8 @@ erDiagram
 <p><strong>엔터티 시각화</strong> — §21.9에 Mermaid ER 다이어그램을 추가했다. 새 엔터티를 만들지 않고 §21.1~21.8에서 이미 정의된 데이터를 관계로 재구성했으며, <code>decisions/0001·0003·0004</code>가 정한 저장 위치·금지 항목(총점 엔터티 없음)을 그대로 반영했다.</p>
   </main>
   <footer class="doc-footer">
-    <span>네이버 부동산 공동 주거 의사결정 PRD v0.2</span>
-    <span>prd_v0.2_20260824.md 기반 · Entity Model §21.9 포함</span>
+    <span>네이버 부동산 공동 주거 의사결정 PRD (ai-place) v1.0</span>
+    <span>ai-place-prd-v1_0.md 기반 · Entity Model §21.9 포함</span>
   </footer>
 </div>
 
