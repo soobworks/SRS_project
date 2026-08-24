@@ -12,6 +12,10 @@
 4. KPI/성공 지표, 화면별 인벤토리처럼 29148 §9.6.x의 어느 조항에도 대응하지 않는 PRD 내용은 SRS에 억지로 편입하지 않고 PRD 원문에만 둔다.
 5. 이 원칙은 이후 SRS 문서를 개정하거나 재작성할 때도 동일하게 적용된다.
 
+## 별도 문서 — 기술스택 구현판 SRS
+
+`같이보기-srs-nextjs-v1_0.md`는 위 "SRS 작업 목표"의 결과물(`같이보기-srs-v1_0.md`)과 **완전히 별개의 문서**다. 기존 SRS는 마이크로서비스 전제의 기술 중립적 서술이고, 이 문서는 Next.js(App Router) 단일 모놀리스 + Server Actions/Route Handlers + Prisma/Supabase + Tailwind/shadcn-ui + Vercel AI SDK(Gemini) + Vercel 배포라는 **확정된 기술스택**을 그대로 적용했을 때 구현 가능한 형태로 아키텍처·인터페이스·데이터 설계를 다시 쓴 것이다. 기능 요구사항(FR-01~25)은 두 문서에서 동일하며, 이 문서는 변경하지 않는다.
+
 ## 문서 흐름
 
 ```
@@ -34,7 +38,8 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/같이보기-prd-v1_0.md` | PRD v1.0 (마크다운 원본, 저장소에 커밋) |
 | `SRS_project/같이보기-srs-v1_0.md` | PRD 기반 SRS 문서 (마크다운 원본, 저장소에 커밋) |
 | `SRS_project/같이보기-technical-design-v1_0.md` | SRS 기반 기술 설계 문서 — UseCase·ERD·Component·Sequence·CLD·Flow Chart 다이어그램 모음 (마크다운 원본, 저장소에 커밋). 각 다이어그램은 SRS 해당 장에도 동일하게 삽입되어 있다 |
-| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
+| `SRS_project/같이보기-srs-nextjs-v1_0.md` | 별도의 기술스택 구현판 SRS — Next.js 단일 모놀리스 + Prisma/Supabase + Vercel + Gemini 전제(마크다운 원본, 저장소에 커밋). 기존 SRS와 기능 요구사항은 동일, 아키텍처·인터페이스·데이터 설계만 재작성 |
+| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
 PRD·SRS 이전 단계의 리서치 로그, 발표 덱, 프로토타입 등은 팀 작업 폴더에만 보관하며 이 저장소에는 포함하지 않는다. `SRS_project/29148-2018-ISOIECIEEE.pdf`(ISO/IEC/IEEE 29148:2018 표준 원문)도 저작권 문제로 이 저장소에는 커밋하지 않고 로컬에만 둔다.
