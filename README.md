@@ -49,7 +49,9 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/tasks/` | 위 로드맵 순서대로 작성한 21개 풀버전 TASK 문서(TASK-000~020, v1) — `.github/ISSUE_TEMPLATE/feature_task.md` 형식. 이력 보존용, 실제 착수는 아래 v2 사용 |
 | `SRS_project/tasks/TASK-재추출-전략-v2-계획서.md` | v1을 "① 계약(DTO/스키마) 우선 ② Read/Write Closed Context 분리 ③ AC→자동화 테스트 Task 변환" 3원칙으로 재구성하는 계획서 |
 | `SRS_project/tasks/v2/` | 위 3원칙을 반영해 재작성한 **TASK 문서 세트(실제 구현 착수 시 우선 사용 대상)** — 2026-08-26 개수 축약(`TASK-개수-축약-분석.md`)을 거쳐 66개→**52개**(확정 48 + Macro NFR 4)로 정리됨. 폴더 내 `README.md`가 Phase별 실행 순서·의존관계 인덱스, `TASK-마스터-리스트.md`가 Epic·복잡도(H/M/L) 포함 스프레드시트용 단일 표 |
-| `SRS_project/tasks/v2/[총괄] 개발 실행 계획.md` | 마스터 리스트 52개 Task의 의존관계를 계산한 총괄 실행 계획 — DAG 레벨·임계경로(42영업일)·병목 Top 10·자원제약 스케줄(1/2/3레인 시나리오)·Gantt 차트·게이트(G0~G3)·리스크를 담았다. `tools/gen_exec_plan.py`가 계산기이자 재생성 스크립트(마스터 리스트 의존관계 변경 시 재실행) |
+| `SRS_project/tasks/v2/[총괄] 개발 실행 계획.md` | 마스터 리스트 52개 Task의 의존관계를 계산한 총괄 실행 계획(기본안·2레인·66일) — DAG 레벨·임계경로(42영업일)·병목 Top 10·자원제약 스케줄·Gantt 차트·게이트(G0~G3)·리스크를 담았다. `tools/gen_exec_plan.py`가 계산기이자 재생성 스크립트 |
+| `SRS_project/tasks/v2/[총괄] 압축 수행 일정.md` | 위 기본 계획의 압축 대안 — 4레인으로 임계경로 하한(42일)에 정확히 도달함을 1~8레인 전수 계산으로 확인하고, 주차별 동시작업 프로파일·레인 투입/철수 곡선·압축의 대가(리뷰 병목·온보딩 비용 등)·42일보다 더 줄이는 방법을 정리했다 |
+| `SRS_project/tasks/v2/[태스크 리스트] 같이보기.md` | `TASK-마스터-리스트.md`와 동일한 52건을 Epic별 상세 표(유형·후행 태스크 포함)로 재구성하고, 임계경로·Phase 배치·요구사항 커버리지(35종 중 34종)·의도적 제외 항목(부록 D)까지 담은 종합 인덱스 |
 | `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html`, `SRS_V0_9.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
