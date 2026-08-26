@@ -48,7 +48,7 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/GitHub-TASK-작성순서-로드맵.md` | 위 템플릿으로 풀버전 TASK 문서를 뽑아낼 순서(TASK-000~020) — 판정 엔진을 사용자 흐름보다 먼저 시드 데이터로 검증하고, 1-A(핵심 검증) 완료 후 1-B로 넘어가도록 모듈 의존관계 기반으로 설계했다 |
 | `SRS_project/tasks/` | 위 로드맵 순서대로 작성한 21개 풀버전 TASK 문서(TASK-000~020, v1) — `.github/ISSUE_TEMPLATE/feature_task.md` 형식. 이력 보존용, 실제 착수는 아래 v2 사용 |
 | `SRS_project/tasks/TASK-재추출-전략-v2-계획서.md` | v1을 "① 계약(DTO/스키마) 우선 ② Read/Write Closed Context 분리 ③ AC→자동화 테스트 Task 변환" 3원칙으로 재구성하는 계획서 |
-| `SRS_project/tasks/v2/` | 위 3원칙을 반영해 재작성한 **60개 TASK 문서(실제 구현 착수 시 우선 사용 대상)** — 기능/인프라 36개 + AC 기반 테스트 companion 24개. 폴더 내 `README.md`가 Phase별 실행 순서·의존관계 인덱스 |
+| `SRS_project/tasks/v2/` | 위 3원칙을 반영해 재작성한 **TASK 문서 세트(실제 구현 착수 시 우선 사용 대상)** — 2026-08-26 개수 축약(`TASK-개수-축약-분석.md`)을 거쳐 66개→**52개**(확정 48 + Macro NFR 4)로 정리됨. 폴더 내 `README.md`가 Phase별 실행 순서·의존관계 인덱스, `TASK-마스터-리스트.md`가 Epic·복잡도(H/M/L) 포함 스프레드시트용 단일 표 |
 | `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html`, `SRS_V0_9.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
