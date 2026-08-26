@@ -1,10 +1,10 @@
 # 같이 고르기 — 네이버 부동산 공동 주거 의사결정 기능 역기획
 
-네이버 부동산의 관심매물 저장 이후 구간에서 동작하는 **2인 공동 주거 의사결정 기능**을 역기획하고, PRD → SRS로 이어지는 요구공학 산출물을 만드는 팀 프로젝트다. 이 저장소는 그중 **최종 PRD·SRS 문서(마크다운 원본)와, 실제 개발 착수를 위한 Claude Code 하네스(`CLAUDE.md`, `.claude/`)**를 담는다. 리서치 로그·발표 덱·프로토타입 등 그 외 작업 자료는 이 저장소 범위 밖이다. **HTML 렌더링본은 PC 로컬 폴더에만 저장하며 이 저장소에는 푸시하지 않는다** (`.gitignore`의 `*.html`).
+네이버 부동산의 관심매물 저장 이후 구간에서 동작하는 **2인 공동 주거 의사결정 기능**을 역기획하고, PRD → SRS로 이어지는 요구공학 산출물을 만드는 팀 프로젝트다. 이 저장소는 그중 **최종 PRD·SRS 문서(마크다운 원본)와, 실제 개발 착수를 위한 AI 코딩 하네스(`AGENTS.md`, `CLAUDE.md`, `.agents/`, `.claude/`)**를 담는다. 리서치 로그·발표 덱·프로토타입 등 그 외 작업 자료는 이 저장소 범위 밖이다. **HTML 렌더링본은 PC 로컬 폴더에만 저장하며 이 저장소에는 푸시하지 않는다** (`.gitignore`의 `*.html`).
 
 ## 개발 하네스 (Claude Code)
 
-`CLAUDE.md`(프로젝트 컨텍스트·§3 절대 규칙)와 `.claude/agents/`(4개, 판정엔진·Server Action·Prisma 스키마·UI 전담)·`.claude/skills/`(14개 — 팀 자체 스킬 4개 + skills.sh 마켓플레이스 7개 + 프로세스 스킬 3개)로 구성된다. `wild-mental/AI-multivender-harness-sample`을 이 프로젝트(Next.js/Prisma/Supabase)에 맞게 조정한 것이며, 무엇을 가져오고 버렸는지는 `.claude/HARNESS-ADAPTATION-NOTES.md`에 기록했다.
+3계층 구조다 — `.agents/rules/`(가장 상세) → `AGENTS.md`(크로스툴 요약) → `CLAUDE.md`(Claude 전용, 가장 짧음). 판정 도메인(총점 금지·5분류)을 전담하는 서브에이전트 `judgment-engine`을 포함해 `.claude/agents/` 5개, 프로젝트 고유 규칙을 번호로 정리한 스킬(`300~304`·`400`)과 skills.sh 마켓플레이스 12종·팀 지정 스킬 4종을 합쳐 `.agents/skills/`(원천) · `.claude/skills/`(복사본, 27개)로 구성된다. `wild-mental/ai-place-mate-prd-to-srs`(같은 스택의 실제 완성 하네스)를 그대로 참조해 재구성했으며, 무엇을 가져오고 버렸는지는 `.claude/HARNESS-ADAPTATION-NOTES.md`에 기록했다.
 
 ## SRS 작업 목표 (중요)
 
