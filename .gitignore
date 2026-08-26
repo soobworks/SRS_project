@@ -8,3 +8,6 @@ SRS_project/29148-2018-ISOIECIEEE.pdf
 
 # HTML renderings stay local (PC folder) only — never pushed to GitHub
 *.html
+
+# Claude Code local permission overrides — per-developer, not shared
+.claude/settings.local.json
