@@ -44,6 +44,8 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/SRS_V0_9.md` | 위 검토 보고서의 통합 권고(6개 중 SRS 범위인 5개)를 실제로 반영한 `같이보기-srs-nextjs-v1_0.md`의 개정 초안. 네이버 API 목업 스위치, 릴리스 1-A/1-B 재분할(§11 신규), 임시 인증, 유료 전환 트리거, 포터빌리티 트레이드오프 ADR을 추가했다. 팀 승인 전이라 버전을 0.9로 표기 |
 | `SRS_project/SRS_V0_9-AI-작업지시서.md` | SRS_V0_9.md → SRS_V1_0.md로 개정하기 위해 AI(Claude)에게 내리는 실행 명령서 — 사람이 읽는 보고서가 아니라 작업 단위(TASK-A1~C1)별 정확한 삽입/교체 텍스트와 완료 기준을 담은 지시 문서. 개인 구현 난이도 조정과 완전 무료 인프라 vs SLA/동시접속자 NFR 모순 해소 두 축을 다룬다 |
 | `SRS_project/SRS_V0_9-작업지시서-변경사항-3관점-검토.md` | 위 작업지시서의 TASK-A1~C1을 기술스택 명확성·MVP 목표 및 가치전달 조정·기타 차이점 세 관점으로 검토한 표. A4(0단계 승인)와 B4(동시접속자 정원 제한)가 실제로 기능·가치 범위를 건드리는 유일한 두 항목임을 짚었다 |
+| `.github/ISSUE_TEMPLATE/feature_task.md` | GitHub Project(이슈 트래커) 용 TASK 템플릿 — FR 단위 개발 태스크를 Summary · References · Task Breakdown · Acceptance Criteria(GWT) · Constraints · DoD · Dependencies 형식으로 발행하기 위한 GitHub 표준 이슈 템플릿 |
+| `SRS_project/GitHub-TASK-작성순서-로드맵.md` | 위 템플릿으로 풀버전 TASK 문서를 뽑아낼 순서(TASK-000~020) — 판정 엔진을 사용자 흐름보다 먼저 시드 데이터로 검증하고, 1-A(핵심 검증) 완료 후 1-B로 넘어가도록 모듈 의존관계 기반으로 설계했다 |
 | `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html`, `SRS_V0_9.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
