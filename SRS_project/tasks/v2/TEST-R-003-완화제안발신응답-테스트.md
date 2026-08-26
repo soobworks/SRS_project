@@ -33,7 +33,7 @@ test("AC-14-02: 수락 전 미적용, 수락 후 갱신") {
   then: judgment unaffected by pending proposal
 
   when: respondToRelaxationProposal(proposalId, "ACCEPTED")
-  then: Person(B).requiredConditions updated, related JudgmentResult recomputed via J-002
+  then: Person(B).requiredConditions updated, related JudgmentResult recomputed via J-001's persist function
 
   (별도 케이스) when: respondToRelaxationProposal(proposalId, "REJECTED")
   then: Person(B).requiredConditions unchanged, judgment unaffected

@@ -39,7 +39,7 @@ Scenario 2: 목업 모드 기본 동작
 ## ⚙️ Technical & Non-Functional Constraints
 - 픽스처는 C-001의 타입 정의를 그대로 따른다(임의 필드 생성 금지)
 - `NAVER_API_MODE=live` 전환은 실제 API 키 발급 후에만 수행하며, 이 태스크 범위에는 포함하지 않는다
-- 실연동 클라이언트(`naver-listing.ts` 등)와 그에 대한 `try/catch`(REQ-NF-004) 구현은 각 소비 태스크(S-001, R-005 등)에서 담당한다 — 이 태스크는 데이터만 준비한다
+- 실연동 클라이언트(`naver-listing.ts` 등)와 그에 대한 `try/catch`(REQ-NF-004) 구현은 각 소비 태스크(S-001, R-002 등)에서 담당한다 — 이 태스크는 데이터만 준비한다
 
 ## 🏁 Definition of Done (DoD)
 - [ ] 모든 Acceptance Criteria를 충족하는가?
@@ -48,4 +48,4 @@ Scenario 2: 목업 모드 기본 동작
 
 ## 🚧 Dependencies & Blockers
 - Depends on: C-000, C-001(타입 계약)
-- Blocks: S-001(FR-001 후보 구성), R-005(FR-016 재탐색 필터), J-001·003~005(판정 시 매물 데이터 필요)
+- Blocks: S-001(FR-001 후보 구성), R-002(FR-016 재탐색 필터), J-001·003(판정 시 매물 데이터 필요)

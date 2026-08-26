@@ -18,6 +18,7 @@ assignees: ''
 ## ✅ Task Breakdown
 - [ ] AC-10a-01에 대한 단위 테스트 작성: 예산 상한·실부담이 모두 유효한 값일 때 MET/UNMET(미달량 포함)이 산출되는지 검증
 - [ ] AC-10a-02에 대한 단위 테스트 작성: 실부담 계산 필요 데이터가 없을 때 반드시 CALCULATION_FAILED이며 UNMET이 아님을 검증(오분류 회귀 테스트)
+- [ ] **저장 통합 테스트(2026-08-26 J-002 병합분): `persist-judgment-result.ts`의 upsert가 create/update 양쪽 경로에서 정확히 동작하고, `@@unique([personId, listingId, conditionKey])` 위반 없이 재판정 시 중복 행이 생기지 않는지 검증**
 
 ## 🧪 Test Cases (실행 가능한 형태)
 ```
@@ -33,6 +34,12 @@ test("AC-10a-02: 데이터 누락 시 계산 불가, 미충족 아님") {
   when: evaluateBudget(condition, actualCost)
   then: result.status === "CALCULATION_FAILED"
   and: result.status !== "UNMET"  // 오분류 회귀 방지 — 이 assertion이 핵심
+}
+
+test("저장 통합: upsert가 create/update 양쪽에서 중복 없이 동작") {
+  given: 동일한 (personId, listingId, conditionKey)에 대해 evaluateBudget 결과가 두 번 연속 저장됨(최초 1회 + 재판정 1회)
+  when: persistJudgmentResult(result) 를 순차 호출
+  then: JudgmentResult 테이블에 해당 복합키 행이 정확히 1개만 존재하고, 두 번째 호출 후 값이 최신으로 갱신됨
 }
 ```
 
