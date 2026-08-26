@@ -41,7 +41,8 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/같이보기-srs-nextjs-v1_0.md` | 별도의 기술스택 구현판 SRS — Next.js 단일 모놀리스 + Prisma/Supabase + Vercel + Gemini 전제(마크다운 원본, 저장소에 커밋). 기존 SRS와 기능 요구사항은 동일, 아키텍처·인터페이스·데이터 설계만 재작성 |
 | `SRS_project/같이보기-srs-nextjs-기술스택변경-plan-v1_0.md` | 위 문서의 C-TEC 제약 문구 갱신(로컬 Supabase CLI 확정, LLM 오케스트레이션 선택적 유지) 작업 계획 및 MVP 핵심 사용자 경험 훼손 여부 검토 기록 |
 | `SRS_project/MVP-개발목표-적절성-종합-검토(난이도-가능성-효율성)-보고서.md` | Next.js 기술스택판 SRS를 개발 난이도·구현 가능성(요구 배경지식·적합 직무·바이브코딩 여부)과 시스템·비용 효율성(개발 속도·외부연동 리스크·운영 비용) 두 관점에서 검토한 읽기 전용 보고서 |
-| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
+| `SRS_project/SRS_V0_9.md` | 위 검토 보고서의 통합 권고(6개 중 SRS 범위인 5개)를 실제로 반영한 `같이보기-srs-nextjs-v1_0.md`의 개정 초안. 네이버 API 목업 스위치, 릴리스 1-A/1-B 재분할(§11 신규), 임시 인증, 유료 전환 트리거, 포터빌리티 트레이드오프 ADR을 추가했다. 팀 승인 전이라 버전을 0.9로 표기 |
+| `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html`, `SRS_V0_9.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 
 PRD·SRS 이전 단계의 리서치 로그, 발표 덱, 프로토타입 등은 팀 작업 폴더에만 보관하며 이 저장소에는 포함하지 않는다. `SRS_project/29148-2018-ISOIECIEEE.pdf`(ISO/IEC/IEEE 29148:2018 표준 원문)도 저작권 문제로 이 저장소에는 커밋하지 않고 로컬에만 둔다.
