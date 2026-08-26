@@ -39,6 +39,7 @@ SRS (같이보기-srs-v1_0.md) — §1~7 템플릿 포맷 그대로 + §8~14 표
 | `SRS_project/같이보기-srs-v1_0.md` | PRD 기반 SRS 문서 (마크다운 원본, 저장소에 커밋) |
 | `SRS_project/같이보기-technical-design-v1_0.md` | SRS 기반 기술 설계 문서 — UseCase·ERD·Component·Sequence·CLD·Flow Chart 다이어그램 모음 (마크다운 원본, 저장소에 커밋). 각 다이어그램은 SRS 해당 장에도 동일하게 삽입되어 있다 |
 | `SRS_project/같이보기-srs-nextjs-v1_0.md` | 별도의 기술스택 구현판 SRS — Next.js 단일 모놀리스 + Prisma/Supabase + Vercel + Gemini 전제(마크다운 원본, 저장소에 커밋). 기존 SRS와 기능 요구사항은 동일, 아키텍처·인터페이스·데이터 설계만 재작성 |
+| `SRS_project/같이보기-srs-nextjs-기술스택변경-plan-v1_0.md` | 위 문서의 C-TEC 제약 문구 갱신(로컬 Supabase CLI 확정, LLM 오케스트레이션 선택적 유지) 작업 계획 및 MVP 핵심 사용자 경험 훼손 여부 검토 기록 |
 | `SRS_project/같이보기-prd-v1_0.html`, `같이보기-srs-v1_0.html`, `같이보기-technical-design-v1_0.html`, `같이보기-srs-nextjs-v1_0.html` | 다이어그램 포함 HTML 렌더링본 — **PC 로컬에만 저장, 저장소에는 푸시하지 않음**(`.gitignore`) |
 | `SRS_project/[SRS 문서] AD-Core-Platform (한글).md` | SRS 포맷·범위 기준이 되는 예시 템플릿 (참고자료) |
 

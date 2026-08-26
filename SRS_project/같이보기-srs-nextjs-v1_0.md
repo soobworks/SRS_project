@@ -86,22 +86,22 @@
 | --- | --- |
 | **C-TEC-001** | 모든 서비스는 Next.js (App Router) 기반의 단일 풀스택 프레임워크로 구현한다. (프론트엔드와 백엔드를 별도 분리하지 않는다.) |
 | **C-TEC-002** | 서버 측 로직(DB 접근, API 호출 등)은 Next.js의 Server Actions 또는 Route Handlers를 사용하여 별도의 백엔드 서버 없이 구현한다. |
-| **C-TEC-003** | 데이터베이스는 Prisma + 로컬 Supabase를 사용하여 로컬 개발환경을 구성하고 배포 시 Supabase(PostgreSQL)를 사용하여 인프라 설정 복잡도를 최소화한다. |
+| **C-TEC-003** | 데이터베이스는 Prisma + 로컬 Supabase CLI를 사용하여 로컬 개발환경을 구성하고 배포 시 Supabase(PostgreSQL)를 사용하여 인프라 설정 복잡도를 최소화한다. |
 | **C-TEC-004** | UI 및 스타일링은 Tailwind CSS와 shadcn/ui를 사용하여 AI가 일관된 디자인 코드를 생성하도록 강제한다. |
 
 **(시스템 외부 — 연결 및 AI 통합)**
 
 | ID | 제약 |
 | --- | --- |
-| **C-TEC-005** | (AI 호출 기능이 포함된 경우) AI 기능은 별도 자체 서버 구축 없이 Vercel AI SDK를 사용하여 Next.js에서 외부 API를 호출하는 형태로 구현한다. |
-| **C-TEC-006** | 외부 AI 서비스 API 호출은 Google Gemini API를 기본으로 사용하며, 환경 변수 설정만으로 모델 교체가 가능하도록 SDK의 표준 인터페이스를 준수한다. |
+| **C-TEC-005** | LLM 오케스트레이션은 별도의 Python 서버 없이 Vercel AI SDK를 사용하여 Next.js 내부에서 직접 구현한다. |
+| **C-TEC-006** | LLM 호출은 Google Gemini API를 기본으로 사용하며, 환경 변수 설정만으로 모델 교체가 가능하도록 SDK의 표준 인터페이스를 준수한다. |
 | **C-TEC-007** | 배포 및 인프라 관리는 Vercel 플랫폼으로 단일화하며, CI/CD 설정 없이 Git Push만으로 배포를 자동화한다. |
 
 **파생 가정** — 이 제약들로부터, 이 문서 전체가 따르는 세 가지 설계 원칙이 도출된다.
 
 1. **물리적으로 분리된 서비스는 없다.** 기존 SRS의 "7개 마이크로서비스"는 Next.js 앱 안의 **논리적 모듈(도메인 폴더)**로만 존재한다(§2.2).
 2. **인프라를 늘리지 않는다.** 캐시 · 배치 · 큐가 필요한 곳에도 Redis · 메시지 브로커 같은 별도 인프라를 추가하지 않고, Prisma로 접근하는 Postgres 테이블과 Vercel Cron Job으로 해결한다(§5, §6).
-3. **AI 호출은 선택적이다.** C-TEC-005의 "(AI 호출 기능이 포함된 경우)"라는 조건절을 그대로 존중해, 현재 기능 요구사항이 실제로 생성형 AI를 필요로 하는지부터 §7에서 판단한다.
+3. **LLM 오케스트레이션 방식은 표준화하되, 사용 여부는 별개의 제품 결정이다.** C-TEC-005·006은 "LLM을 쓴다면 어떻게 구현할지"(Python 서버 없이 Next.js 내부 · Vercel AI SDK · Gemini 기본값)를 정한 기술 표준이지, "LLM 기능을 반드시 넣어야 한다"는 기능 요구가 아니다. 현재 기능 요구사항이 실제로 생성형 AI를 필요로 하는지는 §7에서 별도로 판단하며, 그 판단에 따라 MVP는 이 표준화된 인터페이스를 준비만 해두고 호출하지 않는다(2026-08-26 제품 결정, `같이보기-srs-nextjs-기술스택변경-plan-v1_0.md` §2).
 
 ### 1.6 이 기술스택을 벗어나는 목표 기능 (적합성 검토)
 
@@ -114,7 +114,7 @@
 | **GAP-003** | REQ-FUNC-019(매물 소진 처리) AC-19-01 "감지 후 즉시 제거" | 네이버 웹훅 제공 여부가 불확실해(ADR-TECH-05) Vercel Cron Job 폴링으로 설계했는데, Vercel Cron은 요금제별 최소 실행 주기 제한이 있다(무료 요금제일수록 주기가 길다). 어떤 요금제든 폴링 주기만큼 지연이 발생하므로 "즉시"라는 SLO 문구를 문자 그대로는 이 스택에서 충족할 수 없다 | **높음** | 실제 배포 요금제를 정한 뒤 Cron 최소 주기를 확인하고, AC-19-01의 SLO를 "폴링 주기(예: N분) 이내 반영"으로 현실화하거나 네이버 웹훅 제공 여부를 먼저 재확인한다 |
 | **GAP-004** | REQ-NF-001(E2E 응답시간 P95 ≤ 30초) | `같이보기-technical-design-v1_0.md` §8이 제안한 "후보 매물 · A 선호 카드 조회" 구간 예산이 최대 15,000ms다. Vercel 서버리스 함수는 요금제별 실행시간 상한이 있고, 낮은 요금제일수록 짧아 이 구간이 상한에 근접하거나 초과할 수 있다 | **중간** | 배포 요금제의 함수 실행시간 상한을 확인해 `maxDuration`을 명시적으로 설정하고, 필요하면 Suspense 스트리밍으로 첫 페인트를 먼저 보여줘 상한 초과 위험을 낮춘다(§5.1에 이미 있는 방향과 동일선상, 수치만 재확인 필요) |
 | **GAP-005** | REQ-FUNC-024(상태 변화 알림) | 현재 설계(§4)는 페이지 재방문 시 조회하는 폴링형이며 실시간 push는 설계에 없다. C-TEC 제약에는 실시간 통신 수단이 명시돼 있지 않다. 알림 채널이 모바일 푸시로 확정되면 FCM 같은, 이 7개 제약 어디에도 없는 별도 서비스 연동이 필요하다 | **중간** | "즉시 알림"이 실제 요구라면 Supabase가 자체 제공하는 Realtime 기능(C-TEC-003 범위 안)으로 확장한다. 모바일 푸시까지 필요하다면 그 시점에 별도 제약(C-TEC-008 등)을 새로 정의해야 한다 — 현재 7개 제약만으로는 커버되지 않는다 |
-| **GAP-006** | C-TEC-005 · 006(AI 통합) — 재확인 | 실제 벗어나는 지점은 아니지만 혼동 방지를 위해 명시: REQ-FUNC-012(양보 문장)는 PRD §14.1의 고정 템플릿이라 생성형 AI 호출이 필수가 아니다(§7.1) | **정보** | §7.2에 이미 설계된 선택적 확장 지점 외에는 Gemini를 호출할 필요가 없다는 판단을 유지한다 |
+| **GAP-006** | C-TEC-005 · 006(LLM 오케스트레이션) — 재확인 | C-TEC-005의 문구가 조건절 없이 단정형으로 바뀌었지만, 이는 "LLM을 어떻게 구현할지"에 대한 기술 표준을 정한 것이지 "LLM 기능을 반드시 넣으라"는 뜻이 아니다(§1.5 파생 가정 3). REQ-FUNC-012(양보 문장)는 여전히 PRD §14.1의 고정 템플릿이라 생성형 AI 호출이 필수가 아니다(§7.1) | **정보** | §7.2에 이미 설계된 선택적 확장 지점 외에는 Gemini를 호출할 필요가 없다는 판단을 유지한다(2026-08-26 재확인) |
 
 이 중 **GAP-001**이 가장 근본적이다 — 나머지 다섯은 "이 스택으로 어떻게 더 잘 만들까"의 문제지만, GAP-001은 "네이버 API 접근권 없이는 이 제품의 핵심 전제 자체가 성립하지 않는다"는, 기술스택 선택과 무관하게 항상 존재했던 제약(기존 SRS LIM-05)이 이 문서에서 다시 표면화된 것이다.
 
@@ -598,7 +598,7 @@ model RouteCache {
 
 | 단계 | 환경 | 명령 |
 | --- | --- | --- |
-| 로컬 개발 | 로컬 Supabase(Docker) | `supabase start` → `prisma migrate dev` |
+| 로컬 개발 | 로컬 Supabase CLI(Docker) | `supabase start` → `prisma migrate dev` |
 | 스키마 변경 | 로컬에서 마이그레이션 파일 생성 | `prisma migrate dev --name <변경명>` |
 | 배포 | Supabase(PostgreSQL) | `prisma migrate deploy`(Vercel 빌드 스텝에 포함) |
 | 시드 데이터 | 로컬 전용 | `prisma db seed` |
@@ -613,7 +613,9 @@ model RouteCache {
 
 먼저 짚어야 할 것 — **기존 기능 요구사항(REQ-FUNC-001~025)은 생성형 AI(LLM) 호출을 필수로 요구하지 않는다.** 양보 문장(REQ-FUNC-012)은 PRD §14.1이 정한 고정 구조("[누가][무엇을][얼마나] 감수하고, [대신]...")를 따르는 **결정론적 템플릿**이며, "AI"라는 제품명·PRD §15의 "AI 역할"은 조건 대조·설명 로직 자체를 가리키는 제품 프레이밍이지 LLM 호출을 의미하지 않는다. 총점·복합순위를 금지하는 `decisions/0001`과 판정의 재현 가능성 요구(REQ-FUNC-020)는 비결정적인 LLM 출력과 근본적으로 상충한다(ADR-TECH-05).
 
-따라서 C-TEC-005("AI 호출 기능이 **포함된 경우**")의 조건절은 현재 MVP에서는 충족되지 않는다. `CompromiseSentenceGenerator`(§4의 `domain/compromise/sentence-generator.ts`)는 순수 템플릿 함수로 구현하며 외부 API를 호출하지 않는다.
+따라서 C-TEC-005·006이 표준화하는 "LLM을 어떻게 부를 것인가"라는 기술 패턴은 준비해 두되, 현재 MVP는 이를 실제로 호출하지 않는다 — 이는 §1.5 파생 가정 3에서 명문화한 별개의 제품 결정이다. `CompromiseSentenceGenerator`(§4의 `domain/compromise/sentence-generator.ts`)는 순수 템플릿 함수로 구현하며 외부 API를 호출하지 않는다.
+
+덧붙여 C-TEC-005는 LLM 오케스트레이션을 위해 흔히 쓰이는 별도 Python 백엔드(LangChain 서버 등) 패턴을 명시적으로 배제한다 — 이 프로젝트에서는 그 갈림길 자체가 아직 등장하지 않았다는 뜻이기도 하다.
 
 ### 7.2 확장 지점 설계
 
@@ -654,7 +656,7 @@ export async function rewriteCompromiseSentence(structuredFacts: CompromiseFacts
 
 ```mermaid
 flowchart LR
-    DEV["로컬 개발<br/>로컬 Supabase"] -->|git push| REPO[["GitHub 저장소"]]
+    DEV["로컬 개발<br/>로컬 Supabase CLI"] -->|git push| REPO[["GitHub 저장소"]]
     REPO -->|Vercel Git 연동| BUILD["Vercel 빌드<br/>prisma migrate deploy → next build"]
     BUILD -->|main 브랜치| PROD["프로덕션 배포<br/>Supabase PostgreSQL"]
     BUILD -->|그 외 브랜치 · PR| PREVIEW["프리뷰 배포<br/>브랜치별 URL"]
@@ -668,7 +670,7 @@ flowchart LR
 
 | 변수 | 용도 | 환경 |
 | --- | --- | --- |
-| `DATABASE_URL` | Prisma 접속 문자열 | 로컬(로컬 Supabase) / 배포(Supabase) 각기 다른 값 |
+| `DATABASE_URL` | Prisma 접속 문자열 | 로컬(로컬 Supabase CLI) / 배포(Supabase) 각기 다른 값 |
 | `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_ANON_KEY` | Supabase Auth · 클라이언트 SDK | 공통 |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API 키 | §7 확장 지점 활성화 시에만 필요 |
 | `AI_MODEL_ID` | 모델 교체용(C-TEC-006) | 기본값 `gemini-1.5-flash` |
