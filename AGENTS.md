@@ -1,4 +1,4 @@
-# 같이 고르기 — Agent Instructions
+# 같이보기 — Agent Instructions
 
 여러 AI 코딩 도구(Claude Code 등)가 공통으로 읽는 최상위 규칙 파일이다. 도구별 설정은 이 내용을 중복하지 않고 참조한다.
 

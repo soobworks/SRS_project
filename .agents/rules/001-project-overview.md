@@ -1,9 +1,9 @@
 ---
-description: 같이 고르기 프로젝트 개요 — 무엇을 왜 만드는가
+description: 같이보기 프로젝트 개요 — 무엇을 왜 만드는가
 globs: ["**/*"]
 alwaysApply: true
 ---
-# PROJECT OVERVIEW: 같이 고르기
+# PROJECT OVERVIEW: 같이보기
 
 ## Vision
 

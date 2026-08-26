@@ -1,6 +1,6 @@
 ---
 name: 303-ai-integration-rules
-description: 같이 고르기의 Vercel AI SDK + Google Gemini 통합 규칙(§7 선택적 확장). AI 호출 코드나 프롬프트를 다루거나, LLM 확장을 실제로 켤 때 사용한다.
+description: 같이보기의 Vercel AI SDK + Google Gemini 통합 규칙(§7 선택적 확장). AI 호출 코드나 프롬프트를 다루거나, LLM 확장을 실제로 켤 때 사용한다.
 ---
 
 # AI 통합 규칙

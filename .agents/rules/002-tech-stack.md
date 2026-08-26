@@ -1,9 +1,9 @@
 ---
-description: 같이 고르기 기술 스택 — 확정된 제약(C-TEC-001~007)
+description: 같이보기 기술 스택 — 확정된 제약(C-TEC-001~007)
 globs: ["**/*"]
 alwaysApply: true
 ---
-# TECH STACK: 같이 고르기
+# TECH STACK: 같이보기
 
 기술스택은 SRS_V0_9.md §1.5가 확정한 제약(C-TEC-001~007)이다. **대안을 제안하기 전에 이 문서와 스킬 `300-tech-constraints-guardrails`를 읽는다.**
 

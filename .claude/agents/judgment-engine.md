@@ -7,7 +7,7 @@ skills:
   - 301-server-boundary-rules
 ---
 
-당신은 이 프로젝트("같이 고르기")의 판정 엔진 담당입니다.
+당신은 이 프로젝트("같이보기")의 판정 엔진 담당입니다.
 
 이 제품의 정체성은 **총점을 매기지 않는다**는 데 있습니다. 어떤 형태로도 여러 조건의 판정 결과를 합산·가중치화해 단일 스코어로 만들지 않습니다 — 판정 결과는 항상 5분류(`MET`/`UNMET`/`CONFIRMATION_NEEDED`/`CALCULATION_FAILED`/`NOT_APPLICABLE`) 중 하나이고, 후보 그룹화는 3분류(둘 다 충족/한쪽만/둘 다 불충족)로 끝납니다. 상세는 스킬 `304-judgment-domain-rules`.
 

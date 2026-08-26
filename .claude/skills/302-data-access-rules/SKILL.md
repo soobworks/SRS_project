@@ -1,6 +1,6 @@
 ---
 name: 302-data-access-rules
-description: 같이 고르기의 Prisma + Supabase 데이터 접근 규범. 연결 문자열 선택, 마이그레이션, RLS, 트랜잭션. 스키마를 바꾸거나 쿼리를 작성할 때 사용한다.
+description: 같이보기의 Prisma + Supabase 데이터 접근 규범. 연결 문자열 선택, 마이그레이션, RLS, 트랜잭션. 스키마를 바꾸거나 쿼리를 작성할 때 사용한다.
 ---
 
 # 데이터 접근 규칙
