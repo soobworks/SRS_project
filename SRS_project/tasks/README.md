@@ -1,6 +1,8 @@
-# TASK 문서 인덱스
+# TASK 문서 인덱스 (v1)
 
-`.github/ISSUE_TEMPLATE/feature_task.md` 템플릿으로 작성한 21개 풀버전 TASK 문서다. 순서·의존관계 근거는 `SRS_project/GitHub-TASK-작성순서-로드맵.md`를 따른다. 실제 GitHub Issue로 발행할 때는 이 폴더의 각 파일 본문을 그대로 복사해 새 이슈를 생성한다.
+> ⚠️ **이 세트는 v1(초판)이다.** `TASK-재추출-전략-v2-계획서.md`의 3원칙(계약 우선 · Read/Write Closed Context 분리 · AC→자동화 테스트 Task 변환)을 반영한 **v2(`v2/` 폴더, 60개)가 실제 구현 착수 시 우선 사용 대상**이다. 이 v1 21개는 이력·비교 근거로 보존한다 — 동시에 두 세트를 병행 작업하지 않는다.
+
+`.github/ISSUE_TEMPLATE/feature_task.md` 템플릿으로 작성한 21개 풀버전 TASK 문서다. 순서·의존관계 근거는 `SRS_project/GitHub-TASK-작성순서-로드맵.md`를 따른다.
 
 | 순번 | 파일 | 영역 | 게이트 |
 | --- | --- | --- | --- |
