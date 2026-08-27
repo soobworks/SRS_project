@@ -1,0 +1,72 @@
+[
+  {
+    "id": "L-001",
+    "name": "흑석 리버뷰",
+    "sharedSpaceId": "demo",
+    "coordinates": "37.5085,126.9635",
+    "deposit": 5000,
+    "rent": 45,
+    "maintenanceFee": 12,
+    "area": 68,
+    "listingType": "아파트",
+    "parking": true,
+    "walkToStationMin": 5,
+    "transactionStatus": "ACTIVE"
+  },
+  {
+    "id": "L-002",
+    "name": "상도 파크빌",
+    "sharedSpaceId": "demo",
+    "coordinates": "37.5024,126.9481",
+    "deposit": 3000,
+    "rent": 50,
+    "maintenanceFee": 7,
+    "area": 59,
+    "listingType": "빌라",
+    "parking": false,
+    "walkToStationMin": 12,
+    "transactionStatus": "ACTIVE"
+  },
+  {
+    "id": "L-003",
+    "name": "노량진 스카이",
+    "sharedSpaceId": "demo",
+    "coordinates": "37.5133,126.9424",
+    "deposit": 2000,
+    "rent": 68,
+    "maintenanceFee": 14,
+    "area": 44,
+    "listingType": "오피스텔",
+    "parking": true,
+    "walkToStationMin": 3,
+    "transactionStatus": "ACTIVE"
+  },
+  {
+    "id": "L-004",
+    "name": "사당 그린홈",
+    "sharedSpaceId": "demo",
+    "coordinates": "37.4765,126.9816",
+    "deposit": 8000,
+    "rent": 28,
+    "maintenanceFee": 13,
+    "area": 74,
+    "listingType": "아파트",
+    "parking": true,
+    "walkToStationMin": 9,
+    "transactionStatus": "ACTIVE"
+  },
+  {
+    "id": "L-005",
+    "name": "신대방 코지",
+    "sharedSpaceId": "demo",
+    "coordinates": "37.4874,126.9134",
+    "deposit": 3000,
+    "rent": 42,
+    "maintenanceFee": 6,
+    "area": 52,
+    "listingType": "빌라",
+    "parking": null,
+    "walkToStationMin": 15,
+    "transactionStatus": "ACTIVE"
+  }
+]

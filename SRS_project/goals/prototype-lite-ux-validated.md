@@ -44,7 +44,7 @@
   1) `reports/PROTOTYPE_LOG.md` 마지막 줄에 `STOP REASON: <원인 코드>` 한 줄을 덧붙인다.
   2) `pnpm typecheck && pnpm lint && pnpm build` 를 실행해 **세 명령 모두 exit 0** 인 출력을 대화에 남긴다.
   3) `grep -rniE "totalScore|totalPoint|overallScore|compositeScore|종합 ?점수|공동 ?적합도|추천 ?배지|복합 ?순위" app components lib` 를 실행해 **0 matches** 인 출력을 대화에 남긴다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d app components lib` 로 먼저 확인).
-  4) `find reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **32** 가 출력되는 것을 대화에 남긴다(§6의 32개 상태).
+  4) `find reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **32** 가 출력되는 것을 대화에 남긴다(§6의 32개 상태). 이어서 `ls reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
   5) `cat reports/PROTOTYPE_LOG.md` 를 실행해 스텝별 검수 결과·`EVAL #N` 줄·`STOP REASON:` 줄이 보이는 출력을 대화에 남긴다.
   6) **마지막 `aztks-agent` EVALUATE 출력 5줄(`VERDICT` / `SCORECARD` / `TOP_FIX` / `EVIDENCE` / `NOTES`)을 요약하지 말고 그대로 대화에 붙여넣는다.**
   7) `"$GH" pr list --draft` 를 실행해 열린 Draft PR 목록을 대화에 남긴다.
@@ -92,11 +92,14 @@
 
 ## 6) 화면 캡처 규칙 — 32장
 
-- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 32개 상태를 캡처해 `reports/prototype-screens/<파일명>.png` 로 저장한다.
+- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 32개 상태를 캡처해 `reports/prototype-screens/<파일명>__<RUN_TS>.png` 로 저장한다.
+- **`<RUN_TS>` 는 캡처 실행 시각**이며 `YYYYMMDD-HHmm` 형식이다(예: `A-13__20260827-1432.png`). 한 번의 캡처 실행에서는 32장이 **같은 `<RUN_TS>`** 를 쓴다.
+- **캡처 실행 전 `reports/prototype-screens/` 를 비운다.** 이전 실행분이 남으면 §3.4의 32장 검증이 깨진다.
+- `RUN_TS` 값을 `reports/PROTOTYPE_LOG.md` 에 `CAPTURE RUN: <RUN_TS> (32 shots)` 한 줄로 기록한다.
 - 뷰포트는 명세 §2.1을 따른다 — `A-*`는 1280px, `B-*`는 390px.
 - **32장이 모두 저장되기 전에는 `aztks-agent`를 디스패치하지 않는다.** 캡처가 없으면 UX 흐름을 판정할 근거가 없다.
 
-| # | 파일명 | URL 쿼리 | 화면 |
+| # | 파일명 (뒤에 `__<RUN_TS>` 가 붙는다) | URL 쿼리 | 화면 |
 | --- | --- | --- | --- |
 | 1 | `A-01` | `?state=A-01` | 기능 진입 |
 | 2 | `A-02` | `?state=A-02` | 후보 선택 1~5개 |
