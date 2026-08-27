@@ -66,7 +66,8 @@
   - `SRS_project/tasks/v2/TASK-마스터-리스트.md` · `[태스크 리스트] 같이보기.md` · `[총괄] *.md` · 개별 `{Task ID}-*.md`
   - `SRS_project/grill/GRILL_LEDGER.md` · `SRS_project/goals/prototype-lite-ux-validated.md`
 - **금지 행동:**
-  - 어떤 PR도 `main`에 머지하지 않는다. `main` 직접 커밋·force push를 하지 않는다.
+  - `main` 직접 커밋·force push를 하지 않는다.
+  - ~~어떤 PR도 `main`에 머지하지 않는다.~~ **2026-08-27 사용자 지시로 해제** — 저장소 기본 화면에서 프로토타입이 보여야 해 PR #56을 `main`에 머지했다. 평가가 아직 5축 전부 `P`에 도달하지 않은 상태로 진입한 것이며, 완료 조건(§3)은 그대로다 — 머지는 목표 달성을 대체하지 않는다.
   - **총점·복합순위·공동 적합도·추천 배지를 산출하거나 렌더하는 코드를 만들지 않는다.** 픽스처에 `totalScore`·`rank`·`recommendation` 필드를 넣지 않는다.
   - **Server Action 본문을 쓰지 않는다.** 프레젠테이션 계층만 만든다.
   - **DB에 연결하지 않는다.** `supabase start`·`prisma migrate` 를 실행하지 않는다(`prisma generate`만 쓴다).
