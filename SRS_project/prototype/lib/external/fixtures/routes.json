@@ -1,0 +1,13 @@
+[
+  { "origin": "강남역", "listingId": "L-001", "commuteMode": "TRANSIT", "durationMin": 25 },
+  { "origin": "강남역", "listingId": "L-002", "commuteMode": "TRANSIT", "durationMin": 28 },
+  { "origin": "강남역", "listingId": "L-003", "commuteMode": "TRANSIT", "durationMin": 30 },
+  { "origin": "강남역", "listingId": "L-004", "commuteMode": "TRANSIT", "durationMin": 18 },
+  { "origin": "강남역", "listingId": "L-005", "commuteMode": "TRANSIT", "durationMin": 32 },
+
+  { "origin": "여의도역", "listingId": "L-001", "commuteMode": "TRANSIT", "durationMin": 18 },
+  { "origin": "여의도역", "listingId": "L-002", "commuteMode": "TRANSIT", "durationMin": 22 },
+  { "origin": "여의도역", "listingId": "L-003", "commuteMode": "TRANSIT", "durationMin": null },
+  { "origin": "여의도역", "listingId": "L-004", "commuteMode": "TRANSIT", "durationMin": 19 },
+  { "origin": "여의도역", "listingId": "L-005", "commuteMode": "TRANSIT", "durationMin": 20 }
+]

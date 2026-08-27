@@ -11,3 +11,17 @@ SRS_project/29148-2018-ISOIECIEEE.pdf
 
 # Claude Code local permission overrides — per-developer, not shared
 .claude/settings.local.json
+
+# --- Next.js 프로토타입 (2026-08-27, 이슈 #55) ---
+node_modules/
+.next/
+out/
+build/
+.env
+.env*.local
+next-env.d.ts
+.vercel
+*.tsbuildinfo
+
+# 프로토타입 화면 캡처는 로컬 산출물 — 용량이 커 저장소에 넣지 않는다
+SRS_project/prototype/reports/prototype-screens/

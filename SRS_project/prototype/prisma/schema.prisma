@@ -1,0 +1,198 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // 로컬: 로컬 Supabase, 배포: Supabase PostgreSQL (C-TEC-003)
+}
+
+enum Role {
+  A
+  B
+}
+
+enum ConditionType {
+  UPPER_BOUND   // 예산 · 통근시간 · 역 도보
+  LOWER_BOUND   // 전용면적
+  PRESENCE      // 주차
+  EXACT_MATCH   // 매물 유형
+}
+
+enum JudgmentStatus {
+  MET
+  UNMET
+  CONFIRMATION_NEEDED
+  CALCULATION_FAILED
+  NOT_APPLICABLE
+}
+
+enum RelaxationProposalStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum FieldRecordOutcome {
+  KEEP
+  HOLD
+  EXCLUDE
+}
+
+enum NotificationType {
+  CONDITION_CHANGED
+  RELAXATION_PROPOSED
+  LISTING_CHANGED
+  VISIT_SELECTION_CHANGED
+}
+
+model Person {
+  id                 String   @id @default(cuid())
+  sharedSpace        SharedSpace? @relation("SpacePersons", fields: [sharedSpaceId], references: [id])
+  sharedSpaceId      String?
+  role               Role
+  relationshipType   String?  // A가 초대 시 1회 선택
+  budgetCap          Int      // 항상 필수
+  commutes           Boolean  @default(false)
+  commuteOrigin      String?
+  commuteMode        String?  // 대중교통 기본, 자차 선택
+  requiredConditions Json     @default("[]") // 0~4개, {key, operator, value}[]
+  preferences        Json     @default("[]") // 자유 문장 0~3개, 판정 미사용
+  confirmationItems  Json     @default("[]") // 상한 없음, 판정 미사용
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  judgmentResults      JudgmentResult[]
+  relaxationsProposed  RelaxationProposal[] @relation("Proposer")
+  relaxationsTargeted  RelaxationProposal[] @relation("Target")
+  notifications        Notification[]
+}
+
+model SharedSpace {
+  id               String   @id @default(cuid())
+  connectionStatus String   @default("AWAITING_B")
+  persons          Person[] @relation("SpacePersons")
+  listings         ListingRef[]
+  invite           Invite?
+  visitSelection   VisitSelection?
+  createdAt        DateTime @default(now())
+}
+
+model Invite {
+  code               String   @id @default(cuid())
+  sharedSpace        SharedSpace @relation(fields: [sharedSpaceId], references: [id])
+  sharedSpaceId      String   @unique
+  linkUrl            String
+  tempCondition      Json?    // B 비로그인 임시조건
+  lastAccessedAt     DateTime @default(now())
+  migratedAt         DateTime?
+  createdAt          DateTime @default(now())
+
+  @@index([lastAccessedAt]) // REQ-FUNC-007 AC-07-03 배치 삭제용
+}
+
+model ListingRef {
+  id                 String   @id @default(cuid())
+  sharedSpace        SharedSpace @relation(fields: [sharedSpaceId], references: [id])
+  sharedSpaceId      String
+  coordinates        String
+  deposit            Int
+  rent               Int
+  maintenanceFee     Int
+  area               Float
+  listingType        String
+  parking            Boolean
+  walkToStationMin   Int
+  transactionStatus  String   @default("ACTIVE")
+
+  judgmentResults    JudgmentResult[]
+  brokerQuestions    BrokerQuestion[]
+  fieldRecord        FieldRecord?
+}
+
+model JudgmentResult {
+  id            String         @id @default(cuid())
+  person        Person         @relation(fields: [personId], references: [id])
+  personId      String
+  listing       ListingRef     @relation(fields: [listingId], references: [id])
+  listingId     String
+  conditionKey  String
+  status        JudgmentStatus
+  gapAmount     String?
+  compromiseSentence CompromiseSentence?
+  updatedAt     DateTime       @updatedAt
+
+  @@unique([personId, listingId, conditionKey])
+}
+
+model CompromiseSentence {
+  id               String   @id @default(cuid())
+  judgmentResult   JudgmentResult @relation(fields: [judgmentResultId], references: [id])
+  judgmentResultId String   @unique
+  losingPersonId   String
+  lostCondition    String
+  relativeRank     Int      // 후보 5개 안 상대 순위, 절대값 아님
+}
+
+model RelaxationProposal {
+  id             String                   @id @default(cuid())
+  proposer       Person                   @relation("Proposer", fields: [proposerId], references: [id])
+  proposerId     String
+  target         Person                   @relation("Target", fields: [targetId], references: [id])
+  targetId       String
+  conditionKey   String
+  proposedValue  String                   // 실제 미달량에서 산출
+  status         RelaxationProposalStatus @default(PENDING)
+  createdAt      DateTime                 @default(now())
+}
+
+model VisitSelection {
+  id                String   @id @default(cuid())
+  sharedSpace       SharedSpace @relation(fields: [sharedSpaceId], references: [id])
+  sharedSpaceId     String   @unique
+  round             Int      @default(1) // 최대 2라운드
+  finalCandidates   Json?    // 최대 2개, 분할 포함
+  updatedAt         DateTime @updatedAt
+}
+
+model BrokerQuestion {
+  id                 String @id @default(cuid())
+  listing            ListingRef @relation(fields: [listingId], references: [id])
+  listingId          String
+  confirmationItem   String
+  answer             String?
+  status             String @default("PENDING")
+}
+
+model FieldRecord {
+  id         String              @id @default(cuid())
+  listing    ListingRef          @relation(fields: [listingId], references: [id])
+  listingId  String              @unique
+  checklist  Json                // 층간소음 등 6항목, 전부 표시
+  outcome    FieldRecordOutcome?
+}
+
+model Notification {
+  id         String           @id @default(cuid())
+  person     Person           @relation(fields: [personId], references: [id])
+  personId   String
+  type       NotificationType
+  payload    Json
+  readAt     DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@index([personId, readAt])
+}
+
+// REQ-NF-002, 003 — 별도 캐시 인프라 없이 Postgres로 구현(ADR-TECH-04)
+model RouteCache {
+  id           String   @id @default(cuid())
+  origin       String
+  coordinates  String
+  commuteMode  String
+  durationMin  Int
+  computedAt   DateTime @default(now())
+
+  @@unique([origin, coordinates, commuteMode])
+}
