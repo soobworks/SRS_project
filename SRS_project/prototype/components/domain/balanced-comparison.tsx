@@ -37,7 +37,11 @@ const STATUS_TONE: Record<ConditionRow["status"], string> = {
 
 /** 전체형 한 줄 — `통근  13분 > 10분  ✗ +3분` (명세 §4.3) */
 function FullRow({ r }: { r: ConditionRow }) {
-  const gapEstimated = r.estimated && r.gap !== null;
+  // 명세 §5.3 — ⓘ는 **행당 최대 1개**다.
+  // 실제값이 이미 ⓘ를 달았으면 미달량에는 달지 않는다. 같은 전제를 공유하는
+  // 두 값에 각각 ⓘ를 붙이면 한 줄이 과밀해지고, 정작 중요한 추정치가 묻힌다.
+  const actualHasBadge = r.estimated && r.status !== "CALCULATION_FAILED" &&
+    r.status !== "CONFIRMATION_NEEDED";
   return (
     <div className="grid grid-cols-[3.5rem_1fr_auto] items-baseline gap-x-2 py-1.5 text-sm">
       <span className="text-ink-muted">{r.label}</span>
@@ -67,7 +71,11 @@ function FullRow({ r }: { r: ConditionRow }) {
         {r.gap ? (
           <>
             {" "}
-            {gapEstimated ? <DisclosedValue>{r.gap}</DisclosedValue> : r.gap}
+            {r.estimated && !actualHasBadge ? (
+              <DisclosedValue>{r.gap}</DisclosedValue>
+            ) : (
+              r.gap
+            )}
           </>
         ) : null}
       </span>
