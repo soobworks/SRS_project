@@ -25,6 +25,7 @@ const S = "/spaces/demo";
 const SHOTS = [
   ["A-01", `${S}?state=A-01`],
   ["A-02", `${S}?state=A-02`],
+  ["A-02a", `${S}?state=A-02a`],
   ["A-02c", `${S}?state=A-02c`],
   ["A-03", `${S}/conditions?state=A-03`],
   ["A-03d", `${S}/conditions?state=A-03d`],
@@ -55,6 +56,7 @@ const SHOTS = [
   ["B-01__invite-expired", `/invite/DEMOCODE?state=B-01&invite=expired`],
   ["B-02", `/invite/DEMOCODE?state=B-02`],
   ["S-02", `${S}/judgments?state=S-02`],
+  ["S-03", `${S}/judgments?state=S-03`],
 ];
 
 const isMobile = (name) => name.startsWith("B-");

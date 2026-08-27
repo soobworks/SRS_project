@@ -7,6 +7,7 @@ import {
 } from "@/components/dev/prototype-shell";
 import { CompactSummary } from "@/components/domain/balanced-comparison";
 import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
+import type { CandidateGroup } from "@/lib/types";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
 import {
   resolveSet,
@@ -85,11 +86,44 @@ export default async function JudgmentsPage({
                 </p>
               </section>
             ) : null}
+            {state === "S-03" ? (
+              <section className="mb-5 rounded-lg border border-line bg-surface p-4">
+                <h2 className="mb-1 font-medium text-ink">
+                  통근 경로를 찾지 못했어요
+                </h2>
+                <p className="text-sm text-ink-muted">
+                  출근지에서 이 집까지 가는 길을 계산하지 못했어요. 세 가지는
+                  서로 다른 상태예요 —{" "}
+                  <b className="text-neutral">계산 불가</b>(재보려 했지만
+                  실패), <b className="text-neutral">해당 없음</b>(출근을 안
+                  하셔서 잴 대상이 없음),{" "}
+                  <b className="text-unmet">미충족</b>(재봤는데 기준에 못 미침).
+                  이번은 첫 번째예요.
+                </p>
+              </section>
+            ) : null}
             {state === "A-13b" ? <DeadEndPanel spaceId={spaceId} /> : null}
             {state === "A-13c" ? <ConflictPanel /> : null}
 
+            {/* 3분류 그룹으로 묶는다(명세 §9.1). 그룹 순서는 고정이며
+                그룹 내부는 후보를 담은 순서 그대로다 — 재정렬하지 않는다.
+                1인 빈 경로(group=null)는 3분류가 성립하지 않아 평면 나열한다. */}
+            {(solo
+              ? [null]
+              : (["BOTH_MET", "ONE_SIDE_ONLY", "BOTH_UNMET"] as CandidateGroup[])
+            ).map((g) => {
+              const rows = scenario.judgments.filter((x) => x.group === g);
+              if (rows.length === 0) return null;
+              return (
+                <section key={g ?? "solo"} className="mb-5">
+                  {g ? (
+                    <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-ink">
+                      <GroupBadge group={g} />
+                      <span className="nums text-ink-muted">{rows.length}곳</span>
+                    </h2>
+                  ) : null}
             <ul className="flex flex-col gap-3">
-              {scenario.judgments.map((jd) => {
+              {rows.map((jd) => {
                 const listing = listingById(jd.listingId);
                 return (
                   <li
@@ -118,10 +152,11 @@ export default async function JudgmentsPage({
                         </span>
                       </div>
 
-                      <div className="mb-2 flex flex-wrap items-center gap-1.5">
-                        {jd.group ? <GroupBadge group={jd.group} /> : null}
-                        {jd.confirmationNeeded ? <ConfirmationBadge /> : null}
-                      </div>
+                      {jd.confirmationNeeded ? (
+                        <div className="mb-2">
+                          <ConfirmationBadge />
+                        </div>
+                      ) : null}
 
                       <div className="flex flex-col gap-0.5">
                         <CompactSummary label="A" rows={jd.a} />
@@ -143,6 +178,9 @@ export default async function JudgmentsPage({
                 );
               })}
             </ul>
+                </section>
+              );
+            })}
 
             <PreferenceCards solo={solo} />
           </>

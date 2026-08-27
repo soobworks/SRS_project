@@ -127,6 +127,17 @@ export interface RelaxationOption {
   recovers: string[];
 }
 
+/**
+ * `all-unmet` 세트 기준이며 값은 `judgments.fixture.ts`의 실제 미달량과 일치해야 한다.
+ *
+ * A안 — L-005에서 A의 미충족은 예산 하나뿐이라(`+월 3만`) 그만큼 풀면 A가 전부
+ * 충족으로 바뀌고 후보가 `한쪽만 충족`으로 살아난다(명세 §6.7).
+ *
+ * B안 — B는 어느 후보에서도 미충족이 2개 이상이라(L-001 예산 `+월 15만` **및**
+ * 통근 `+3분`) **한 조건만 풀어서는 살아나는 후보가 없다.** 그래서 `recovers`가
+ * 비어 있고 화면도 그렇게 말한다. 없는 이득을 만들어내지 않는다(PRD §14.2).
+ * A안·B안을 둘 다 보여주는 것은 유지한다(PRD §14.3).
+ */
 export const RELAXATION_OPTIONS: RelaxationOption[] = [
   {
     who: "A",
@@ -142,7 +153,7 @@ export const RELAXATION_OPTIONS: RelaxationOption[] = [
     from: "15분",
     to: "18분",
     delta: "+3분",
-    recovers: ["L-001"],
+    recovers: [],
   },
 ];
 

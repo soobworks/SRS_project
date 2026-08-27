@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ASSUMPTION_BASIS } from "@/lib/dev/scenarios";
 
 /**
  * X-001 — 숫자 전제 공개 (REQ-FUNC-021 · REQ-NF-006)
@@ -16,11 +15,16 @@ import { ASSUMPTION_BASIS } from "@/lib/dev/scenarios";
  */
 export function DisclosedValue({
   children,
-  basis = ASSUMPTION_BASIS,
+  basis = "기준 시점 미지정",
   href,
 }: {
   /** 이미 `약` 접두어가 붙은 표시 문자열. */
   children: React.ReactNode;
+  /**
+   * 기준 시점. 호출자가 넘긴다 —
+   * 이 컴포넌트는 `J-006` 이후에도 살아남으므로 폐기 예정인 `lib/dev/`에
+   * 의존하지 않는다.
+   */
   basis?: string;
   /** 전제 패널로 가는 경로. */
   href?: string;

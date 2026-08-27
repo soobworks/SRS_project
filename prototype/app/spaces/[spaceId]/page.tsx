@@ -27,6 +27,7 @@ export default async function SharedSpacePage({
   const { state = "A-02" } = await searchParams;
 
   const blocked = state === "A-02c";
+  const empty = state === "A-02a";
   const entry = state === "A-01";
 
   return (
@@ -63,6 +64,25 @@ export default async function SharedSpacePage({
             </p>
           ) : null}
 
+          {/* A-02a — 관심매물 0개. 여기서 막지 말고 네이버 탐색으로 안내한다(PRD §18.2). */}
+          {empty ? (
+            <div className="rounded-lg border border-line bg-surface p-6 text-center">
+              <p className="text-sm text-ink">
+                아직 관심매물에 담아둔 집이 없어요
+              </p>
+              <p className="mt-1 text-sm text-ink-muted">
+                네이버 부동산에서 마음에 드는 집을 먼저 담아주세요. 담은 집
+                중에서 같이 볼 후보를 고르게 돼요.
+              </p>
+              <div className="mt-4">
+                <ExitBadge>
+                  네이버 탐색으로 나갑니다 — 프로토타입 범위 밖입니다.
+                </ExitBadge>
+              </div>
+            </div>
+          ) : null}
+
+          {!empty ? (
           <ul className="flex flex-col gap-2">
             {LISTINGS.map((l, i) => (
               <li
@@ -100,6 +120,7 @@ export default async function SharedSpacePage({
               </li>
             ) : null}
           </ul>
+          ) : null}
 
           <section className="mt-6 rounded-lg border border-line bg-surface p-4">
             <p className="mb-2 text-xs font-medium text-ink-muted">
@@ -124,6 +145,12 @@ export default async function SharedSpacePage({
               className="inline-block rounded-md border border-line px-4 py-2 text-sm text-ink"
             >
               6개째 담아보기(상한 확인)
+            </Link>
+            <Link
+              href={`/spaces/${spaceId}?state=A-02a`}
+              className="inline-block rounded-md border border-line px-4 py-2 text-sm text-ink"
+            >
+              관심매물이 없을 때
             </Link>
           </div>
         </>
