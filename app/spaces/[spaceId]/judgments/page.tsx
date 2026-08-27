@@ -92,15 +92,19 @@ export default async function JudgmentsPage({
               {scenario.judgments.map((jd) => {
                 const listing = listingById(jd.listingId);
                 return (
-                  <li key={jd.listingId}>
-                    <Link
-                      href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-14&set=${scenario.id}`}
-                      className="block rounded-lg border border-line bg-surface p-4 hover:border-line-strong"
-                    >
+                  <li
+                    key={jd.listingId}
+                    className="rounded-lg border border-line bg-surface p-4"
+                  >
+                    {/* 카드 전체를 링크로 감싸지 않는다 — 안에 전제 공개(ⓘ) 링크가
+                        들어가 `<a>` 중첩이 되기 때문이다. 제목만 링크로 둔다. */}
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <span className="font-medium text-ink">
+                        <Link
+                          href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-14&set=${scenario.id}`}
+                          className="font-medium text-ink underline-offset-4 hover:underline"
+                        >
                           {listing.name}
-                        </span>
+                        </Link>
                         <span className="text-xs text-ink-muted">
                           {listing.listingType} · 역도보 {listing.walkToStationMin}분
                         </span>
@@ -129,7 +133,12 @@ export default async function JudgmentsPage({
                           <CompactSummary label="B" rows={jd.b} />
                         )}
                       </div>
-                    </Link>
+                      <Link
+                        href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-14&set=${scenario.id}`}
+                        className="mt-2 inline-block text-xs text-ink-muted underline underline-offset-4"
+                      >
+                        판정 근거 보기 →
+                      </Link>
                   </li>
                 );
               })}

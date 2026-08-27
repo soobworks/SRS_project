@@ -18,3 +18,8 @@ STEP 2 DONE: R-001 양보 문장(A-14b) · R-002 완화 A안/B안(A-15) · 전�
 STEP 3 DONE: V-001 2라운드(A-16 match 2/1/0) · A-16e Option Grid(총점 행 없음) | 검수 1·4 = 예
 STEP 4 DONE: I-001 조건 입력 · S-001 후보 선택 · S-003 B 진입(모바일 390px) | 검수 1~8 = 예
 VERIFY: pnpm typecheck / lint / build 모두 exit 0
+FIX: 판정 목록 카드 전체를 Link로 감싸 `<a>` 중첩 → 하이드레이션 실패. 제목만 링크로 바꿔 해소.
+FIX: A/B 블록 행 수 불일치(명세 §4.3 위반) — 안 건 조건도 `기준 없음`으로 행을 남기도록 정규화. 블록 높이가 달라 "동일 비중"이 깨지고 있었다.
+FIX: A-16e Option Grid에서 `기준 없음`을 `?`(확인 필요 기호)로 렌더 — 5분류 오분류. 상태별로 분기하도록 수정.
+FIX: Next 개발 표시기가 매물명을 가림 → devIndicators: false
+CAPTURE RUN: 20260827-1459 (32 shots)

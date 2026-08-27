@@ -143,21 +143,33 @@ function RunoffGrid({
   rowsFor: (id: string) => { a: ConditionRow[]; b: ConditionRow[] };
 }) {
   const labels = ["예산", "통근", "면적", "주차", "유형"];
+  /**
+   * 5분류를 기호 하나로 뭉뚱그리지 않는다.
+   * `확인 필요`(?)와 `기준 없음`·`해당 없음`·`계산 불가`는 서로 다른 상태이며,
+   * 이들을 섞는 것이 이 프로젝트에서 가장 치명적인 오분류다(PRD §18.3).
+   */
   const cell = (id: string, who: "a" | "b", label: string) => {
     const row = rowsFor(id)[who].find((r) => r.label === label);
     if (!row) return <span className="text-neutral">—</span>;
-    const tone =
-      row.status === "MET"
-        ? "text-met"
-        : row.status === "UNMET"
-          ? "text-unmet"
-          : "text-neutral";
-    return (
-      <span className={`nums ${tone}`}>
-        {row.status === "MET" ? "✓" : row.status === "UNMET" ? "✗" : "?"}
-        {row.gap ? ` ${row.gap}` : ""}
-      </span>
-    );
+
+    switch (row.status) {
+      case "MET":
+        return <span className="nums text-met">✓</span>;
+      case "UNMET":
+        return (
+          <span className="nums text-unmet">✗{row.gap ? ` ${row.gap}` : ""}</span>
+        );
+      case "CONFIRMATION_NEEDED":
+        return <span className="nums text-confirm">? 확인 필요</span>;
+      case "CALCULATION_FAILED":
+        return <span className="nums text-neutral">계산 불가</span>;
+      case "NOT_APPLICABLE":
+        return (
+          <span className="nums text-neutral">
+            {row.actual === "해당 없음" ? "해당 없음" : "기준 없음"}
+          </span>
+        );
+    }
   };
 
   return (

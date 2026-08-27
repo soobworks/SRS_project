@@ -72,13 +72,78 @@ const na = (k: ConditionKey, l: string) =>
 const noRule = (k: ConditionKey, l: string, a: string) =>
   row(k, l, a, null, null, "NOT_APPLICABLE", null);
 
+/**
+ * 블록 간 행 수 맞추기 — 명세 §4.3
+ *
+ * 한 사람이 걸지 않은 조건도 그 사람 블록에서 **행을 지우지 않는다.**
+ * 블록 높이가 달라지면 "A와 B를 같은 비중으로"(REQ-FUNC-025)가 깨진다.
+ * 빠진 자리는 `기준 없음`으로 채우고 조건 순서(§4.5)로 정렬한다.
+ *
+ * 이것은 **표시 정규화**이지 판정이 아니다 — 상태는 여전히 표에서 전사한 값 그대로다.
+ * 양쪽 모두 없는 조건은 채우지 않는다(`no-commute`의 통근 행 제거가 유지된다).
+ */
+const ORDER: ConditionKey[] = [
+  "budget",
+  "commute",
+  "area",
+  "parking",
+  "listingType",
+];
+const LABEL: Record<ConditionKey, string> = {
+  budget: "예산",
+  commute: "통근",
+  walkToStation: "역도보",
+  area: "면적",
+  parking: "주차",
+  listingType: "유형",
+};
+/** 사람과 무관한 매물 실제값. 패딩은 이 세 항목에서만 일어난다. */
+const LISTING_VALUE: Record<string, Partial<Record<ConditionKey, string>>> = {
+  "L-001": { area: "68㎡", parking: "있음", listingType: "아파트" },
+  "L-002": { area: "59㎡", parking: "없음", listingType: "빌라" },
+  "L-003": { area: "44㎡", parking: "있음", listingType: "오피스텔" },
+  "L-004": { area: "74㎡", parking: "있음", listingType: "아파트" },
+  "L-005": { area: "52㎡", parking: "데이터 없음", listingType: "빌라" },
+};
+
+const pad = (
+  listingId: string,
+  own: ConditionRow[],
+  other: ConditionRow[],
+): ConditionRow[] => {
+  if (own.length === 0) return own; // B 미참여(solo)는 채우지 않는다
+  const union = new Set<ConditionKey>([
+    ...own.map((r) => r.key),
+    ...other.map((r) => r.key),
+  ]);
+  const have = new Map(own.map((r) => [r.key, r]));
+  const out: ConditionRow[] = [];
+  for (const key of ORDER) {
+    if (!union.has(key)) continue;
+    const existing = have.get(key);
+    if (existing) {
+      out.push(existing);
+      continue;
+    }
+    const actual = LISTING_VALUE[listingId]?.[key] ?? "—";
+    out.push(noRule(key, LABEL[key], actual));
+  }
+  return out;
+};
+
 const j = (
   listingId: string,
   group: ListingJudgment["group"],
   confirmationNeeded: boolean,
   a: ConditionRow[],
   b: ConditionRow[],
-): ListingJudgment => ({ listingId, group, confirmationNeeded, a, b });
+): ListingJudgment => ({
+  listingId,
+  group,
+  confirmationNeeded,
+  a: pad(listingId, a, b),
+  b: pad(listingId, b, a),
+});
 
 // ── 세트 1: normal — 명세 §6.6 ────────────────────────────────────────
 // A 예산 100만 · 통근 25분 · 면적 60㎡ · 주차 있음

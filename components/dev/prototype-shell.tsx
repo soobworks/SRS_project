@@ -24,7 +24,7 @@ export function PrototypeShell({
   if (form === "mobile") {
     return (
       <div className="flex min-h-screen flex-col items-center bg-canvas py-6">
-        <div className="w-[390px] overflow-hidden rounded-xl border border-line-strong bg-surface shadow-sm">
+        <div className="w-full max-w-[390px] overflow-hidden rounded-xl border border-line-strong bg-surface shadow-sm">
           <header className="flex items-center justify-between border-b border-line bg-shell px-4 py-2.5 text-xs text-shell-ink">
             <span>‹ 같이 고르기</span>
             {state ? <code className="opacity-70">{state}</code> : null}
