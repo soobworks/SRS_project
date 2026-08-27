@@ -192,3 +192,39 @@ export interface Checklist {
   ambientNoise: boolean | null;
   interiorCondition: boolean | null;
 }
+
+// ── 화면 표시 계약 ────────────────────────────────────────────────────
+//
+// 판정 결과를 화면이 소비하는 형태다. `J-006`(5분류 상태 분류)이 완료되면
+// `queries/judgment.queries.ts` 가 이 형태로 반환하고, 프로토타입 픽스처는
+// 삭제된다 — 즉 **이 타입들은 프로토타입보다 오래 산다.** 그래서 폐기 예정인
+// `lib/dev/` 가 아니라 계약 SSOT인 여기에 둔다.
+
+/** 조건 한 줄. 전체형 `통근 13분 > 10분 ✗ +3분` 이 이 필드들로 조립된다. */
+export interface ConditionRow {
+  key: ConditionKey;
+  /** 화면 라벨 — 예산 · 통근 · 면적 · 주차 · 유형. 순서는 고정이다. */
+  label: string;
+  /** 실제값 표시 문자열. 추정치면 `약` 접두어가 이미 붙어 있다. */
+  actual: string;
+  /** 비교 기호. 기준이 없거나 비교가 성립하지 않으면 null. */
+  comparator: "≤" | ">" | "≥" | "<" | "=" | "≠" | null;
+  /** 사용자 기준값 표시 문자열. 그 사람이 걸지 않은 조건이면 null(`기준 없음`). */
+  threshold: string | null;
+  status: JudgmentStatus;
+  /** 미달량 표시 문자열. 충족·해당없음이면 null. */
+  gap: string | null;
+  /** `true`면 `DisclosedValue`로 감싼다 — 전제가 바뀌면 함께 바뀌는 값이다. */
+  estimated: boolean;
+}
+
+/** 한 매물에 대한 A·B 판정 한 벌. */
+export interface ListingJudgment {
+  listingId: ListingId;
+  /** `null` = 1인 빈 경로(B 미참여). 3분류는 두 사람이 있어야 성립한다. */
+  group: CandidateGroup | null;
+  /** 3분류와 별개로 붙는 배지. 3분류에 흡수하지 않는다(AC-11-02). */
+  confirmationNeeded: boolean;
+  a: ConditionRow[];
+  b: ConditionRow[];
+}

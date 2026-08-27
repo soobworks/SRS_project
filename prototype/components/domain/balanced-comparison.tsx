@@ -1,4 +1,4 @@
-import type { ConditionRow } from "@/lib/dev/view-types";
+import type { ConditionRow } from "@/lib/types";
 import { DisclosedValue, UndisclosedValue } from "./disclosed-value";
 
 /**

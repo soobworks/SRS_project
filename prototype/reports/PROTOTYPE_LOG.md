@@ -12,11 +12,11 @@
 | --- | --- |
 | **단계** | 구현 완료 · **평가 반영 중** |
 | **완료 조건** | `aztks-agent` EVALUATE가 `VERDICT: GO` + `SCORECARD: A:P Z:P T:P K:P S:P` |
-| **최근 평가** | EVAL #1 → **NO-GO** (`A:P Z:F T:F K:C S:C`) |
-| **평가 예산** | 1 / 5 사용 |
+| **최근 평가** | EVAL #2 → **GO / 미통과** (`A:P Z:C T:P K:C S:P`) — CONCERN 2건 |
+| **평가 예산** | 2 / 5 사용 |
 | **검증 명령** | `typecheck` · `lint` · `build` 전부 exit 0 |
 | **총점 금지** | 실코드 0건 · 금지 prop 0건 |
-| **캡처** | 34장 (이동 후 재캡처 필요) |
+| **캡처** | 34장 (`RUN_TS=20260827-1543`, 소스와 동기) |
 | **다음 행동** | ↓ §5 |
 
 ---
@@ -52,6 +52,23 @@ SCORECARD: A:P Z:F T:F K:C S:C
 
 **통과한 것:** 검수 8문항 전부 · 총점 부재 · `확인 필요` 별도 배지 · 4상태 구분 · A/B 동일 비중 · 동시 완화 불가 · 필터 자동이동 없음 · 전부불충족 출구 · 세 검증 명령 exit 0
 
+### EVAL #2 — 2026-08-27 · **GO (미통과 — CONCERN 2건)**
+
+```
+VERDICT: GO
+SCORECARD: A:P Z:C T:P K:C S:P
+```
+
+| 축 | 판정 | 지적 | 조치 |
+| --- | --- | --- | --- |
+| A | **P** | — | — |
+| Z | **C** | X8·X9를 소스만 고치고 **재캡처를 안 해** 캡처가 여전히 `가 살아나요`를 보여줌 → 검수질문 6·8이 캡처로 답해지지 않음 | 재캡처 `RUN_TS=20260827-1543` (X11) |
+| T | **P** | EVAL #1의 FAIL 2건 모두 해소 확인 | — |
+| K | **C** | `balanced-comparison.tsx`가 `@/lib/dev/view-types`의 `ConditionRow`를 import — EVAL #1 K:C를 `disclosed-value.tsx`에만 반영하고 같은 패턴을 놓침 | `ConditionRow`·`ListingJudgment`를 `lib/types/contracts.ts`로 이관 (X10) |
+| S | **P** | 로그가 X8을 정직하게 미완으로 기록한 점 인정 | — |
+
+**전수 통과 확인:** 총점·순위·추천 grep 0건 · `A-14d`에서 `확인 필요`가 별도 배지로 병기 · `데이터 없음`/`기준 없음` 구분 · `no-commute` 실부담이 명세 §6.4와 정확히 일치 · `A-16e` 총점 행 없음 · `A-13b-2` 결과 수 미표시·자동 이동 없음 · 세 검증 명령 exit 0
+
 ---
 
 ## 3. 결정 기록
@@ -85,6 +102,8 @@ SCORECARD: A:P Z:F T:F K:C S:C
 | X7 | `disclosed-value.tsx`가 `lib/dev/` 의존 → `basis`를 호출자가 넘기도록 분리 | EVAL #1 K:C |
 | X8 | X6에서 `recovers`를 비웠는데 **UI가 빈 배열을 처리하지 않아** B안이 `가 살아나요`로 문장이 깨짐 → `A-15`·`A-13b` 둘 다 "이 조건만 풀어서는 살아나는 후보가 없어요"로 분기 | 캡처 육안 확인 (EVAL #2 진행 중 발견) |
 | X9 | `A-02a`(관심매물 0곳)에서 "5곳으로 시작하기" CTA가 활성이고 선호 카드도 노출 — 담은 집이 0곳인데 시작할 수 있다고 말하는 모순 → 비활성 문구로 대체, 선호 카드 숨김 | 캡처 육안 확인 (EVAL #2 진행 중 발견) |
+| X10 | 생존 컴포넌트가 폐기 예정 `lib/dev/`의 타입에 의존 → `ConditionRow`·`ListingJudgment`를 `lib/types/contracts.ts`로 이관. `components/domain/`의 `lib/dev` 의존 **0건** | EVAL #2 K:C |
+| X11 | 캡처가 소스보다 오래됨 → 전량 재캡처(`RUN_TS=20260827-1543`). `A-15` B안이 "이 조건만 풀어서는 살아나는 후보가 없어요"로 정상 렌더 확인 | EVAL #2 Z:C(TOP_FIX) |
 
 ---
 
@@ -95,7 +114,10 @@ SCORECARD: A:P Z:F T:F K:C S:C
 - [x] **T:F ①** `A-13` 3분류 그룹 헤더·건수·그룹 순서 적용(명세 §9.1)
 - [x] **T:F ②** `A-02a`(후보 0개) · `S-01`(`app/loading.tsx`) · `S-03`(경로 없음) 구현 · 캡처 32→34장
 - [x] **S:C** `prototype/reports/REVIEW_URLS.md` 생성 · 이 보고서를 구조화
-- [ ] 재캡처 → EVAL #2 디스패치
+- [x] 재캡처 → EVAL #2 디스패치
+- [x] **EVAL #2 Z:C** 재캡처로 소스·캡처 동기화
+- [x] **EVAL #2 K:C** 표시 계약을 `lib/types/contracts.ts`로 이관
+- [ ] EVAL #3 디스패치 → 5축 전부 `P` 확인
 
 ---
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
 import { resolveSet, listingById, VISIT_ROUNDS } from "@/lib/dev/scenarios";
-import type { ConditionRow } from "@/lib/dev/view-types";
+import type { ConditionRow } from "@/lib/types";
 
 /**
  * V-001 — 방문 후보 2개 결정 (2라운드 분할 프로토콜) · **North Star 지점**
