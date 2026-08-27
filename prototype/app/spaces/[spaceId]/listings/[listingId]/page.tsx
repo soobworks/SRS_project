@@ -162,10 +162,18 @@ function RelaxationPanel() {
               <span className="absolute inset-y-0 left-0 w-2/3 rounded-full bg-ink" />
               <span className="absolute -top-1 left-2/3 size-3.5 -translate-x-1/2 rounded-full border-2 border-surface bg-ink" />
             </div>
-            <p className="mt-3 text-sm text-met">
-              {o.recovers.map((id) => listingById(id).name).join(" · ")}가
-              살아나요
-            </p>
+            {/* 살아나는 후보가 없으면 그렇게 말한다.
+                없는 이득을 만들어내지 않는다(PRD §14.2). */}
+            {o.recovers.length > 0 ? (
+              <p className="mt-3 text-sm text-met">
+                {o.recovers.map((id) => listingById(id).name).join(" · ")}가
+                살아나요
+              </p>
+            ) : (
+              <p className="mt-3 text-sm text-ink-muted">
+                이 조건만 풀어서는 살아나는 후보가 없어요
+              </p>
+            )}
             <p className="mt-1 text-xs text-ink-muted">
               상대 조건은 직접 바꿀 수 없어요 — 제안하면 상대가 수락할 때만
               반영돼요.

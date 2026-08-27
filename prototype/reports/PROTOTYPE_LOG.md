@@ -83,6 +83,7 @@ SCORECARD: A:P Z:F T:F K:C S:C
 | X5 | `A-15`의 양보 문장이 `normal` 세트 기준이라 `all-unmet` 표와 **모순** → PRD §14.1대로 `한쪽만 충족`에만 적용 | 캡처 육안 확인 |
 | X6 | `RELAXATION_OPTIONS` B안이 픽스처와 모순 → `recovers` 비우고 화면도 "살아나는 후보 없음"으로 | **EVAL #1 TOP_FIX** |
 | X7 | `disclosed-value.tsx`가 `lib/dev/` 의존 → `basis`를 호출자가 넘기도록 분리 | EVAL #1 K:C |
+| X8 | X6에서 `recovers`를 비웠는데 **UI가 빈 배열을 처리하지 않아** B안이 `가 살아나요`로 문장이 깨짐 → `A-15`·`A-13b` 둘 다 "이 조건만 풀어서는 살아나는 후보가 없어요"로 분기 | 캡처 육안 확인 (EVAL #2 진행 중 발견) |
 
 ---
 

@@ -230,9 +230,15 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
               {o.conditionLabel} {o.from} → {o.to}{" "}
               <span className="text-ink-muted">({o.delta})</span>
             </p>
-            <p className="mt-1 text-xs text-met">
-              {o.recovers.map((id) => listingById(id).name).join(" · ")} 살아남
-            </p>
+            {o.recovers.length > 0 ? (
+              <p className="mt-1 text-xs text-met">
+                {o.recovers.map((id) => listingById(id).name).join(" · ")} 살아남
+              </p>
+            ) : (
+              <p className="mt-1 text-xs text-ink-muted">
+                이 조건만 풀어서는 살아나는 후보 없음
+              </p>
+            )}
           </div>
         ))}
       </div>
