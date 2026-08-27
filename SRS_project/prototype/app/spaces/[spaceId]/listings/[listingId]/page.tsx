@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   PrototypeShell,
   ScreenTitle,
@@ -110,7 +111,7 @@ export default async function ListingDetailPage({
         bEmptyNote="B가 초대에 들어오면 두 분 조건을 나란히 보여드려요"
       />
 
-      {relaxing ? <RelaxationPanel /> : null}
+      {relaxing ? <RelaxationPanel /> : <NextStep spaceId={spaceId} jd={jd} />}
 
       <StepNav
         links={[
@@ -124,6 +125,59 @@ export default async function ListingDetailPage({
         ]}
       />
     </PrototypeShell>
+  );
+}
+
+/**
+ * 다음 화면으로 가는 제품 동선 — PRD §17.2가 `A-14`의 다음을 `A-15`/`A-16`으로 정한다.
+ *
+ * 상태에 따라 갈 곳이 다르다. 어느 집이 낫다고 말하지 않고, **지금 할 수 있는
+ * 다음 행동**만 제시한다.
+ */
+function NextStep({
+  spaceId,
+  jd,
+}: {
+  spaceId: string;
+  jd: { group: string | null; confirmationNeeded: boolean; listingId: string };
+}) {
+  const unmet = jd.group === "BOTH_UNMET";
+  return (
+    <section className="mt-5 rounded-lg border border-line bg-surface p-4">
+      <div className="flex flex-wrap items-center gap-3">
+        {unmet ? (
+          <>
+            <p className="text-sm text-ink">
+              두 분 다 아쉬운 곳이에요. 조건을 조금 풀면 달라질 수 있어요.
+            </p>
+            <Link
+              href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-15`}
+              className="ml-auto rounded-md bg-ink px-4 py-2 text-sm text-surface"
+            >
+              조금 풀어보기
+            </Link>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-ink">
+              이 집을 이번에 보러 갈 후보로 넣을까요?
+            </p>
+            <Link
+              href={`/spaces/${spaceId}/visit-selection?state=A-16&match=2`}
+              className="ml-auto rounded-md bg-ink px-4 py-2 text-sm text-surface"
+            >
+              방문 후보 정하러 가기
+            </Link>
+          </>
+        )}
+      </div>
+      {jd.confirmationNeeded ? (
+        <p className="mt-2 text-xs text-ink-muted">
+          확인 필요 항목은 방문 전에 중개사에게 물어보고 답을 채우면 판정이
+          갱신돼요 — 그 화면은 아직 만들지 않았어요.
+        </p>
+      ) : null}
+    </section>
   );
 }
 
