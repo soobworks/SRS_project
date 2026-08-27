@@ -5,7 +5,13 @@ import {
   StepNav,
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { ASSUMPTIONS, NOT_ADVICE, resolveSet } from "@/lib/dev/scenarios";
+import {
+  ASSUMPTIONS,
+  ASSUMPTION_BASIS,
+  NOT_ADVICE,
+  resolveSet,
+  listingById,
+} from "@/lib/dev/scenarios";
 
 /**
  * I-001 — 기본 조건 입력 (예산 · 출퇴근)
@@ -49,7 +55,7 @@ export default async function ConditionsPage({
     <PrototypeShell form={isMobile ? "mobile" : "desktop"} state={state}>
       <div className={isMobile ? "p-4" : "max-w-[42rem]"}>
         {preview ? (
-          <PreviewStep spaceId={spaceId} burden={scenario.burden["L-001"]} />
+          <PreviewStep spaceId={spaceId} scenario={scenario} />
         ) : commuteStep ? (
           <CommuteStep spaceId={spaceId} noCommute={noCommute} who={who} />
         ) : (
@@ -263,35 +269,76 @@ function CommuteStep({
   );
 }
 
-/** A-05 — 첫 결과 미리보기. 지금 확보한 실제값으로 가능한 판정만 보여준다. */
+/**
+ * A-05 — 첫 결과 미리보기 (PRD §17.2)
+ *
+ * "현재 확보한 실제값과 **가능한 판정**"을 보여준다. 예산만 넣은 시점이라
+ * 예산은 판정하고 나머지는 아직 잴 수 없다고 말한다 — 부분 입력으로도
+ * 볼 수 있는 것이 있다는 게 이 제품의 첫 약속이다(1인 빈 경로와 같은 결).
+ *
+ * 아직 안 넣은 조건을 `미충족`으로 표시하지 않는다. 재지 않은 것과 재봤는데
+ * 못 미친 것은 다른 상태다(PRD §18.3).
+ */
 function PreviewStep({
   spaceId,
-  burden,
+  scenario,
 }: {
   spaceId: string;
-  burden: string;
+  scenario: ReturnType<typeof resolveSet>;
 }) {
   return (
     <>
       <ScreenTitle
         title="지금 입력으로 이만큼 보여요"
-        sub="조건을 더 넣으면 볼 수 있는 것도 늘어나요"
+        sub="예산은 지금 바로 재볼 수 있어요. 조건을 더 넣으면 볼 수 있는 것도 늘어나요"
       />
-      <div className="rounded-lg border border-line bg-surface p-4">
-        <p className="text-sm text-ink-muted">흑석 리버뷰 월 실부담</p>
-        <p className="mt-1 text-lg text-ink">
-          <DisclosedValue href={`/spaces/${spaceId}/conditions?state=A-04a`}>
-            {burden}
-          </DisclosedValue>
-        </p>
-        <p className="mt-2 text-xs text-ink-muted">{NOT_ADVICE}</p>
-      </div>
+
+      <ul className="flex flex-col gap-2">
+        {scenario.judgments.map((jd) => {
+          const listing = listingById(jd.listingId);
+          const budget = jd.a.find((r) => r.key === "budget");
+          const met = budget?.status === "MET";
+          return (
+            <li
+              key={jd.listingId}
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg border border-line bg-surface p-3"
+            >
+              <span className="text-sm font-medium text-ink">{listing.name}</span>
+              <span className="text-xs text-ink-muted">
+                {listing.listingType} · 역도보 {listing.walkToStationMin}분
+              </span>
+              <span className="ml-auto text-sm text-ink-muted">
+                월{" "}
+                <DisclosedValue
+                  basis={ASSUMPTION_BASIS}
+                  href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                >
+                  {scenario.burden[jd.listingId]}
+                </DisclosedValue>
+              </span>
+              <span
+                className={`nums w-full text-sm ${met ? "text-met" : "text-unmet"}`}
+              >
+                예산 {met ? "✓ 들어와요" : `✗ ${budget?.gap ?? ""}`}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p className="mt-3 rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink-muted">
+        통근·면적·주차는 <b className="text-ink">아직 재지 않았어요</b> — 조건을
+        넣으면 그때 판정해요. 지금 비어 있는 것은 &ldquo;못 미쳤다&rdquo;는 뜻이
+        아니에요.
+      </p>
+      <p className="mt-2 text-xs text-ink-muted">{NOT_ADVICE}</p>
+
       <div className="mt-5">
         <Link
           href={`/spaces/${spaceId}/judgments?state=A-13`}
           className="inline-block rounded-md bg-ink px-4 py-2 text-sm text-surface"
         >
-          5곳 전부 보기
+          조건 다 넣고 5곳 전부 보기
         </Link>
       </div>
     </>
