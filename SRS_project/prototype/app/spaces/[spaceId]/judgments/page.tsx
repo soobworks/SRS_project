@@ -61,7 +61,9 @@ export default async function JudgmentsPage({
               sub={
                 solo
                   ? "B가 아직 참여하지 않아 1인 입력만 반영했어요"
-                  : scenario.label
+                  : state === "A-13c"
+                    ? "조건마다 가장 가까운 후보가 어디인지 봐요"
+                    : scenario.label
               }
             />
 
@@ -267,13 +269,14 @@ function ConflictPanel() {
       </p>
       <ul className="flex flex-col gap-1.5 text-sm nums">
         <li>
-          예산에 가장 가까운 곳 — 신대방 코지, A 기준 <b>+월 3만</b>
+          예산 — 가장 가까운 곳은 신대방 코지, A 기준 <b>+월 3만</b> 모자라요
         </li>
         <li>
-          통근에 가장 가까운 곳 — 사당 그린홈, B 기준 <b>+4분</b>
+          통근 — 가장 가까운 곳은 사당 그린홈, B 기준 <b>+4분</b> 모자라요
         </li>
         <li>
-          면적에 가장 가까운 곳 — 사당 그린홈, A 기준 <b>충족</b>
+          면적 — 사당 그린홈은 <b className="text-met">이미 충족</b>해요. 다른
+          조건이 걸려서 후보로 남지 못한 거예요
         </li>
       </ul>
     </section>
