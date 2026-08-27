@@ -1,10 +1,10 @@
 # 검수 URL 목록 — Scope L 프로토타입
 
 ```bash
-cd prototype && pnpm dev   # http://localhost:3000
+cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 ```
 
-> 앱은 저장소 루트가 아니라 **`prototype/`** 하위에 있다 — 루트에는 기획 문서가 있어 섞이지 않게 분리했다(2026-08-27).
+> 앱은 저장소 루트가 아니라 **`SRS_project/prototype/`** 하위에 있다 — 루트에는 기획 문서가 있어 섞이지 않게 분리했다(2026-08-27).
 
 키는 **PRD 화면 ID**(`?state=`)를 그대로 쓴다. "A-13b 확인했나?"가 URL 하나로 답해진다.
 전체 매핑은 `SRS_project/tasks/v2/prototype-visual-spec.md` §1.2.
@@ -99,11 +99,11 @@ cd prototype && pnpm dev   # http://localhost:3000
 ## 캡처
 
 ```bash
-cd prototype && node scripts/capture-screens.mjs
+cd SRS_project/prototype && node scripts/capture-screens.mjs
 ```
 
-`prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 34장이 저장된다.
-`S-01`(로딩)은 순간 상태라 캡처에서 빠진다 — 코드는 `prototype/app/loading.tsx`에 있다.
+`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 34장이 저장된다.
+`S-01`(로딩)은 순간 상태라 캡처에서 빠진다 — 코드는 `SRS_project/prototype/app/loading.tsx`에 있다.
 
 ## 범위 밖
 

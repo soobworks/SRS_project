@@ -12,8 +12,8 @@
 | --- | --- |
 | **단계** | 구현 완료 · **평가 반영 중** |
 | **완료 조건** | `aztks-agent` EVALUATE가 `VERDICT: GO` + `SCORECARD: A:P Z:P T:P K:P S:P` |
-| **최근 평가** | EVAL #2 → **GO / 미통과** (`A:P Z:C T:P K:C S:P`) — CONCERN 2건 |
-| **평가 예산** | 2 / 5 사용 |
+| **최근 평가** | EVAL #2 → **GO / 미통과** (`A:P Z:C T:P K:C S:P`) · EVAL #3은 경로 이동으로 중단(판정 없음) |
+| **평가 예산** | 3 / 5 사용 (#3은 중단, 판정 없음) |
 | **검증 명령** | `typecheck` · `lint` · `build` 전부 exit 0 |
 | **총점 금지** | 실코드 0건 · 금지 prop 0건 |
 | **캡처** | 34장 (`RUN_TS=20260827-1543`, 소스와 동기) |
@@ -79,7 +79,8 @@ SCORECARD: A:P Z:C T:P K:C S:P
 | D2 | `pnpm-workspace.yaml` `allowBuilds`에 Prisma 3종만 `true` | 그 외 빌드 스크립트는 실행하지 않는다 |
 | D3 | 라이트 모드 고정 | 팀이 서로 다른 OS 설정에서 열어도 판정 색이 뒤집히면 시각 검수가 성립하지 않는다 |
 | D4 | `devIndicators: false` | Next 개발 표시기가 매물명을 가려 검수를 방해 |
-| D5 | **앱 전체를 `prototype/` 하위로 이동** | 저장소 루트에 기획 문서 60여 개가 있어 앱 설정 파일(package.json·tsconfig·next.config…)과 섞이면 읽기 어렵다. `prototype/` 안의 구조는 SRS §2.2 그대로 유지한다(2026-08-27 사용자 결정) |
+| D5 | 앱 전체를 저장소 루트에서 `prototype/` 하위로 이동 | 루트에 기획 문서 60여 개가 있어 앱 설정 파일과 섞이면 읽기 어렵다(2026-08-27 사용자 결정) |
+| D6 | **`prototype/` → `SRS_project/prototype/` 로 재이동** | 프로토타입은 SRS에서 파생된 산출물이므로 SRS 문서군과 같은 계층에 둔다. 안쪽 구조는 여전히 SRS §2.2 그대로다(2026-08-27 사용자 결정) |
 
 ### 발견 — 원천 문서의 갭
 
@@ -113,11 +114,12 @@ SCORECARD: A:P Z:C T:P K:C S:P
 - [x] X7 `disclosed-value.tsx` 의존 분리 — K:C
 - [x] **T:F ①** `A-13` 3분류 그룹 헤더·건수·그룹 순서 적용(명세 §9.1)
 - [x] **T:F ②** `A-02a`(후보 0개) · `S-01`(`app/loading.tsx`) · `S-03`(경로 없음) 구현 · 캡처 32→34장
-- [x] **S:C** `prototype/reports/REVIEW_URLS.md` 생성 · 이 보고서를 구조화
+- [x] **S:C** `SRS_project/prototype/reports/REVIEW_URLS.md` 생성 · 이 보고서를 구조화
 - [x] 재캡처 → EVAL #2 디스패치
 - [x] **EVAL #2 Z:C** 재캡처로 소스·캡처 동기화
 - [x] **EVAL #2 K:C** 표시 계약을 `lib/types/contracts.ts`로 이관
-- [ ] EVAL #3 디스패치 → 5축 전부 `P` 확인
+- [x] `SRS_project/prototype/` 로 재이동 + 경로 참조 전량 갱신
+- [ ] EVAL #4 디스패치 → 5축 전부 `P` 확인
 
 ---
 
@@ -134,9 +136,9 @@ SCORECARD: A:P Z:C T:P K:C S:P
 
 | 무엇 | 어디 |
 | --- | --- |
-| 이 보고서 | `prototype/reports/PROTOTYPE_LOG.md` (커밋됨) |
+| 이 보고서 | `SRS_project/prototype/reports/PROTOTYPE_LOG.md` (커밋됨) |
 | 목표 정의 | `SRS_project/goals/prototype-lite-ux-validated.md` |
 | 시각화 명세 | `SRS_project/tasks/v2/prototype-visual-spec.md` |
-| 화면 캡처 | `prototype/reports/prototype-screens/` (gitignore — 용량) |
-| 검수 URL | `prototype/reports/REVIEW_URLS.md` |
+| 화면 캡처 | `SRS_project/prototype/reports/prototype-screens/` (gitignore — 용량) |
+| 검수 URL | `SRS_project/prototype/reports/REVIEW_URLS.md` |
 | 커밋·PR | 이슈 #55 · 브랜치 `feat/55-proto-lite-scope-l` |

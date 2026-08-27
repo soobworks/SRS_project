@@ -18,13 +18,13 @@
   - Step 0 기반 → Step 1 판정 화면 → Step 2 trade-off·완화 → Step 3 2라운드 → Step 4 진입 맥락
   - **`V-002`를 `J-008`보다 먼저 만든다** — 총점 prop이 없는 컴포넌트 API가 먼저 서야 판정 화면에 총점이 스며들지 않는다.
 - **값을 지어내지 않는다.** 매물 5건·통근시간·실부담·조건 세트 6벌은 `prototype-visual-spec.md` §6의 확정 수치를 그대로 쓴다. 표와 어긋나면 구현이 아니라 표를 먼저 확인한다.
-- **앱 전체는 저장소 루트가 아니라 `prototype/` 하위에 둔다** — 이 저장소 루트에는 기획 문서 60여 개가 있어 앱 설정 파일과 섞이면 읽기 어렵다(2026-08-27 사용자 결정).
-  - `prototype/` **안의** 구조는 `SRS_V0_9.md` §2.2를 그대로 따른다 — `src/` 없이 `app/`, `components/`, `lib/`, `prisma/`. `create-next-app` 실행 시 `--no-src-dir`.
-  - 모든 `pnpm` 명령은 `prototype/` 에서 실행한다.
+- **앱 전체는 저장소 루트가 아니라 `SRS_project/prototype/` 하위에 둔다** — 이 저장소 루트에는 기획 문서 60여 개가 있어 앱 설정 파일과 섞이면 읽기 어렵다(2026-08-27 사용자 결정).
+  - `SRS_project/prototype/` **안의** 구조는 `SRS_V0_9.md` §2.2를 그대로 따른다 — `src/` 없이 `app/`, `components/`, `lib/`, `prisma/`. `create-next-app` 실행 시 `--no-src-dir`.
+  - 모든 `pnpm` 명령은 `SRS_project/prototype/` 에서 실행한다.
 - **URL 규칙 — 새 화면 ID를 만들지 않는다:**
   - 화면은 `?state=<PRD 화면 ID>` 로만 지정한다(명세 §1.1). PRD에 없는 ID를 새로 짓지 않는다.
   - PRD가 ID를 부여하지 않은 하위 상태는 **보조 쿼리 파라미터**로 표현한다 — `?state=A-16&match=2`, `?state=A-13&set=one-commute`, `?state=B-01&invite=expired`, `?state=A-04&form=empty`.
-- **기록 — `prototype/reports/PROTOTYPE_LOG.md` 를 작업 시작 시 만들고 아래를 append 한다:**
+- **기록 — `SRS_project/prototype/reports/PROTOTYPE_LOG.md` 를 작업 시작 시 만들고 아래를 append 한다:**
   - 스텝 완료 시: `STEP <N> DONE: <구현 항목> | 검수 <lite §7 해당 질문 번호> = <예/아니오 목록>`
   - 검수 질문 1(총점·순위·추천 배지 부재)은 **매 스텝 반복**하고 매번 기록한다.
   - EVALUATE 디스패치마다: `EVAL #<N>: VERDICT=<...> SCORECARD=<...> TOP_FIX=<...>`
@@ -43,18 +43,18 @@
   - 평가-진행 라운드(turn = `/goal` 평가자가 진행 상태를 한 번 점검하는 메인 에이전트 응답 사이클)가 누적 60회 도달 → **STOP REASON: TURN_CAP** (= or stop after 60 turns)
   - §7 사전 조건 확인이 실패해 착수 자체가 불가능 → **STOP REASON: PREREQ_MISSING**
 - **종료 방법:**
-  1) `prototype/reports/PROTOTYPE_LOG.md` 마지막 줄에 `STOP REASON: <원인 코드>` 한 줄을 덧붙인다.
-  2) `cd prototype && pnpm typecheck && pnpm lint && pnpm build` 를 실행해 **세 명령 모두 exit 0** 인 출력을 대화에 남긴다.
+  1) `SRS_project/prototype/reports/PROTOTYPE_LOG.md` 마지막 줄에 `STOP REASON: <원인 코드>` 한 줄을 덧붙인다.
+  2) `cd SRS_project/prototype && pnpm typecheck && pnpm lint && pnpm build` 를 실행해 **세 명령 모두 exit 0** 인 출력을 대화에 남긴다.
   3) 총점 금지 검사를 실행해 대화에 남긴다. **원본 grep과 주석 제외 grep을 모두** 보인다 — 가드레일 주석("총점·추천 배지를 두지 않는다")이 패턴에 걸리므로, 원본만으로는 0이 나올 수 없고 숨기면 검사를 약화시키는 것이 된다.
      ```bash
      PAT="totalScore|totalPoint|overallScore|compositeScore|종합 ?점수|공동 ?적합도|추천 ?배지|복합 ?순위"
-     grep -rnIE "$PAT" prototype/app prototype/components prototype/lib                      # 원본 — 걸린 줄이 전부 주석인지 눈으로 확인
-     grep -rnIE "$PAT" prototype/app prototype/components prototype/lib        | grep -vE ':[0-9]+: *(\*|//|/\*|\{/\*)'                # 실코드 — 반드시 0
-     grep -rnE "(score|rank|recommended|winner|sortBy)\s*[?:]" prototype/components/domain prototype/lib/types  # 금지 prop — 반드시 0
+     grep -rnIE "$PAT" SRS_project/prototype/app SRS_project/prototype/components SRS_project/prototype/lib                      # 원본 — 걸린 줄이 전부 주석인지 눈으로 확인
+     grep -rnIE "$PAT" SRS_project/prototype/app SRS_project/prototype/components SRS_project/prototype/lib        | grep -vE ':[0-9]+: *(\*|//|/\*|\{/\*)'                # 실코드 — 반드시 0
+     grep -rnE "(score|rank|recommended|winner|sortBy)\s*[?:]" SRS_project/prototype/components/domain SRS_project/prototype/lib/types  # 금지 prop — 반드시 0
      ```
-     **실코드 0건**과 **금지 prop 0건**이 통과 조건이다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d prototype/app prototype/components prototype/lib`).
-  4) `find prototype/reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **34** 가 출력되는 것을 대화에 남긴다(§6의 34개 상태). 이어서 `ls prototype/reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
-  5) `cat prototype/reports/PROTOTYPE_LOG.md` 를 실행해 스텝별 검수 결과·`EVAL #N` 줄·`STOP REASON:` 줄이 보이는 출력을 대화에 남긴다.
+     **실코드 0건**과 **금지 prop 0건**이 통과 조건이다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d SRS_project/prototype/app SRS_project/prototype/components SRS_project/prototype/lib`).
+  4) `find SRS_project/prototype/reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **34** 가 출력되는 것을 대화에 남긴다(§6의 34개 상태). 이어서 `ls SRS_project/prototype/reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
+  5) `cat SRS_project/prototype/reports/PROTOTYPE_LOG.md` 를 실행해 스텝별 검수 결과·`EVAL #N` 줄·`STOP REASON:` 줄이 보이는 출력을 대화에 남긴다.
   6) **마지막 `aztks-agent` EVALUATE 출력 5줄(`VERDICT` / `SCORECARD` / `TOP_FIX` / `EVIDENCE` / `NOTES`)을 요약하지 말고 그대로 대화에 붙여넣는다.**
   7) `"$GH" pr list --draft` 를 실행해 열린 Draft PR 목록을 대화에 남긴다.
 
@@ -74,17 +74,17 @@
   - 정렬 컨트롤(드롭다운·탭·토글)을 만들지 않는다(명세 §9).
   - 네이버 로고·CI 색상·상표·실제 UI 마크업을 복제하지 않는다(명세 §3.4).
   - 새 의존성·인프라를 도입하기 전에 스킬 `300-tech-constraints-guardrails`를 먼저 읽는다.
-- **활성 범위 외 변경 금지.** 단 `prototype/` 전체와 `.claude/` 는 예외로 허용한다.
+- **활성 범위 외 변경 금지.** 단 `SRS_project/prototype/` 전체와 `.claude/` 는 예외로 허용한다.
 
 ## 5) aztks-agent 평가 규칙
 
 - **디스패치 형식** — Task 도구로 `subagent_type: "aztks-agent"` 를 호출하고 프롬프트 첫 줄에 `MODE: EVALUATE` 를 넣는다. 평가는 **읽기 전용**이며 코드를 수정하지 않는다.
-- **평가 대상:** 구현된 프로토타입 전체(`prototype/app/`, `prototype/components/`, `prototype/lib/`)와 `prototype/reports/prototype-screens/` 의 화면 캡처 32장.
+- **평가 대상:** 구현된 프로토타입 전체(`SRS_project/prototype/app/`, `SRS_project/prototype/components/`, `SRS_project/prototype/lib/`)와 `SRS_project/prototype/reports/prototype-screens/` 의 화면 캡처 32장.
 - **근거 소스로 함께 전달한다:**
   - `SRS_project/같이보기-prd-v1_0.md` §5(JTBD) · §7(가치 제안) · §11(E2E 17단계) · §13(비교 모델) · §14(trade-off·완화 모델) · §17(화면 요구)
   - `SRS_project/tasks/v2/prototype-visual-spec.md` 전체
   - `SRS_project/tasks/v2/prototype-suggestion.md` §5.2(검수 질문 8개)
-  - `prototype/reports/PROTOTYPE_LOG.md`
+  - `SRS_project/prototype/reports/PROTOTYPE_LOG.md`
 - **5축 판정 앵커** — 각 축을 아래 근거로만 판정하게 한다:
 
   | 축 | 판정 기준 |
@@ -92,7 +92,7 @@
   | **A 알아서** | PRD §7 가치 제안과 §5 Core Job이 화면 흐름에서 실제로 전달되는가. §11 E2E 17단계 중 Scope L 담당 구간(2 후보 선택 · 3 A 기본 입력 · 4 A 통근 입력 · 7 B 진입 · 8 B 기본 입력 · 10 첫 결과 · 11 상세 비교 · 12 조건 완화 · 13 0건 분기 · 14 방문 후보 선택)이 캡처상 끊기지 않고 이어지는가 |
   | **Z 잘** | `prototype-suggestion.md` §5.2 검수 질문 8개가 캡처 기준으로 전부 "예"인가. 명세 §6.6·§6.7 판정 검증표와 실제 렌더 결과가 일치하는가. typecheck·lint·build가 통과하는가 |
   | **T 딱** | Scope L 12건 대비 누락·초과가 없는가. 명세 §1.2에서 `L`로 표시된 화면이 전부 존재하고 범위 밖(`—`·Scope B·1-B) 화면이 만들어지지 않았는가. 명세 §4·§5 표기 규칙 위반이 0건인가 |
-  | **K 깔끔** | `prototype/lib/dev/` 경계가 유지되는가(`lib/domain/`·`lib/queries/`에 섞이지 않음). 화면이 `prototype/lib/types/contracts.ts` 외 타입을 스스로 선언하지 않는가. 픽스처 주입 지점이 화면당 정확히 1곳인가 |
+  | **K 깔끔** | `SRS_project/prototype/lib/dev/` 경계가 유지되는가(`lib/domain/`·`lib/queries/`에 섞이지 않음). 화면이 `SRS_project/prototype/lib/types/contracts.ts` 외 타입을 스스로 선언하지 않는가. 픽스처 주입 지점이 화면당 정확히 1곳인가 |
   | **S 센스** | `?state=` URL 목록만으로 팀이 검수를 수행할 수 있는가. 원 순번(`J-006`·`R-001`·`V-001` 등)에서 픽스처를 실제 Query로 교체할 지점이 명확한가. `PROTOTYPE_LOG.md` 만으로 중단 지점부터 이어받을 수 있는가 |
 
 - **완전 통과 기준:** `VERDICT: GO` **이면서** `SCORECARD`의 5축이 전부 `P`. `CONCERN(C)`이 하나라도 있으면 통과가 아니다.
@@ -101,10 +101,10 @@
 
 ## 6) 화면 캡처 규칙 — 34장
 
-- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 34개 상태를 캡처해 `prototype/reports/prototype-screens/<파일명>__<RUN_TS>.png` 로 저장한다.
+- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 34개 상태를 캡처해 `SRS_project/prototype/reports/prototype-screens/<파일명>__<RUN_TS>.png` 로 저장한다.
 - **`<RUN_TS>` 는 캡처 실행 시각**이며 `YYYYMMDD-HHmm` 형식이다(예: `A-13__20260827-1432.png`). 한 번의 캡처 실행에서는 32장이 **같은 `<RUN_TS>`** 를 쓴다.
-- **캡처 실행 전 `prototype/reports/prototype-screens/` 를 비운다.** 이전 실행분이 남으면 §3.4의 32장 검증이 깨진다.
-- `RUN_TS` 값을 `prototype/reports/PROTOTYPE_LOG.md` 에 `CAPTURE RUN: <RUN_TS> (32 shots)` 한 줄로 기록한다.
+- **캡처 실행 전 `SRS_project/prototype/reports/prototype-screens/` 를 비운다.** 이전 실행분이 남으면 §3.4의 32장 검증이 깨진다.
+- `RUN_TS` 값을 `SRS_project/prototype/reports/PROTOTYPE_LOG.md` 에 `CAPTURE RUN: <RUN_TS> (32 shots)` 한 줄로 기록한다.
 - 뷰포트는 명세 §2.1을 따른다 — `A-*`는 1280px, `B-*`는 390px.
 - **34장이 모두 저장되기 전에는 `aztks-agent`를 디스패치하지 않는다.** 캡처가 없으면 UX 흐름을 판정할 근거가 없다.
 
