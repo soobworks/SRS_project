@@ -359,6 +359,12 @@ function AssumptionPanel({ spaceId }: { spaceId: string }) {
         title="이 숫자는 이렇게 계산했어요"
         sub="기준 시점과 가정, 그리고 어디까지 믿을 수 있는지를 함께 적었어요"
       />
+      {/* 명세 §5.4는 전제를 11종으로 세고, §6.4가 교통비 정액 가정을 여기
+          함께 표시하라고 한다 — 그래서 12행이다. 세다가 어긋난 것이 아니다. */}
+      <p className="mb-3 text-xs text-ink-muted">
+        아래 12가지 — PRD §19.3의 전제 11가지와, 이 프로토타입이 교통비를
+        정액으로 단순화한 가정 1가지예요.
+      </p>
       <div className="overflow-x-auto rounded-lg border border-line bg-surface">
         <table className="w-full min-w-[42rem] text-sm">
           <thead>
