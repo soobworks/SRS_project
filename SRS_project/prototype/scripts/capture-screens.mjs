@@ -52,6 +52,7 @@ const SHOTS = [
   ["A-16__match-2", `${S}/visit-selection?state=A-16&match=2`],
   ["A-16e", `${S}/visit-selection?state=A-16e`],
   ["A-16__match-0", `${S}/visit-selection?state=A-16&match=0`],
+  ["A-16__match-split", `${S}/visit-selection?state=A-16&match=split`],
   ["B-01", `/invite/DEMOCODE?state=B-01`],
   ["B-01__invite-expired", `/invite/DEMOCODE?state=B-01&invite=expired`],
   ["B-02", `/invite/DEMOCODE?state=B-02`],

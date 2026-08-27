@@ -51,7 +51,27 @@ export default async function VisitSelectionPage({
         <PickBlock label="B가 고른 곳" picks={round.bPicks} matched={round.matched} />
       </div>
 
-      {round.settled ? (
+      {round.settled && round.splitEnding ? (
+        /* AC-17-03 · decisions/0004 — 2라운드에도 겹치지 않으면 **분할로 끝낸다.**
+           시스템이 하나를 고르거나 투표·순위를 매기지 않는다. */
+        <section className="rounded-lg border border-line bg-surface p-4">
+          <h2 className="mb-1 font-medium text-ink">
+            두 번 다 겹치지 않았어요 — 각자 고른 곳을 하나씩 보러 가요
+          </h2>
+          <p className="mb-3 text-sm text-ink-muted">
+            어느 쪽이 낫다고 정하지 않고 이렇게 끝냅니다. 두 곳을 다 보고 나서
+            다시 이야기하면 돼요.
+          </p>
+          <div className="grid gap-2 md:grid-cols-2">
+            <p className="rounded-md border border-line px-3 py-2 text-sm text-ink">
+              A가 고른 곳 · {listingById(round.settled[0]).name}
+            </p>
+            <p className="rounded-md border border-line px-3 py-2 text-sm text-ink">
+              B가 고른 곳 · {listingById(round.settled[1]).name}
+            </p>
+          </div>
+        </section>
+      ) : round.settled ? (
         <section className="rounded-lg border border-met/30 bg-met-bg/50 p-4">
           <h2 className="mb-1 font-medium text-ink">
             두 곳 다 겹쳤어요 — 이번엔 여기 두 곳을 보러 가요
@@ -87,6 +107,7 @@ export default async function VisitSelectionPage({
           { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=2`, label: "2개 일치" },
           { href: `/spaces/${spaceId}/visit-selection?state=A-16e`, label: "1개 일치" },
           { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=0`, label: "0개 일치" },
+          { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=split`, label: "분할 종료" },
           { href: `/spaces/${spaceId}/judgments?state=A-13`, label: "목록으로" },
         ]}
       />

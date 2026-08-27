@@ -180,6 +180,11 @@ export interface VisitRound {
   round: 1 | 2;
   /** 남은 한 자리를 두고 비교할 두 후보(A-16e). */
   runoff: [string, string] | null;
+  /**
+   * 2라운드에서도 겹치지 않아 **각자 고른 곳을 하나씩 나눠** 보러 가는 종료.
+   * `decisions/0004` — 투표·순위·자동 선택으로 하나를 고르지 않는다(AC-17-03).
+   */
+  splitEnding?: boolean;
 }
 
 export const VISIT_ROUNDS: Record<string, VisitRound> = {
@@ -206,5 +211,15 @@ export const VISIT_ROUNDS: Record<string, VisitRound> = {
     settled: null,
     round: 2,
     runoff: null,
+  },
+  split: {
+    aPicks: ["L-001", "L-004"],
+    bPicks: ["L-002", "L-003"],
+    matched: [],
+    /** A가 고른 1곳 + B가 고른 1곳. 시스템이 고른 것이 아니다. */
+    settled: ["L-001", "L-002"],
+    round: 2,
+    runoff: null,
+    splitEnding: true,
   },
 };

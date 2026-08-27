@@ -85,6 +85,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | `A-16&match=2` | `/spaces/demo/visit-selection?state=A-16&match=2` | 2개 일치 → 확정 |
 | `A-16e` | `/spaces/demo/visit-selection?state=A-16e` | **남은 한 자리 Option Grid — 총점 행 없음** (질문 1) |
 | `A-16&match=0` | `/spaces/demo/visit-selection?state=A-16&match=0` | 0개 일치 → 2라운드 |
+| `A-16&match=split` | `/spaces/demo/visit-selection?state=A-16&match=split` | **2라운드도 불일치 → 분할 종료** — 시스템이 고르지 않는다 |
 
 ## 6. B 진입 (S-003) — 모바일
 
@@ -102,7 +103,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 cd SRS_project/prototype && node scripts/capture-screens.mjs
 ```
 
-`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 34장이 저장된다.
+`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 35장이 저장된다.
 `S-01`(로딩)은 순간 상태라 캡처에서 빠진다 — 코드는 `SRS_project/prototype/app/loading.tsx`에 있다.
 
 ## 범위 밖

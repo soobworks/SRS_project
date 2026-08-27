@@ -53,7 +53,7 @@
      grep -rnE "(score|rank|recommended|winner|sortBy)\s*[?:]" SRS_project/prototype/components/domain SRS_project/prototype/lib/types  # 금지 prop — 반드시 0
      ```
      **실코드 0건**과 **금지 prop 0건**이 통과 조건이다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d SRS_project/prototype/app SRS_project/prototype/components SRS_project/prototype/lib`).
-  4) `find SRS_project/prototype/reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **34** 가 출력되는 것을 대화에 남긴다(§6의 34개 상태). 이어서 `ls SRS_project/prototype/reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
+  4) `find SRS_project/prototype/reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **35** 가 출력되는 것을 대화에 남긴다(§6의 35개 상태). 이어서 `ls SRS_project/prototype/reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
   5) `cat SRS_project/prototype/reports/PROTOTYPE_LOG.md` 를 실행해 스텝별 검수 결과·`EVAL #N` 줄·`STOP REASON:` 줄이 보이는 출력을 대화에 남긴다.
   6) **마지막 `aztks-agent` EVALUATE 출력 5줄(`VERDICT` / `SCORECARD` / `TOP_FIX` / `EVIDENCE` / `NOTES`)을 요약하지 말고 그대로 대화에 붙여넣는다.**
   7) `"$GH" pr list --draft` 를 실행해 열린 Draft PR 목록을 대화에 남긴다.
@@ -100,14 +100,14 @@
 - **재평가 절차:** 통과하지 못하면 `TOP_FIX` **한 건만** 반영하고 다시 디스패치한다.
 - **매 평가 직후 스코어카드 5줄을 요약하지 말고 그대로 대화에 붙여넣는다** — 평가자가 transcript로 판정할 수 있어야 한다.
 
-## 6) 화면 캡처 규칙 — 34장
+## 6) 화면 캡처 규칙 — 35장
 
-- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 34개 상태를 캡처해 `SRS_project/prototype/reports/prototype-screens/<파일명>__<RUN_TS>.png` 로 저장한다.
+- 스킬 `webapp-testing`(Playwright)으로 `pnpm dev` 기동 상태에서 아래 35개 상태를 캡처해 `SRS_project/prototype/reports/prototype-screens/<파일명>__<RUN_TS>.png` 로 저장한다.
 - **`<RUN_TS>` 는 캡처 실행 시각**이며 `YYYYMMDD-HHmm` 형식이다(예: `A-13__20260827-1432.png`). 한 번의 캡처 실행에서는 32장이 **같은 `<RUN_TS>`** 를 쓴다.
 - **캡처 실행 전 `SRS_project/prototype/reports/prototype-screens/` 를 비운다.** 이전 실행분이 남으면 §3.4의 32장 검증이 깨진다.
 - `RUN_TS` 값을 `SRS_project/prototype/reports/PROTOTYPE_LOG.md` 에 `CAPTURE RUN: <RUN_TS> (32 shots)` 한 줄로 기록한다.
 - 뷰포트는 명세 §2.1을 따른다 — `A-*`는 1280px, `B-*`는 390px.
-- **34장이 모두 저장되기 전에는 `aztks-agent`를 디스패치하지 않는다.** 캡처가 없으면 UX 흐름을 판정할 근거가 없다.
+- **35장이 모두 저장되기 전에는 `aztks-agent`를 디스패치하지 않는다.** 캡처가 없으면 UX 흐름을 판정할 근거가 없다.
 
 | # | 파일명 (뒤에 `__<RUN_TS>` 가 붙는다) | URL 쿼리 | 화면 |
 | --- | --- | --- | --- |
@@ -140,6 +140,7 @@
 | 26 | `A-16__match-2` | `?state=A-16&match=2` | 2개 일치 → 확정 |
 | 27 | `A-16e` | `?state=A-16e` | 1개 일치 → 남은 한 자리 Option Grid |
 | 28 | `A-16__match-0` | `?state=A-16&match=0` | 0개 일치 → 2라운드 |
+| 28-2 | `A-16__match-split` | `?state=A-16&match=split` | 2라운드도 불일치 → **분할 종료**(AC-17-03 · `decisions/0004`) |
 | 29 | `B-01` | `?state=B-01` | 초대 진입(모바일) |
 | 30 | `B-01__invite-expired` | `?state=B-01&invite=expired` | 초대 만료·존재하지 않음 |
 | 31 | `B-02` | `?state=B-02` | 조건 입력 전 맥락(모바일) |
