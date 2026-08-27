@@ -96,6 +96,12 @@ export interface CompromiseSentenceView {
   remaining: string[];
 }
 
+/**
+ * PRD §14.1 — 양보 문장은 **한쪽만 충족하는 매물**에만 붙는다.
+ * `둘 다 불충족`·`둘 다 충족`에는 문장이 없다. 문장이 조건 세트와 어긋나
+ * 표를 배반하는 것을 막으려면 대상을 이렇게 좁혀야 한다.
+ * 지금 픽스처에서 `한쪽만 충족`은 `normal` 세트의 `L-001` 하나뿐이다.
+ */
 export const COMPROMISE_SENTENCES: Record<string, CompromiseSentenceView> = {
   "L-001": {
     listingId: "L-001",
@@ -103,20 +109,6 @@ export const COMPROMISE_SENTENCES: Record<string, CompromiseSentenceView> = {
     what: "예산을 월 5만원 더",
     instead: "같은 후보 5곳 중 통근이 가장 짧고(18분), 원하던 아파트예요",
     remaining: [],
-  },
-  "L-002": {
-    listingId: "L-002",
-    who: "A",
-    what: "통근을 3분 더, 면적을 1㎡ 더",
-    instead: null,
-    remaining: ["주차 없음"],
-  },
-  "L-005": {
-    listingId: "L-005",
-    who: "A",
-    what: "통근을 7분 더, 면적을 8㎡ 더",
-    instead: "같은 후보 5곳 중 월 실부담이 가장 낮아요",
-    remaining: ["주차 확인 필요"],
   },
 };
 

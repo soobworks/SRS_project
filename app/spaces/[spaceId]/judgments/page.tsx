@@ -280,6 +280,11 @@ function SearchFilterView({ spaceId }: { spaceId: string }) {
       </p>
 
       <div className="mt-4 flex flex-col gap-2">
+        {/* 자동 이동 금지(AC-16-01) — 누르는 순간에만 나간다.
+            프로토타입에는 나갈 대상이 없어 아래 배지가 그 자리를 대신한다. */}
+        <span className="inline-flex w-fit cursor-not-allowed items-center rounded-md bg-ink px-4 py-2 text-sm text-surface opacity-60">
+          이 필터로 찾아보기
+        </span>
         <ExitBadge>
           「이 필터로 찾아보기」를 누르면 네이버 탐색으로 나갑니다 — 프로토타입
           범위 밖이라 여기서 멈춥니다. 자동으로 이동하지 않습니다.

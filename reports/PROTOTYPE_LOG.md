@@ -23,3 +23,7 @@ FIX: A/B 블록 행 수 불일치(명세 §4.3 위반) — 안 건 조건도 `�
 FIX: A-16e Option Grid에서 `기준 없음`을 `?`(확인 필요 기호)로 렌더 — 5분류 오분류. 상태별로 분기하도록 수정.
 FIX: Next 개발 표시기가 매물명을 가림 → devIndicators: false
 CAPTURE RUN: 20260827-1459 (32 shots)
+GOAL AMENDED: §3.3 총점 금지 grep이 가드레일 주석 4건을 잡아 원본만으로는 0이 나올 수 없었다. 원본 + 주석제외 + 금지 prop 3단으로 바꿨다(원본 결과도 반드시 함께 보인다 — 숨기면 검사 약화).
+VERIFY: 총점 실코드 0건 / 금지 prop(score·rank·recommended·winner·sortBy) 0건
+FIX: A-13b-2에 「이 필터로 찾아보기」 버튼이 시각적으로 없었다(명세 §7.3) → 추가. 자동 이동 없음은 유지.
+FIX: A-15에서 양보 문장이 normal 세트 기준이라 바로 아래 all-unmet 표와 모순됐다. PRD §14.1대로 양보 문장을 `한쪽만 충족` 매물에만 붙이도록 좁혔다.

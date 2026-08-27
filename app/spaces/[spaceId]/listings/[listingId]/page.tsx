@@ -75,7 +75,11 @@ export default async function ListingDetailPage({
         </span>
       </div>
 
-      {/* A-14b — Hero trade-off. 결론을 붙이지 않는다(PRD §14.2). */}
+      {/* A-14b — Hero trade-off.
+          PRD §14.1: **한쪽만 충족하는 매물**을 설명 대상으로 승격한다 —
+          `둘 다 불충족`에는 양보 문장을 붙이지 않는다. 거기서는 감수할 쪽이
+          한 명으로 정해지지 않고, 표와 어긋나는 문장이 나오기 때문이다.
+          결론("이 집이 낫다")은 어떤 경우에도 붙이지 않는다(PRD §14.2). */}
       {sentence && jd.group === "ONE_SIDE_ONLY" ? (
         <section className="mb-5 rounded-lg border border-line bg-surface p-5">
           <p className="text-base leading-relaxed text-ink">
@@ -94,32 +98,6 @@ export default async function ListingDetailPage({
                 <li key={r}>· {r}</li>
               ))}
             </ul>
-          ) : null}
-        </section>
-      ) : null}
-
-      {/* 미충족 3개 이상이면 앞 2개만 문장, 나머지는 목록(PRD §14.2) */}
-      {sentence && jd.group === "BOTH_UNMET" ? (
-        <section className="mb-5 rounded-lg border border-line bg-surface p-5">
-          <p className="text-base leading-relaxed text-ink">
-            <strong>{sentence.who}</strong>는 {sentence.what} 감수해요
-            {sentence.instead ? (
-              <>
-                . 대신 <span className="text-ink">{sentence.instead}</span>
-              </>
-            ) : (
-              "."
-            )}
-          </p>
-          {sentence.remaining.length > 0 ? (
-            <>
-              <p className="mt-2 text-xs text-ink-muted">그 밖에</p>
-              <ul className="mt-1 flex flex-col gap-0.5 text-sm text-ink-muted">
-                {sentence.remaining.map((r) => (
-                  <li key={r}>· {r}</li>
-                ))}
-              </ul>
-            </>
           ) : null}
         </section>
       ) : null}

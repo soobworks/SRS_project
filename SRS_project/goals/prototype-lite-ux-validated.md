@@ -43,7 +43,14 @@
 - **종료 방법:**
   1) `reports/PROTOTYPE_LOG.md` 마지막 줄에 `STOP REASON: <원인 코드>` 한 줄을 덧붙인다.
   2) `pnpm typecheck && pnpm lint && pnpm build` 를 실행해 **세 명령 모두 exit 0** 인 출력을 대화에 남긴다.
-  3) `grep -rniE "totalScore|totalPoint|overallScore|compositeScore|종합 ?점수|공동 ?적합도|추천 ?배지|복합 ?순위" app components lib` 를 실행해 **0 matches** 인 출력을 대화에 남긴다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d app components lib` 로 먼저 확인).
+  3) 총점 금지 검사를 실행해 대화에 남긴다. **원본 grep과 주석 제외 grep을 모두** 보인다 — 가드레일 주석("총점·추천 배지를 두지 않는다")이 패턴에 걸리므로, 원본만으로는 0이 나올 수 없고 숨기면 검사를 약화시키는 것이 된다.
+     ```bash
+     PAT="totalScore|totalPoint|overallScore|compositeScore|종합 ?점수|공동 ?적합도|추천 ?배지|복합 ?순위"
+     grep -rnIE "$PAT" app components lib                      # 원본 — 걸린 줄이 전부 주석인지 눈으로 확인
+     grep -rnIE "$PAT" app components lib        | grep -vE ':[0-9]+: *(\*|//|/\*|\{/\*)'                # 실코드 — 반드시 0
+     grep -rnE "(score|rank|recommended|winner|sortBy)\s*[?:]" components/domain lib/types  # 금지 prop — 반드시 0
+     ```
+     **실코드 0건**과 **금지 prop 0건**이 통과 조건이다. 세 디렉터리가 모두 존재하는 상태에서 실행한다(`ls -d app components lib`).
   4) `find reports/prototype-screens -name '*.png' | wc -l` 를 실행해 **32** 가 출력되는 것을 대화에 남긴다(§6의 32개 상태). 이어서 `ls reports/prototype-screens | head -3` 로 파일명에 `__<RUN_TS>` 가 붙어 있는지 대화에 남긴다.
   5) `cat reports/PROTOTYPE_LOG.md` 를 실행해 스텝별 검수 결과·`EVAL #N` 줄·`STOP REASON:` 줄이 보이는 출력을 대화에 남긴다.
   6) **마지막 `aztks-agent` EVALUATE 출력 5줄(`VERDICT` / `SCORECARD` / `TOP_FIX` / `EVIDENCE` / `NOTES`)을 요약하지 말고 그대로 대화에 붙여넣는다.**
