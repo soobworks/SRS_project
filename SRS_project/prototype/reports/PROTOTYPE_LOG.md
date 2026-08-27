@@ -160,6 +160,6 @@ SCORECARD: A:P Z:C T:P K:C S:P
 | 이 보고서 | `SRS_project/prototype/reports/PROTOTYPE_LOG.md` (커밋됨) |
 | 목표 정의 | `SRS_project/goals/prototype-lite-ux-validated.md` |
 | 시각화 명세 | `SRS_project/tasks/v2/prototype-visual-spec.md` |
-| 화면 캡처 | `SRS_project/prototype/reports/prototype-screens/` (gitignore — 용량) |
+| 화면 캡처 | `SRS_project/prototype/reports/prototype-screens/` (커밋됨 — 2026-08-27 결정) |
 | 검수 URL | `SRS_project/prototype/reports/REVIEW_URLS.md` |
 | 커밋·PR | 이슈 #55 · 브랜치 `feat/55-proto-lite-scope-l` |
