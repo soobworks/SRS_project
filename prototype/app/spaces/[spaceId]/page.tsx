@@ -122,6 +122,7 @@ export default async function SharedSpacePage({
           </ul>
           ) : null}
 
+          {!empty ? (
           <section className="mt-6 rounded-lg border border-line bg-surface p-4">
             <p className="mb-2 text-xs font-medium text-ink-muted">
               A의 선호 — 상대가 읽는 자유 문장이에요. 집마다 ✓/✗를 매기지 않아요.
@@ -132,14 +133,22 @@ export default async function SharedSpacePage({
               ))}
             </ul>
           </section>
+          ) : null}
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <Link
-              href={`/spaces/${spaceId}/conditions?state=A-03`}
-              className="inline-block rounded-md bg-ink px-4 py-2 text-sm text-surface"
-            >
-              5곳으로 시작하기
-            </Link>
+            {/* 담은 집이 0곳이면 시작할 수 없다 — 버튼을 활성으로 두면 거짓말이 된다. */}
+            {!empty ? (
+              <Link
+                href={`/spaces/${spaceId}/conditions?state=A-03`}
+                className="inline-block rounded-md bg-ink px-4 py-2 text-sm text-surface"
+              >
+                5곳으로 시작하기
+              </Link>
+            ) : (
+              <span className="inline-block cursor-not-allowed rounded-md bg-neutral-bg px-4 py-2 text-sm text-neutral">
+                담은 집이 없어 시작할 수 없어요
+              </span>
+            )}
             <Link
               href={`/spaces/${spaceId}?state=A-02c`}
               className="inline-block rounded-md border border-line px-4 py-2 text-sm text-ink"
