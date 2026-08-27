@@ -40,6 +40,8 @@ SRS_V0_9.md §1.5가 제약(C-TEC-001~007)으로 못박았다. **대안을 제�
 3. 참조된 SRS 절
 4. **선행이 안 끝났으면 시작하지 않는다**
 
+프로토타입(UI/UX 선행 구현) 작업은 `SRS_project/tasks/v2/prototype-visual-spec.md`가 선행 근거다 — 화면 ID·폼팩터·표기 문법·픽스처가 거기 확정돼 있다.
+
 절차 전체는 스킬 `400-task-execution-workflow`.
 
 ---
