@@ -27,7 +27,10 @@ export default async function ConditionsPage({
   const { spaceId } = await params;
   const { state = "A-04", form } = await searchParams;
 
+  // 화면 ID 접두사가 폼팩터뿐 아니라 **누구의 입력인지**도 가른다(명세 §2.1).
+  // B 화면에서 A의 값을 보여주면 두 사람이 같은 조건을 가진 것처럼 읽힌다.
   const isMobile = state.startsWith("B-");
+  const who: "a" | "b" = isMobile ? "b" : "a";
   const scenario = resolveSet(state);
 
   if (state === "A-04a") {
@@ -48,12 +51,13 @@ export default async function ConditionsPage({
         {preview ? (
           <PreviewStep spaceId={spaceId} burden={scenario.burden["L-001"]} />
         ) : commuteStep ? (
-          <CommuteStep spaceId={spaceId} noCommute={noCommute} />
+          <CommuteStep spaceId={spaceId} noCommute={noCommute} who={who} />
         ) : (
           <BudgetStep
             spaceId={spaceId}
             empty={form === "empty"}
             mobile={isMobile}
+            who={who}
           />
         )}
 
@@ -74,14 +78,21 @@ export default async function ConditionsPage({
 }
 
 /** A-04 — 예산 입력. 미입력 시 저장 자체를 막는다(AC-02-01). */
+/** 명세 §6.5 — A 예산 100만 / B 예산 85만. 사람마다 다른 값을 쓴다. */
+const BUDGET_OF = { a: "100", b: "85" } as const;
+/** 명세 §6.3 — A 출근지 강남역 / B 출근지 여의도역. */
+const ORIGIN_OF = { a: "강남역", b: "여의도역" } as const;
+
 function BudgetStep({
   spaceId,
   empty,
   mobile,
+  who,
 }: {
   spaceId: string;
   empty: boolean;
   mobile: boolean;
+  who: "a" | "b";
 }) {
   return (
     <>
@@ -100,7 +111,7 @@ function BudgetStep({
         <input
           id="budget"
           inputMode="numeric"
-          defaultValue={empty ? "" : "100"}
+          defaultValue={empty ? "" : BUDGET_OF[who]}
           placeholder="예: 100"
           aria-invalid={empty}
           aria-describedby={empty ? "budget-error" : "budget-help"}
@@ -163,9 +174,11 @@ function BudgetStep({
 function CommuteStep({
   spaceId,
   noCommute,
+  who,
 }: {
   spaceId: string;
   noCommute: boolean;
+  who: "a" | "b";
 }) {
   return (
     <>
@@ -218,7 +231,7 @@ function CommuteStep({
             </label>
             <input
               id="origin"
-              defaultValue="강남역"
+              defaultValue={ORIGIN_OF[who]}
               className="w-64 rounded-md border border-line bg-surface px-3 py-2 text-sm"
             />
           </div>
