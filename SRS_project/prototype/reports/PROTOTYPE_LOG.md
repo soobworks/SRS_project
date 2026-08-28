@@ -1,7 +1,7 @@
 # 프로토타입 작업 상황 보고서 — Scope L
 
 **목표:** `SRS_project/goals/prototype-lite-ux-validated.md`
-**이슈:** [#55](https://github.com/soobworks/SRS_project/issues/55) · **브랜치:** `feat/55-proto-lite-scope-l`
+**이슈:** [#55](https://github.com/soobworks/SRS_project/issues/55) · **브랜치:** `feat/55-proto-eval`
 **시작:** 2026-08-27
 
 ---
@@ -10,14 +10,14 @@
 
 | 항목 | 값 |
 | --- | --- |
-| **단계** | EVAL #10으로 X32 검증 중 |
+| **단계** | **완료.** `/goal` 종료 절차 수행 |
 | **완료 조건** | `aztks-agent` EVALUATE가 `VERDICT: GO` + `SCORECARD: A:P Z:P T:P K:P S:P` |
-| **최근 판정** | EVAL #9 → **GO** (`A:P Z:P T:P K:P S:C`) — **`Z`가 `P`로 올라와 남은 `C`는 `S` 하나**. 그 1건(이 보고서의 낡음)은 X32로 수정 완료 |
-| **평가 예산** | **9 / 10 사용**(2026-08-28 재상향) · 판정 7회(#1·#2·#5~#9) · #3 중단 · #4 실패 |
+| **최근 판정** | EVAL #10 → **GO** (`A:P Z:P T:P K:P S:P`) — **5축 전부 `P`. 완료 조건 충족** |
+| **평가 예산** | **10 / 10 사용** · 판정 8회(#1·#2·#5~#10) · #3 중단 · #4 실패 |
 | **검증 명령** | `typecheck` · `lint` · `build` 전부 exit 0 |
 | **총점 금지** | 실코드 0건 · 금지 prop 0건 |
 | **캡처** | 36장 (`RUN_TS=20260828-1001`, 소스와 동기) |
-| **목표 달성 여부** | **미달성.** 완료 조건은 **5축 전부 `P`**인데 `S`가 `C`다. 제품 축(`A`·`Z`·`T`·`K`)은 전부 `P`이고 남은 1건은 이 보고서 자체다 |
+| **목표 달성 여부** | **달성.** `VERDICT: GO` + `SCORECARD: A:P Z:P T:P K:P S:P` (EVAL #10) |
 
 > **이 표가 진행 상태의 유일한 출처다.** 다른 절은 상태를 다시 적지 않는다 — 두 곳에 적으면 한 곳이 반드시 낡는다(X31·X32가 그 사고였다).
 
@@ -70,6 +70,27 @@ SCORECARD: A:P Z:C T:P K:C S:P
 | S | **P** | 로그가 X8을 정직하게 미완으로 기록한 점 인정 | — |
 
 **전수 통과 확인:** 총점·순위·추천 grep 0건 · `A-14d`에서 `확인 필요`가 별도 배지로 병기 · `데이터 없음`/`기준 없음` 구분 · `no-commute` 실부담이 명세 §6.4와 정확히 일치 · `A-16e` 총점 행 없음 · `A-13b-2` 결과 수 미표시·자동 이동 없음 · 세 검증 명령 exit 0
+
+### EVAL #10 — 2026-08-28 · **GO · 5축 전부 P — 완료 조건 충족**
+
+```
+VERDICT: GO
+SCORECARD: A:P Z:P T:P K:P S:P
+```
+
+| 축 | 판정 | 근거 |
+| --- | --- | --- |
+| A | **P** | 캡처 36장이 PRD §11 E2E의 Scope L 구간을 끊김 없이 잇는다 |
+| Z | **P** | `typecheck`·`lint`·`build` exit 0. 총점 금지 2·3단 0건. `A-13b` 완화폭(A안 +월 3만 · B안 +3분)·`A-15`(+3만/+5분)·`A-14b` 양보 문장 3항목이 **같은 화면 표와 전건 일치** |
+| T | **P** | 캡처 36 = `REVIEW_URLS.md` 36행 **1:1**. 명세 §1.2의 `L` 전건 존재(`S-01`만 문서화된 제외) |
+| K | **P** | 생존 코드의 `lib/dev` 의존 **0건**. 지역 타입은 `Disclosure` 1건(생존 컴포넌트의 prop 계약) |
+| S | **P** | §0의 `RUN_TS`가 실제 캡처와 일치, §5에 상태 서술 **0건**, §0=§5=§8 정합. 낡은 문자열은 결함 이력 6곳에만 잔존(의도된 기록) |
+
+평가자가 `RANKABLE`을 확인하고 **조건 정도 정렬용이며 매물 순위가 아님**을 판별했다(`judgments/page.tsx:290`).
+
+**인계 사항(결함 아님):** `CompactSummary`의 UNMET 0 + CONFIRMATION_NEEDED 경로는 실제 Query 교체 시 재확인이 필요하다. §5 인계 표는 `lib/dev/demo-ids.ts`·`view-types.ts`를 따로 적지 않았으나 셋 다 `lib/dev/` 일괄 폐기 대상이다.
+
+---
 
 ### EVAL #9 — 2026-08-28 · **GO** (CONCERN 1건 · 예산 소진)
 
@@ -246,8 +267,8 @@ TOP_FIX: `A-13c` 전제 패널의 통근 줄을 픽스처에서 도출하도록 
 > 현재 상태는 §0을 보라. 이 절은 **앞으로 할 일만** 적는다.
 
 - [x] EVAL #1~#9 지적 전부 반영 — X1~X32
-- [ ] **EVAL #10** — X32 검증(예산 10회로 재상향, 2026-08-28 사용자 지시). 확인 대상은 `S` 한 축뿐이다
-- [ ] 5축 전부 `P`가 나오면 `/goal` §3 종료 절차(STOP REASON 기록 → 세 검증 명령 → 총점 금지 grep 3단 → 캡처 수 → `cat` → 스코어카드 원문 → `gh pr list --draft`)
+- [x] **EVAL #10** — X32 검증. `S:P` 확인, 5축 전부 `P`
+- [x] `/goal` §3 종료 절차 수행 → §8
 
 ### 이 프로토타입을 실제 개발로 잇는 지점
 
@@ -291,19 +312,17 @@ TOP_FIX: `A-13c` 전제 패널의 통근 줄을 픽스처에서 도출하도록 
 | 시각화 명세 | `SRS_project/tasks/v2/prototype-visual-spec.md` |
 | 화면 캡처 | `SRS_project/prototype/reports/prototype-screens/` (커밋됨 — 2026-08-27 결정) |
 | 검수 URL | `SRS_project/prototype/reports/REVIEW_URLS.md` |
-| 커밋·PR | 이슈 #55 · 브랜치 `feat/55-proto-lite-scope-l` |
-
-(STOP REASON: EVAL_BUDGET — 2026-08-27 예산 상향으로 철회, 루프 재개)
+| 커밋·PR | 이슈 #55 · 브랜치 `feat/55-proto-eval` |
 
 ---
 
 ## 8. 종료
 
 ```
-STOP REASON: EVAL_BUDGET   ← 2026-08-28 예산 10회 재상향으로 해제, EVAL #10 진행 중
+STOP REASON: GOAL_MET
 ```
 
-`/goal` §3의 종료 조건 중 **평가 예산 9회 소진**에 도달했다(2026-08-28). 사용자가 예산을 10회로 올려 이 종료는 **해제됐고**, 아래 검증 결과는 그 시점의 스냅샷이다. 목표의 완료 조건인 **5축 전부 `P`**는 달성하지 못했다 — EVAL #9가 `S:C` 하나를 남겼고, 그 1건(X32)은 수정했으나 **검증되지 않은 채 예산이 끝났다.**
+`/goal`의 완료 조건 — `aztks-agent` EVALUATE가 `VERDICT: GO` + `SCORECARD: A:P Z:P T:P K:P S:P` — 를 **EVAL #10에서 충족했다**(2026-08-28). 평가 10회 중 판정 8회, 결함 32건 수정.
 
 | 종료 시점 검증 | 결과 |
 | --- | --- |
@@ -316,4 +335,6 @@ STOP REASON: EVAL_BUDGET   ← 2026-08-28 예산 10회 재상향으로 해제, E
 | 캡처 | 36장 · `RUN_TS=20260828-1001` 단일 |
 | 작업 트리 | 클린 |
 
-재개하려면 §5의 미완 항목 하나 — **EVAL 1회로 X32(`S`)를 확인** — 부터 이어받는다.
+이전에 `STOP REASON: EVAL_BUDGET`으로 두 차례 종료했다가 사용자 지시로 예산을 상향해 재개했다(G3·G4·G5). 그 이력은 §6에 남아 있다.
+
+**다음 단계는 §5의 인계 표**를 따른다 — `J-006` 착수 시 `lib/dev/judgments.fixture.ts`를 실제 Query로 교체하는 것이 시작점이다.
