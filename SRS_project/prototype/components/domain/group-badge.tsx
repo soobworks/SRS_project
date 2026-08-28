@@ -39,5 +39,3 @@ export function ConfirmationBadge() {
     </span>
   );
 }
-
-export { GROUP_LABEL };

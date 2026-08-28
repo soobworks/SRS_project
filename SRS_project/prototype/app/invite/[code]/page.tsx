@@ -5,7 +5,12 @@ import {
   StepNav,
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { LISTINGS, PREFERENCES, resolveSet } from "@/lib/dev/scenarios";
+import {
+  LISTINGS,
+  PREFERENCES,
+  resolveSet,
+  ASSUMPTION_BASIS,
+} from "@/lib/dev/scenarios";
 import { DEMO_SPACE_ID } from "@/lib/dev/demo-ids";
 
 /**
@@ -123,7 +128,13 @@ function ContextView({ burden }: { burden: Record<string, string> }) {
               {l.listingType} · {l.area}㎡ · 역도보 {l.walkToStationMin}분
             </p>
             <p className="mt-1 text-xs text-ink-muted">
-              월 <DisclosedValue href="?state=B-02">{burden[l.id]}</DisclosedValue>
+              월{" "}
+              <DisclosedValue
+                href={`/spaces/${DEMO_SPACE_ID}/conditions?state=A-04a`}
+                basis={ASSUMPTION_BASIS}
+              >
+                {burden[l.id]}
+              </DisclosedValue>
             </p>
           </li>
         ))}

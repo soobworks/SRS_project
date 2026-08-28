@@ -6,7 +6,12 @@ import {
   StepNav,
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { resolveSet, listingById, VISIT_ROUNDS } from "@/lib/dev/scenarios";
+import {
+  resolveSet,
+  listingById,
+  VISIT_ROUNDS,
+  ASSUMPTION_BASIS,
+} from "@/lib/dev/scenarios";
 import type { ConditionRow } from "@/lib/types";
 
 /**
@@ -51,7 +56,27 @@ export default async function VisitSelectionPage({
         <PickBlock label="B가 고른 곳" picks={round.bPicks} matched={round.matched} />
       </div>
 
-      {round.settled ? (
+      {round.settled && round.splitEnding ? (
+        /* AC-17-03 · decisions/0004 — 2라운드에도 겹치지 않으면 **분할로 끝낸다.**
+           시스템이 하나를 고르거나 투표·순위를 매기지 않는다. */
+        <section className="rounded-lg border border-line bg-surface p-4">
+          <h2 className="mb-1 font-medium text-ink">
+            두 번 다 겹치지 않았어요 — 각자 고른 곳을 하나씩 보러 가요
+          </h2>
+          <p className="mb-3 text-sm text-ink-muted">
+            어느 쪽이 낫다고 정하지 않고 이렇게 끝냅니다. 두 곳을 다 보고 나서
+            다시 이야기하면 돼요.
+          </p>
+          <div className="grid gap-2 md:grid-cols-2">
+            <p className="rounded-md border border-line px-3 py-2 text-sm text-ink">
+              A가 고른 곳 · {listingById(round.settled[0]).name}
+            </p>
+            <p className="rounded-md border border-line px-3 py-2 text-sm text-ink">
+              B가 고른 곳 · {listingById(round.settled[1]).name}
+            </p>
+          </div>
+        </section>
+      ) : round.settled ? (
         <section className="rounded-lg border border-met/30 bg-met-bg/50 p-4">
           <h2 className="mb-1 font-medium text-ink">
             두 곳 다 겹쳤어요 — 이번엔 여기 두 곳을 보러 가요
@@ -87,6 +112,7 @@ export default async function VisitSelectionPage({
           { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=2`, label: "2개 일치" },
           { href: `/spaces/${spaceId}/visit-selection?state=A-16e`, label: "1개 일치" },
           { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=0`, label: "0개 일치" },
+          { href: `/spaces/${spaceId}/visit-selection?state=A-16&match=split`, label: "분할 종료" },
           { href: `/spaces/${spaceId}/judgments?state=A-13`, label: "목록으로" },
         ]}
       />
@@ -144,6 +170,9 @@ function RunoffGrid({
 }) {
   const labels = ["예산", "통근", "면적", "주차", "유형"];
   /**
+   * 명세 §4.3 — `A-16e`는 **전체형**이다. 실제값·비교기호·임계값을 함께 싣는다.
+   * 기호만 두면 "얼마 기준으로 못 미쳤는지"가 이 화면에서 사라진다.
+   *
    * 5분류를 기호 하나로 뭉뚱그리지 않는다.
    * `확인 필요`(?)와 `기준 없음`·`해당 없음`·`계산 불가`는 서로 다른 상태이며,
    * 이들을 섞는 것이 이 프로젝트에서 가장 치명적인 오분류다(PRD §18.3).
@@ -151,13 +180,44 @@ function RunoffGrid({
   const cell = (id: string, who: "a" | "b", label: string) => {
     const row = rowsFor(id)[who].find((r) => r.label === label);
     if (!row) return <span className="text-neutral">—</span>;
+    // 추정치면 전제를 함께 보인다(§5.2). ⓘ는 셀당 1개 — 실제값에만 단다(§5.3).
+    const actual = row.estimated ? (
+      <DisclosedValue
+        href={`/spaces/${spaceId}/conditions?state=A-04a`}
+        basis={ASSUMPTION_BASIS}
+      >
+        {row.actual}
+      </DisclosedValue>
+    ) : (
+      row.actual
+    );
 
     switch (row.status) {
       case "MET":
-        return <span className="nums text-met">✓</span>;
+        return (
+          <span className="nums text-ink">
+            {actual}
+            {row.comparator && row.threshold ? (
+              <span className="text-ink-muted">
+                {" "}
+                {row.comparator} {row.threshold}
+              </span>
+            ) : null}{" "}
+            <span className="text-met">✓</span>
+          </span>
+        );
       case "UNMET":
         return (
-          <span className="nums text-unmet">✗{row.gap ? ` ${row.gap}` : ""}</span>
+          <span className="nums text-ink">
+            {actual}
+            {row.comparator && row.threshold ? (
+              <span className="text-ink-muted">
+                {" "}
+                {row.comparator} {row.threshold}
+              </span>
+            ) : null}{" "}
+            <span className="text-unmet">✗{row.gap ? ` ${row.gap}` : ""}</span>
+          </span>
         );
       case "CONFIRMATION_NEEDED":
         return <span className="nums text-confirm">? 확인 필요</span>;
@@ -180,7 +240,7 @@ function RunoffGrid({
       </p>
 
       <div className="overflow-x-auto rounded-lg border border-line bg-surface">
-        <table className="w-full min-w-[36rem] text-sm">
+        <table className="w-full min-w-[52rem] text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs text-ink-muted">
               <th className="px-4 py-2 font-medium">조건</th>
@@ -218,6 +278,7 @@ function RunoffGrid({
                 <td key={`${id}-burden`} className="px-4 py-2.5" colSpan={2}>
                   <DisclosedValue
                     href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                    basis={ASSUMPTION_BASIS}
                   >
                     {burden[id]}
                   </DisclosedValue>

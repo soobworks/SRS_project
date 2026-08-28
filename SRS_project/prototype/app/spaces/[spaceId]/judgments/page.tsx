@@ -7,9 +7,10 @@ import {
 } from "@/components/dev/prototype-shell";
 import { CompactSummary } from "@/components/domain/balanced-comparison";
 import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
-import type { CandidateGroup } from "@/lib/types";
+import type { CandidateGroup, ConditionKey } from "@/lib/types";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
 import {
+  ASSUMPTION_BASIS,
   resolveSet,
   listingById,
   PREFERENCES,
@@ -42,6 +43,11 @@ export default async function JudgmentsPage({
 
   const isMobile = state.startsWith("B-");
   const solo = scenario.id === "solo";
+  // 전제 패널 경로는 화면이 정한다 — 컴포넌트가 기본값을 지어내지 않는다.
+  const disclosure = {
+    href: `/spaces/${spaceId}/conditions?state=A-04a`,
+    basis: ASSUMPTION_BASIS,
+  };
 
   return (
     <PrototypeShell form={isMobile ? "mobile" : "desktop"} state={state}>
@@ -61,7 +67,9 @@ export default async function JudgmentsPage({
               sub={
                 solo
                   ? "B가 아직 참여하지 않아 1인 입력만 반영했어요"
-                  : scenario.label
+                  : state === "A-13c"
+                    ? "조건마다 가장 가까운 후보가 어디인지 봐요"
+                    : scenario.label
               }
             />
 
@@ -103,7 +111,7 @@ export default async function JudgmentsPage({
               </section>
             ) : null}
             {state === "A-13b" ? <DeadEndPanel spaceId={spaceId} /> : null}
-            {state === "A-13c" ? <ConflictPanel /> : null}
+            {state === "A-13c" ? <ConflictPanel scenario={scenario} /> : null}
 
             {/* 3분류 그룹으로 묶는다(명세 §9.1). 그룹 순서는 고정이며
                 그룹 내부는 후보를 담은 순서 그대로다 — 재정렬하지 않는다.
@@ -145,7 +153,8 @@ export default async function JudgmentsPage({
                         <span className="ml-auto text-sm text-ink-muted">
                           월{" "}
                           <DisclosedValue
-                            href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                            href={disclosure.href}
+                            basis={disclosure.basis}
                           >
                             {scenario.burden[jd.listingId]}
                           </DisclosedValue>
@@ -159,13 +168,13 @@ export default async function JudgmentsPage({
                       ) : null}
 
                       <div className="flex flex-col gap-0.5">
-                        <CompactSummary label="A" rows={jd.a} />
+                        <CompactSummary label="A" rows={jd.a} disclosure={disclosure} />
                         {solo ? (
                           <p className="text-sm text-neutral">
                             B · 아직 조건을 입력하지 않았어요
                           </p>
                         ) : (
-                          <CompactSummary label="B" rows={jd.b} />
+                          <CompactSummary label="B" rows={jd.b} disclosure={disclosure} />
                         )}
                       </div>
                       <Link
@@ -226,8 +235,20 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
             className="rounded-md border border-line bg-surface p-3 text-sm"
           >
             <p className="mb-1 text-xs text-ink-muted">{o.who}안</p>
+            {/* 실부담 파생값이라 전제를 함께 보인다(명세 §5.2).
+                ⓘ는 행당 1개 — 완화 후 값에만 달고 미달량에는 달지 않는다(§5.3). */}
             <p className="nums text-ink">
-              {o.conditionLabel} {o.from} → {o.to}{" "}
+              {o.conditionLabel} {o.from} →{" "}
+              {o.conditionLabel === "예산" ? (
+                <DisclosedValue
+                  href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                  basis={ASSUMPTION_BASIS}
+                >
+                  {o.to}
+                </DisclosedValue>
+              ) : (
+                <strong>{o.to}</strong>
+              )}{" "}
               <span className="text-ink-muted">({o.delta})</span>
             </p>
             {o.recovers.length > 0 ? (
@@ -254,28 +275,84 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
   );
 }
 
-/** A-13c — 후보 집합 내 조건 충돌 설명. 전체 지역에 그런 집이 없다고 단정하지 않는다. */
-function ConflictPanel() {
+/**
+ * A-13c — 후보 집합 내 조건 충돌 설명
+ *
+ * **픽스처에서 도출한다.** 문장을 손으로 쓰면 화면 아래 카드와 어긋나고,
+ * 실제로 어긋났었다(EVAL #5 TOP_FIX — 통근에 가장 가까운 곳을 잘못 지목).
+ * 이 화면은 "조건마다 가장 가까운 후보"를 말하므로 같은 데이터에서 뽑아야 한다.
+ *
+ * 정도(magnitude)가 있는 조건만 줄 세운다 — 주차 `없음`·유형 `빌라` 처럼
+ * 유무형·일치형은 "얼마나 가깝다"가 성립하지 않는다.
+ *
+ * 전체 지역에 그런 집이 없다고 단정하지 않는다.
+ */
+const RANKABLE: ConditionKey[] = ["budget", "commute", "walkToStation", "area"];
+
+/** `+월 15만` · `+3분` · `−7㎡` 에서 크기만 뽑는다. 없으면 줄 세우지 않는다. */
+const magnitudeOf = (gap: string | null): number | null => {
+  if (!gap) return null;
+  const m = gap.match(/(\d+)/);
+  return m ? Number(m[1]) : null;
+};
+
+function ConflictPanel({ scenario }: { scenario: ReturnType<typeof resolveSet> }) {
+  // (조건 × 사람)마다 "이 기준을 만족하는 후보가 하나라도 있는가"를 본다.
+  // 하나도 없는 쌍이 **진짜 막고 있는 것**이다 — 어떤 후보로도 충족되지 않는
+  // 조건. 하나라도 충족하는 조건은 이 화면이 설명할 충돌이 아니다.
+  const blockers = RANKABLE.flatMap((key) =>
+    (["A", "B"] as const).map((who) => {
+      let label = "";
+      let hasThreshold = false;
+      let satisfied = false;
+      let closest: { listingId: string; gap: string; mag: number } | null = null;
+
+      for (const jd of scenario.judgments) {
+        const rows = who === "A" ? jd.a : jd.b;
+        const row = rows.find((r) => r.key === key && r.threshold !== null);
+        if (!row) continue;
+        hasThreshold = true;
+        label = row.label;
+        if (row.status === "MET") {
+          satisfied = true;
+          break;
+        }
+        const mag = magnitudeOf(row.gap);
+        if (row.status !== "UNMET" || mag === null) continue;
+        if (!closest || mag < closest.mag)
+          closest = { listingId: jd.listingId, gap: row.gap!, mag };
+      }
+
+      if (!hasThreshold || satisfied || !closest) return null;
+      return { key, who, label, closest };
+    }),
+  ).filter((x): x is NonNullable<typeof x> => x !== null);
+
   return (
     <section className="mb-5 rounded-lg border border-line bg-surface p-4">
       <h2 className="mb-1 font-medium text-ink">
         지금 담은 5곳 안에서는 두 분 조건이 동시에 맞는 집이 없어요
       </h2>
       <p className="mb-3 text-sm text-ink-muted">
-        조건마다 가장 가까운 후보와 얼마나 모자란지만 알려드려요. 서울 전체에
-        그런 집이 없다는 뜻은 아니에요.
+        어떤 후보로도 맞출 수 없는 조건만 골라, 그중 가장 가까운 곳과 얼마나
+        모자란지 알려드려요. 서울 전체에 그런 집이 없다는 뜻은 아니에요.
       </p>
-      <ul className="flex flex-col gap-1.5 text-sm nums">
-        <li>
-          예산에 가장 가까운 곳 — 신대방 코지, A 기준 <b>+월 3만</b>
-        </li>
-        <li>
-          통근에 가장 가까운 곳 — 사당 그린홈, B 기준 <b>+4분</b>
-        </li>
-        <li>
-          면적에 가장 가까운 곳 — 사당 그린홈, A 기준 <b>충족</b>
-        </li>
-      </ul>
+      {blockers.length > 0 ? (
+        <ul className="nums flex flex-col gap-1.5 text-sm">
+          {blockers.map((b) => (
+            <li key={`${b.key}-${b.who}`}>
+              {b.label} — {b.who} 기준을 맞추는 곳이 없어요. 가장 가까운 곳은{" "}
+              {listingById(b.closest.listingId).name}, <b>{b.closest.gap}</b>{" "}
+              모자라요
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-ink-muted">
+          조건 하나하나는 맞는 곳이 있어요. 다만 그것들이 **한 집에 동시에**
+          모이지 않는 상황이에요.
+        </p>
+      )}
     </section>
   );
 }

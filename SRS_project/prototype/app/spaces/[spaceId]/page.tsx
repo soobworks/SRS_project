@@ -28,6 +28,7 @@ export default async function SharedSpacePage({
 
   const blocked = state === "A-02c";
   const empty = state === "A-02a";
+  const few = state === "A-02b";
   const entry = state === "A-01";
 
   return (
@@ -64,6 +65,14 @@ export default async function SharedSpacePage({
             </p>
           ) : null}
 
+          {/* A-02b — 후보 1~2개. 진행은 막지 않고 안내만 한다(PRD §18.2). */}
+          {few ? (
+            <p className="mb-4 rounded-md border border-confirm/30 bg-confirm-bg px-3 py-2 text-sm text-confirm">
+              지금 2곳만 담으셨어요. 진행하셔도 되지만, 비교할 곳이 적으면
+              &ldquo;한쪽만 충족&rdquo;이 나와도 다른 선택지를 견주기 어려워요.
+            </p>
+          ) : null}
+
           {/* A-02a — 관심매물 0개. 여기서 막지 말고 네이버 탐색으로 안내한다(PRD §18.2). */}
           {empty ? (
             <div className="rounded-lg border border-line bg-surface p-6 text-center">
@@ -84,7 +93,7 @@ export default async function SharedSpacePage({
 
           {!empty ? (
           <ul className="flex flex-col gap-2">
-            {LISTINGS.map((l, i) => (
+            {(few ? LISTINGS.slice(0, 2) : LISTINGS).map((l, i) => (
               <li
                 key={l.id}
                 className="flex items-center gap-3 rounded-lg border border-line bg-surface p-3"
@@ -142,7 +151,7 @@ export default async function SharedSpacePage({
                 href={`/spaces/${spaceId}/conditions?state=A-03`}
                 className="inline-block rounded-md bg-ink px-4 py-2 text-sm text-surface"
               >
-                5곳으로 시작하기
+                {few ? "2곳으로 시작하기" : "5곳으로 시작하기"}
               </Link>
             ) : (
               <span className="inline-block cursor-not-allowed rounded-md bg-neutral-bg px-4 py-2 text-sm text-neutral">
@@ -154,6 +163,12 @@ export default async function SharedSpacePage({
               className="inline-block rounded-md border border-line px-4 py-2 text-sm text-ink"
             >
               6개째 담아보기(상한 확인)
+            </Link>
+            <Link
+              href={`/spaces/${spaceId}?state=A-02b`}
+              className="inline-block rounded-md border border-line px-4 py-2 text-sm text-ink"
+            >
+              2곳만 담았을 때
             </Link>
             <Link
               href={`/spaces/${spaceId}?state=A-02a`}

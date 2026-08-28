@@ -5,7 +5,13 @@ import {
   StepNav,
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { ASSUMPTIONS, NOT_ADVICE, resolveSet } from "@/lib/dev/scenarios";
+import {
+  ASSUMPTIONS,
+  ASSUMPTION_BASIS,
+  NOT_ADVICE,
+  resolveSet,
+  listingById,
+} from "@/lib/dev/scenarios";
 
 /**
  * I-001 — 기본 조건 입력 (예산 · 출퇴근)
@@ -27,7 +33,10 @@ export default async function ConditionsPage({
   const { spaceId } = await params;
   const { state = "A-04", form } = await searchParams;
 
+  // 화면 ID 접두사가 폼팩터뿐 아니라 **누구의 입력인지**도 가른다(명세 §2.1).
+  // B 화면에서 A의 값을 보여주면 두 사람이 같은 조건을 가진 것처럼 읽힌다.
   const isMobile = state.startsWith("B-");
+  const who: "a" | "b" = isMobile ? "b" : "a";
   const scenario = resolveSet(state);
 
   if (state === "A-04a") {
@@ -46,14 +55,15 @@ export default async function ConditionsPage({
     <PrototypeShell form={isMobile ? "mobile" : "desktop"} state={state}>
       <div className={isMobile ? "p-4" : "max-w-[42rem]"}>
         {preview ? (
-          <PreviewStep spaceId={spaceId} burden={scenario.burden["L-001"]} />
+          <PreviewStep spaceId={spaceId} scenario={scenario} />
         ) : commuteStep ? (
-          <CommuteStep spaceId={spaceId} noCommute={noCommute} />
+          <CommuteStep spaceId={spaceId} noCommute={noCommute} who={who} />
         ) : (
           <BudgetStep
             spaceId={spaceId}
             empty={form === "empty"}
             mobile={isMobile}
+            who={who}
           />
         )}
 
@@ -74,14 +84,21 @@ export default async function ConditionsPage({
 }
 
 /** A-04 — 예산 입력. 미입력 시 저장 자체를 막는다(AC-02-01). */
+/** 명세 §6.5 — A 예산 100만 / B 예산 85만. 사람마다 다른 값을 쓴다. */
+const BUDGET_OF = { a: "100", b: "85" } as const;
+/** 명세 §6.3 — A 출근지 강남역 / B 출근지 여의도역. */
+const ORIGIN_OF = { a: "강남역", b: "여의도역" } as const;
+
 function BudgetStep({
   spaceId,
   empty,
   mobile,
+  who,
 }: {
   spaceId: string;
   empty: boolean;
   mobile: boolean;
+  who: "a" | "b";
 }) {
   return (
     <>
@@ -100,7 +117,7 @@ function BudgetStep({
         <input
           id="budget"
           inputMode="numeric"
-          defaultValue={empty ? "" : "100"}
+          defaultValue={empty ? "" : BUDGET_OF[who]}
           placeholder="예: 100"
           aria-invalid={empty}
           aria-describedby={empty ? "budget-error" : "budget-help"}
@@ -163,9 +180,11 @@ function BudgetStep({
 function CommuteStep({
   spaceId,
   noCommute,
+  who,
 }: {
   spaceId: string;
   noCommute: boolean;
+  who: "a" | "b";
 }) {
   return (
     <>
@@ -218,7 +237,7 @@ function CommuteStep({
             </label>
             <input
               id="origin"
-              defaultValue="강남역"
+              defaultValue={ORIGIN_OF[who]}
               className="w-64 rounded-md border border-line bg-surface px-3 py-2 text-sm"
             />
           </div>
@@ -250,35 +269,76 @@ function CommuteStep({
   );
 }
 
-/** A-05 — 첫 결과 미리보기. 지금 확보한 실제값으로 가능한 판정만 보여준다. */
+/**
+ * A-05 — 첫 결과 미리보기 (PRD §17.2)
+ *
+ * "현재 확보한 실제값과 **가능한 판정**"을 보여준다. 예산만 넣은 시점이라
+ * 예산은 판정하고 나머지는 아직 잴 수 없다고 말한다 — 부분 입력으로도
+ * 볼 수 있는 것이 있다는 게 이 제품의 첫 약속이다(1인 빈 경로와 같은 결).
+ *
+ * 아직 안 넣은 조건을 `미충족`으로 표시하지 않는다. 재지 않은 것과 재봤는데
+ * 못 미친 것은 다른 상태다(PRD §18.3).
+ */
 function PreviewStep({
   spaceId,
-  burden,
+  scenario,
 }: {
   spaceId: string;
-  burden: string;
+  scenario: ReturnType<typeof resolveSet>;
 }) {
   return (
     <>
       <ScreenTitle
         title="지금 입력으로 이만큼 보여요"
-        sub="조건을 더 넣으면 볼 수 있는 것도 늘어나요"
+        sub="예산은 지금 바로 재볼 수 있어요. 조건을 더 넣으면 볼 수 있는 것도 늘어나요"
       />
-      <div className="rounded-lg border border-line bg-surface p-4">
-        <p className="text-sm text-ink-muted">흑석 리버뷰 월 실부담</p>
-        <p className="mt-1 text-lg text-ink">
-          <DisclosedValue href={`/spaces/${spaceId}/conditions?state=A-04a`}>
-            {burden}
-          </DisclosedValue>
-        </p>
-        <p className="mt-2 text-xs text-ink-muted">{NOT_ADVICE}</p>
-      </div>
+
+      <ul className="flex flex-col gap-2">
+        {scenario.judgments.map((jd) => {
+          const listing = listingById(jd.listingId);
+          const budget = jd.a.find((r) => r.key === "budget");
+          const met = budget?.status === "MET";
+          return (
+            <li
+              key={jd.listingId}
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg border border-line bg-surface p-3"
+            >
+              <span className="text-sm font-medium text-ink">{listing.name}</span>
+              <span className="text-xs text-ink-muted">
+                {listing.listingType} · 역도보 {listing.walkToStationMin}분
+              </span>
+              <span className="ml-auto text-sm text-ink-muted">
+                월{" "}
+                <DisclosedValue
+                  basis={ASSUMPTION_BASIS}
+                  href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                >
+                  {scenario.burden[jd.listingId]}
+                </DisclosedValue>
+              </span>
+              <span
+                className={`nums w-full text-sm ${met ? "text-met" : "text-unmet"}`}
+              >
+                예산 {met ? "✓ 들어와요" : `✗ ${budget?.gap ?? ""}`}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+
+      <p className="mt-3 rounded-md border border-line bg-surface px-3 py-2 text-sm text-ink-muted">
+        통근·면적·주차는 <b className="text-ink">아직 재지 않았어요</b> — 조건을
+        넣으면 그때 판정해요. 지금 비어 있는 것은 &ldquo;못 미쳤다&rdquo;는 뜻이
+        아니에요.
+      </p>
+      <p className="mt-2 text-xs text-ink-muted">{NOT_ADVICE}</p>
+
       <div className="mt-5">
         <Link
           href={`/spaces/${spaceId}/judgments?state=A-13`}
           className="inline-block rounded-md bg-ink px-4 py-2 text-sm text-surface"
         >
-          5곳 전부 보기
+          조건 다 넣고 5곳 전부 보기
         </Link>
       </div>
     </>
@@ -299,6 +359,12 @@ function AssumptionPanel({ spaceId }: { spaceId: string }) {
         title="이 숫자는 이렇게 계산했어요"
         sub="기준 시점과 가정, 그리고 어디까지 믿을 수 있는지를 함께 적었어요"
       />
+      {/* 명세 §5.4는 전제를 11종으로 세고, §6.4가 교통비 정액 가정을 여기
+          함께 표시하라고 한다 — 그래서 12행이다. 세다가 어긋난 것이 아니다. */}
+      <p className="mb-3 text-xs text-ink-muted">
+        아래 12가지 — PRD §19.3의 전제 11가지와, 이 프로토타입이 교통비를
+        정액으로 단순화한 가정 1가지예요.
+      </p>
       <div className="overflow-x-auto rounded-lg border border-line bg-surface">
         <table className="w-full min-w-[42rem] text-sm">
           <thead>

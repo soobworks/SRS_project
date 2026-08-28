@@ -35,8 +35,17 @@ const STATUS_TONE: Record<ConditionRow["status"], string> = {
   NOT_APPLICABLE: "text-neutral",
 };
 
+/**
+ * 전제 공개 링크. 화면마다 경로가 달라 **호출자가 넘긴다** —
+ * 컴포넌트가 기본값을 지어내면 닿지 않는 링크가 조용히 생긴다.
+ */
+export interface Disclosure {
+  href: string;
+  basis: string;
+}
+
 /** 전체형 한 줄 — `통근  13분 > 10분  ✗ +3분` (명세 §4.3) */
-function FullRow({ r }: { r: ConditionRow }) {
+function FullRow({ r, d }: { r: ConditionRow; d: Disclosure }) {
   // 명세 §5.3 — ⓘ는 **행당 최대 1개**다.
   // 실제값이 이미 ⓘ를 달았으면 미달량에는 달지 않는다. 같은 전제를 공유하는
   // 두 값에 각각 ⓘ를 붙이면 한 줄이 과밀해지고, 정작 중요한 추정치가 묻힌다.
@@ -52,7 +61,9 @@ function FullRow({ r }: { r: ConditionRow }) {
         ) : r.status === "CONFIRMATION_NEEDED" ? (
           <UndisclosedValue label="확인 필요" />
         ) : r.estimated ? (
-          <DisclosedValue>{r.actual}</DisclosedValue>
+          <DisclosedValue href={d.href} basis={d.basis}>
+            {r.actual}
+          </DisclosedValue>
         ) : (
           r.actual
         )}
@@ -72,7 +83,9 @@ function FullRow({ r }: { r: ConditionRow }) {
           <>
             {" "}
             {r.estimated && !actualHasBadge ? (
-              <DisclosedValue>{r.gap}</DisclosedValue>
+              <DisclosedValue href={d.href} basis={d.basis}>
+                {r.gap}
+              </DisclosedValue>
             ) : (
               r.gap
             )}
@@ -91,10 +104,12 @@ function PersonBlock({
   label,
   rows,
   emptyNote,
+  d,
 }: {
   label: string;
   rows: ConditionRow[];
   emptyNote?: string;
+  d: Disclosure;
 }) {
   return (
     <div className="rounded-lg border border-line bg-surface p-4">
@@ -106,7 +121,7 @@ function PersonBlock({
       ) : (
         <div className="divide-y divide-line">
           {rows.map((r) => (
-            <FullRow key={r.key} r={r} />
+            <FullRow key={r.key} r={r} d={d} />
           ))}
         </div>
       )}
@@ -120,19 +135,22 @@ export function BalancedComparison({
   aLabel = "A",
   bLabel = "B",
   bEmptyNote,
+  disclosure,
 }: {
   a: ConditionRow[];
   b: ConditionRow[];
   aLabel?: string;
   bLabel?: string;
+  /** 전제 패널 경로와 기준 시점. 화면이 정한다. */
+  disclosure: Disclosure;
   /** B 미참여(A-14e)일 때 B 블록에 표시할 문구. */
   bEmptyNote?: string;
   // ⚠️ score·rank·recommended·winner·sortBy prop은 의도적으로 존재하지 않는다.
 }) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <PersonBlock label={aLabel} rows={a} />
-      <PersonBlock label={bLabel} rows={b} emptyNote={bEmptyNote} />
+      <PersonBlock label={aLabel} rows={a} d={disclosure} />
+      <PersonBlock label={bLabel} rows={b} emptyNote={bEmptyNote} d={disclosure} />
     </div>
   );
 }
@@ -146,9 +164,11 @@ export function BalancedComparison({
 export function CompactSummary({
   label,
   rows,
+  disclosure,
 }: {
   label: string;
   rows: ConditionRow[];
+  disclosure: Disclosure;
 }) {
   const unmet = rows.filter((r) => r.status === "UNMET");
   const shown = unmet.slice(0, 2);
@@ -163,7 +183,14 @@ export function CompactSummary({
       ) : (
         shown.map((r) => (
           <span key={r.key} className="nums text-unmet">
-            {r.label} {r.estimated ? <DisclosedValue>{r.gap}</DisclosedValue> : r.gap}
+            {r.label}{" "}
+            {r.estimated ? (
+              <DisclosedValue href={disclosure.href} basis={disclosure.basis}>
+                {r.gap}
+              </DisclosedValue>
+            ) : (
+              r.gap
+            )}
           </span>
         ))
       )}

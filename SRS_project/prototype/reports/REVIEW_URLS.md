@@ -21,7 +21,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | --- | --- | --- |
 | 1 | 총점·순위·추천 배지가 어디에도 없는가 | **전 화면** · 특히 `A-16e` |
 | 2 | `확인 필요`가 3분류에 흡수되지 않고 별도 배지인가 | `A-13` · `A-14d` |
-| 3 | 모든 숫자가 기준 시점·가정과 함께 보이는가 | `A-04a` · `A-13` · `A-14b` |
+| 3 | 모든 숫자가 기준 시점·가정과 함께 보이는가 | `A-04a` · `A-13` · `A-14b` (ⓘ는 **행당 1개** — 명세 §5.3) |
 | 4 | A와 B가 같은 시각 비중인가 | `A-14a`~`A-14e` |
 | 5 | 양보 문장이 결론을 말하지 않는가 | `A-14b` |
 | 6 | 두 조건 동시 완화가 불가능한가 | `A-15` |
@@ -37,6 +37,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | `A-01` | `/spaces/demo?state=A-01` | 기능 진입 — 네이버에서 들어온 지점 |
 | `A-02` | `/spaces/demo?state=A-02` | 후보 1~5곳 선택 |
 | `A-02a` | `/spaces/demo?state=A-02a` | 관심매물 0개 — 막지 않고 탐색으로 안내 |
+| `A-02b` | `/spaces/demo?state=A-02b` | 후보 1~2개 — 진행 허용 + 안내(PRD §18.2) |
 | `A-02c` | `/spaces/demo?state=A-02c` | 6개째 즉시 차단 |
 
 ## 2. 조건 입력 (I-001)
@@ -57,7 +58,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | 화면 | URL | 보는 것 |
 | --- | --- | --- |
 | `A-12` | `/spaces/demo/judgments?state=A-12` | 1인 빈 경로 — B 미참여, 실부담 1인 기준 |
-| `A-13` | `/spaces/demo/judgments?state=A-13` | **3분류 그룹 + 확인 필요 배지 + 계산 불가** (질문 1·2·3) |
+| `A-13` | `/spaces/demo/judgments?state=A-13` | **3분류 그룹 + 확인 필요 배지** (질문 1·2·3) — 목록은 축약형이라 `계산 불가`는 싣지 않는다. 그건 `S-02`·`A-14`에서 본다 |
 | `A-13&set=one-commute` | `/spaces/demo/judgments?state=A-13&set=one-commute` | 한쪽만 `해당 없음` → **행 유지** |
 | `A-13&set=no-commute` | `/spaces/demo/judgments?state=A-13&set=no-commute` | 둘 다 `해당 없음` → **행 제거** |
 | `A-13b` | `/spaces/demo/judgments?state=A-13b` | **전부 불충족 → 한 조건 완화 출구** (질문 8) |
@@ -85,6 +86,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | `A-16&match=2` | `/spaces/demo/visit-selection?state=A-16&match=2` | 2개 일치 → 확정 |
 | `A-16e` | `/spaces/demo/visit-selection?state=A-16e` | **남은 한 자리 Option Grid — 총점 행 없음** (질문 1) |
 | `A-16&match=0` | `/spaces/demo/visit-selection?state=A-16&match=0` | 0개 일치 → 2라운드 |
+| `A-16&match=split` | `/spaces/demo/visit-selection?state=A-16&match=split` | **2라운드도 불일치 → 분할 종료** — 시스템이 고르지 않는다 |
 
 ## 6. B 진입 (S-003) — 모바일
 
@@ -102,8 +104,19 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 cd SRS_project/prototype && node scripts/capture-screens.mjs
 ```
 
-`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 34장이 저장된다.
+`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 36장이 저장된다.
 `S-01`(로딩)은 순간 상태라 캡처에서 빠진다 — 코드는 `SRS_project/prototype/app/loading.tsx`에 있다.
+
+## shadcn/ui 를 쓰지 않은 이유
+
+`components.json` 은 남아 있지만 `components/ui/*` 는 비어 있다. C-TEC-004는
+"shadcn/ui에 **있는** 컴포넌트를 자체 구현하지 않는다"인데, 이 프로토타입에는
+Dialog·Popover·Select 처럼 재구현이 문제가 되는 컴포넌트가 없다 — 표·목록·
+링크·입력 같은 시맨틱 마크업뿐이다. 처음에 11개를 받아뒀다가 **하나도 쓰지
+않아 죽은 코드로 남길래 걷어냈다.**
+
+실제 상호작용 컴포넌트가 필요해지면 `pnpm dlx shadcn@latest add <name>` 한
+줄로 다시 받는다.
 
 ## 범위 밖
 

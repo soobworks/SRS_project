@@ -15,25 +15,29 @@ import Link from "next/link";
  */
 export function DisclosedValue({
   children,
-  basis = "기준 시점 미지정",
+  basis,
   href,
 }: {
   /** 이미 `약` 접두어가 붙은 표시 문자열. */
   children: React.ReactNode;
   /**
-   * 기준 시점. 호출자가 넘긴다 —
-   * 이 컴포넌트는 `J-006` 이후에도 살아남으므로 폐기 예정인 `lib/dev/`에
-   * 의존하지 않는다.
+   * 기준 시점. **필수다.** 기본값을 두면 안 넘긴 호출부가 조용히
+   * `기준 시점 미지정`을 렌더한다 — 전제 없는 숫자를 막자는 컴포넌트가
+   * 스스로 전제 없는 숫자를 만들게 된다(REQ-NF-006).
    */
-  basis?: string;
-  /** 전제 패널로 가는 경로. */
-  href?: string;
+  basis: string;
+  /**
+   * 전제 패널(`A-04a`)로 가는 **절대 경로**. 필수다.
+   * 상대 경로 기본값(`?state=A-04a`)은 화면마다 다른 곳으로 가버려
+   * 어떤 화면에서는 같은 화면을 다시 렌더했다.
+   */
+  href: string;
 }) {
   return (
     <span className="inline-flex items-baseline gap-1 nums">
       <span>{children}</span>
       <Link
-        href={href ?? "?state=A-04a"}
+        href={href}
         aria-label={`계산 전제 보기 — ${basis}`}
         title={`${basis} · 전제 보기`}
         className="inline-flex size-4 shrink-0 translate-y-[1px] items-center justify-center rounded-full border border-line-strong text-[10px] leading-none text-ink-muted hover:bg-neutral-bg focus-visible:outline-2 focus-visible:outline-offset-2"

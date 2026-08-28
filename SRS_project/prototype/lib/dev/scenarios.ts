@@ -22,6 +22,9 @@ export const listingById = (id: string): FixtureListing =>
  * 표에 없는 화면은 `normal`을 쓴다.
  */
 const STATE_TO_SET: Record<string, string> = {
+  // `A-05`는 A만 입력한 시점이라 B가 없다 — `A-12`와 같은 1인 기준이어야
+  // 실부담이 어긋나지 않는다(명세 §6.4 "한 명만" 열).
+  "A-05": "solo",
   "A-12": "solo",
   "A-14e": "solo",
   "A-13b": "all-unmet",
@@ -143,7 +146,7 @@ export const RELAXATION_OPTIONS: RelaxationOption[] = [
     who: "A",
     conditionLabel: "예산",
     from: "70만",
-    to: "73만",
+    to: "약 73만",
     delta: "+월 3만",
     recovers: ["L-005"],
   },
@@ -180,6 +183,11 @@ export interface VisitRound {
   round: 1 | 2;
   /** 남은 한 자리를 두고 비교할 두 후보(A-16e). */
   runoff: [string, string] | null;
+  /**
+   * 2라운드에서도 겹치지 않아 **각자 고른 곳을 하나씩 나눠** 보러 가는 종료.
+   * `decisions/0004` — 투표·순위·자동 선택으로 하나를 고르지 않는다(AC-17-03).
+   */
+  splitEnding?: boolean;
 }
 
 export const VISIT_ROUNDS: Record<string, VisitRound> = {
@@ -206,5 +214,15 @@ export const VISIT_ROUNDS: Record<string, VisitRound> = {
     settled: null,
     round: 2,
     runoff: null,
+  },
+  split: {
+    aPicks: ["L-001", "L-004"],
+    bPicks: ["L-002", "L-003"],
+    matched: [],
+    /** A가 고른 1곳 + B가 고른 1곳. 시스템이 고른 것이 아니다. */
+    settled: ["L-001", "L-002"],
+    round: 2,
+    runoff: null,
+    splitEnding: true,
   },
 };
