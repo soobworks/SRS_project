@@ -22,6 +22,9 @@ export const listingById = (id: string): FixtureListing =>
  * 표에 없는 화면은 `normal`을 쓴다.
  */
 const STATE_TO_SET: Record<string, string> = {
+  // `A-05`는 A만 입력한 시점이라 B가 없다 — `A-12`와 같은 1인 기준이어야
+  // 실부담이 어긋나지 않는다(명세 §6.4 "한 명만" 열).
+  "A-05": "solo",
   "A-12": "solo",
   "A-14e": "solo",
   "A-13b": "all-unmet",
@@ -143,7 +146,7 @@ export const RELAXATION_OPTIONS: RelaxationOption[] = [
     who: "A",
     conditionLabel: "예산",
     from: "70만",
-    to: "73만",
+    to: "약 73만",
     delta: "+월 3만",
     recovers: ["L-005"],
   },

@@ -21,13 +21,19 @@ import type { ConditionRow, ListingJudgment } from "@/lib/types";
  */
 
 /** PRD 하위 상태 → (매물, 조건 세트). 명세 §6.6 검증표에서 고른 대표 사례다. */
-const STATE_CASE: Record<string, { listing: string; set: string }> = {
-  "A-14a": { listing: "L-004", set: "normal" }, // 둘 다 충족
-  "A-14b": { listing: "L-001", set: "normal" }, // 한쪽만 충족 = Hero trade-off
-  "A-14c": { listing: "L-002", set: "normal" }, // 둘 다 불충족
-  "A-14d": { listing: "L-005", set: "normal" }, // 보류(확인 필요)
-  "A-14e": { listing: "L-001", set: "solo" }, // 상대 미입력
-  "A-15": { listing: "L-005", set: "all-unmet" }, // 조건 완화
+/**
+ * PRD 하위 상태 → **조건 세트**. 매물은 URL의 `listingId`를 그대로 쓴다.
+ *
+ * 전에는 여기서 매물까지 지정해, `A-14c`(상도 파크빌)에서 "조금 풀어보기"를
+ * 누르면 신대방 코지로 튀었다 — 보고 있던 집이 바뀌는 것은 UX 배반이다.
+ */
+const STATE_SET: Record<string, string> = {
+  "A-14a": "normal",
+  "A-14b": "normal",
+  "A-14c": "normal",
+  "A-14d": "normal",
+  "A-14e": "solo",
+  "A-15": "all-unmet",
 };
 
 export default async function ListingDetailPage({
@@ -40,11 +46,10 @@ export default async function ListingDetailPage({
   const { spaceId, listingId } = await params;
   const { state = "A-14", set } = await searchParams;
 
-  const preset = STATE_CASE[state];
-  const activeListingId = preset?.listing ?? listingId;
+  const activeListingId = listingId;
 
   // ★ 픽스처 주입 지점 (화면당 1곳) — J-006 완료 후 실제 Query로 교체
-  const scenario = resolveSet(state, set ?? preset?.set);
+  const scenario = resolveSet(state, set ?? STATE_SET[state]);
 
   const listing = listingById(activeListingId);
   const jd =
@@ -107,7 +112,7 @@ export default async function ListingDetailPage({
         bEmptyNote="B가 초대에 들어오면 두 분 조건을 나란히 보여드려요"
       />
 
-      {relaxing ? <RelaxationPanel jd={jd} /> : <NextStep spaceId={spaceId} jd={jd} />}
+      {relaxing ? <RelaxationPanel jd={jd} spaceId={spaceId} /> : <NextStep spaceId={spaceId} jd={jd} setId={scenario.id} />}
 
       <StepNav
         links={[
@@ -133,9 +138,12 @@ export default async function ListingDetailPage({
 function NextStep({
   spaceId,
   jd,
+  setId,
 }: {
   spaceId: string;
   jd: { group: string | null; confirmationNeeded: boolean; listingId: string };
+  /** 보고 있던 조건 세트를 유지한다 — 완화 화면에서 집이 바뀌면 안 된다. */
+  setId: string;
 }) {
   const unmet = jd.group === "BOTH_UNMET";
   return (
@@ -147,7 +155,7 @@ function NextStep({
               두 분 다 아쉬운 곳이에요. 조건을 조금 풀면 달라질 수 있어요.
             </p>
             <Link
-              href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-15`}
+              href={`/spaces/${spaceId}/listings/${jd.listingId}?state=A-15&set=${setId}`}
               className="ml-auto rounded-md bg-ink px-4 py-2 text-sm text-surface"
             >
               조금 풀어보기
@@ -184,7 +192,13 @@ function NextStep({
  * A안과 B안을 항상 동시에 보여준다. 두 조건을 동시에 낮추는 안은 만들지 않으며,
  * 그런 조작을 할 UI 자체가 없다.
  */
-function RelaxationPanel({ jd }: { jd: ListingJudgment }) {
+function RelaxationPanel({
+  jd,
+  spaceId,
+}: {
+  jd: ListingJudgment;
+  spaceId: string;
+}) {
   // PRD §14.3 — 완화폭은 임의 제안값이 아니라 **지금 보고 있는 이 후보의
   // 실제 미달량**에서 가져온다. 세트 전체를 훑는 `A-13b`(막다른 길)와 달리
   // 이 화면은 매물 하나를 보고 있으므로 원천이 다르다.
@@ -230,8 +244,19 @@ function RelaxationPanel({ jd }: { jd: ListingJudgment }) {
             </p>
             {row ? (
               <>
+                {/* 추정치면 전제를 함께 보인다(§5.2). ⓘ는 행당 1개이므로
+                    완화 후 값에만 달고 미달량에는 달지 않는다(§5.3). */}
                 <p className="nums mb-3 text-sm text-ink">
-                  {row.threshold} → <strong>{row.actual}</strong>{" "}
+                  {row.threshold} →{" "}
+                  {row.estimated ? (
+                    <DisclosedValue
+                      href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                    >
+                      {row.actual}
+                    </DisclosedValue>
+                  ) : (
+                    <strong>{row.actual}</strong>
+                  )}{" "}
                   <span className="text-ink-muted">({row.gap})</span>
                 </p>
                 <div

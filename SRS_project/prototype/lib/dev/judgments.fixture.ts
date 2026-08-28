@@ -15,8 +15,6 @@
 import type { ConditionKey } from "@/lib/types";
 import type { ConditionRow, ListingJudgment, ScenarioSet } from "./view-types";
 
-const LISTING_IDS = ["L-001", "L-002", "L-003", "L-004", "L-005"] as const;
-
 // ── 행 생성기 (표시용 조립일 뿐, 판정하지 않는다) ──────────────────────
 
 type Cmp = ConditionRow["comparator"];
@@ -599,4 +597,3 @@ export const SCENARIO_SETS: Record<string, ScenarioSet> = {
 };
 
 export const DEFAULT_SET = "normal";
-export { LISTING_IDS };

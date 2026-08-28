@@ -175,12 +175,20 @@ function RunoffGrid({
   const cell = (id: string, who: "a" | "b", label: string) => {
     const row = rowsFor(id)[who].find((r) => r.label === label);
     if (!row) return <span className="text-neutral">—</span>;
+    // 추정치면 전제를 함께 보인다(§5.2). ⓘ는 셀당 1개 — 실제값에만 단다(§5.3).
+    const actual = row.estimated ? (
+      <DisclosedValue href={`/spaces/${spaceId}/conditions?state=A-04a`}>
+        {row.actual}
+      </DisclosedValue>
+    ) : (
+      row.actual
+    );
 
     switch (row.status) {
       case "MET":
         return (
           <span className="nums text-ink">
-            {row.actual}
+            {actual}
             {row.comparator && row.threshold ? (
               <span className="text-ink-muted">
                 {" "}
@@ -193,7 +201,7 @@ function RunoffGrid({
       case "UNMET":
         return (
           <span className="nums text-ink">
-            {row.actual}
+            {actual}
             {row.comparator && row.threshold ? (
               <span className="text-ink-muted">
                 {" "}

@@ -37,6 +37,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | `A-01` | `/spaces/demo?state=A-01` | 기능 진입 — 네이버에서 들어온 지점 |
 | `A-02` | `/spaces/demo?state=A-02` | 후보 1~5곳 선택 |
 | `A-02a` | `/spaces/demo?state=A-02a` | 관심매물 0개 — 막지 않고 탐색으로 안내 |
+| `A-02b` | `/spaces/demo?state=A-02b` | 후보 1~2개 — 진행 허용 + 안내(PRD §18.2) |
 | `A-02c` | `/spaces/demo?state=A-02c` | 6개째 즉시 차단 |
 
 ## 2. 조건 입력 (I-001)
@@ -103,8 +104,19 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 cd SRS_project/prototype && node scripts/capture-screens.mjs
 ```
 
-`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 35장이 저장된다.
+`SRS_project/prototype/reports/prototype-screens/<화면ID>__<RUN_TS>.png` 로 36장이 저장된다.
 `S-01`(로딩)은 순간 상태라 캡처에서 빠진다 — 코드는 `SRS_project/prototype/app/loading.tsx`에 있다.
+
+## shadcn/ui 를 쓰지 않은 이유
+
+`components.json` 은 남아 있지만 `components/ui/*` 는 비어 있다. C-TEC-004는
+"shadcn/ui에 **있는** 컴포넌트를 자체 구현하지 않는다"인데, 이 프로토타입에는
+Dialog·Popover·Select 처럼 재구현이 문제가 되는 컴포넌트가 없다 — 표·목록·
+링크·입력 같은 시맨틱 마크업뿐이다. 처음에 11개를 받아뒀다가 **하나도 쓰지
+않아 죽은 코드로 남길래 걷어냈다.**
+
+실제 상호작용 컴포넌트가 필요해지면 `pnpm dlx shadcn@latest add <name>` 한
+줄로 다시 받는다.
 
 ## 범위 밖
 

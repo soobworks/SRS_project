@@ -228,8 +228,19 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
             className="rounded-md border border-line bg-surface p-3 text-sm"
           >
             <p className="mb-1 text-xs text-ink-muted">{o.who}안</p>
+            {/* 실부담 파생값이라 전제를 함께 보인다(명세 §5.2).
+                ⓘ는 행당 1개 — 완화 후 값에만 달고 미달량에는 달지 않는다(§5.3). */}
             <p className="nums text-ink">
-              {o.conditionLabel} {o.from} → {o.to}{" "}
+              {o.conditionLabel} {o.from} →{" "}
+              {o.conditionLabel === "예산" ? (
+                <DisclosedValue
+                  href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                >
+                  {o.to}
+                </DisclosedValue>
+              ) : (
+                <strong>{o.to}</strong>
+              )}{" "}
               <span className="text-ink-muted">({o.delta})</span>
             </p>
             {o.recovers.length > 0 ? (
