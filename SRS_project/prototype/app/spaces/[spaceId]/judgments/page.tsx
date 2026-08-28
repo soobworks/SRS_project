@@ -10,6 +10,7 @@ import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
 import type { CandidateGroup, ConditionKey } from "@/lib/types";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
 import {
+  ASSUMPTION_BASIS,
   resolveSet,
   listingById,
   PREFERENCES,
@@ -42,6 +43,11 @@ export default async function JudgmentsPage({
 
   const isMobile = state.startsWith("B-");
   const solo = scenario.id === "solo";
+  // 전제 패널 경로는 화면이 정한다 — 컴포넌트가 기본값을 지어내지 않는다.
+  const disclosure = {
+    href: `/spaces/${spaceId}/conditions?state=A-04a`,
+    basis: ASSUMPTION_BASIS,
+  };
 
   return (
     <PrototypeShell form={isMobile ? "mobile" : "desktop"} state={state}>
@@ -147,7 +153,8 @@ export default async function JudgmentsPage({
                         <span className="ml-auto text-sm text-ink-muted">
                           월{" "}
                           <DisclosedValue
-                            href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                            href={disclosure.href}
+                            basis={disclosure.basis}
                           >
                             {scenario.burden[jd.listingId]}
                           </DisclosedValue>
@@ -161,13 +168,13 @@ export default async function JudgmentsPage({
                       ) : null}
 
                       <div className="flex flex-col gap-0.5">
-                        <CompactSummary label="A" rows={jd.a} />
+                        <CompactSummary label="A" rows={jd.a} disclosure={disclosure} />
                         {solo ? (
                           <p className="text-sm text-neutral">
                             B · 아직 조건을 입력하지 않았어요
                           </p>
                         ) : (
-                          <CompactSummary label="B" rows={jd.b} />
+                          <CompactSummary label="B" rows={jd.b} disclosure={disclosure} />
                         )}
                       </div>
                       <Link
@@ -235,6 +242,7 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
               {o.conditionLabel === "예산" ? (
                 <DisclosedValue
                   href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                  basis={ASSUMPTION_BASIS}
                 >
                   {o.to}
                 </DisclosedValue>

@@ -6,7 +6,12 @@ import {
   StepNav,
 } from "@/components/dev/prototype-shell";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { resolveSet, listingById, VISIT_ROUNDS } from "@/lib/dev/scenarios";
+import {
+  resolveSet,
+  listingById,
+  VISIT_ROUNDS,
+  ASSUMPTION_BASIS,
+} from "@/lib/dev/scenarios";
 import type { ConditionRow } from "@/lib/types";
 
 /**
@@ -177,7 +182,10 @@ function RunoffGrid({
     if (!row) return <span className="text-neutral">—</span>;
     // 추정치면 전제를 함께 보인다(§5.2). ⓘ는 셀당 1개 — 실제값에만 단다(§5.3).
     const actual = row.estimated ? (
-      <DisclosedValue href={`/spaces/${spaceId}/conditions?state=A-04a`}>
+      <DisclosedValue
+        href={`/spaces/${spaceId}/conditions?state=A-04a`}
+        basis={ASSUMPTION_BASIS}
+      >
         {row.actual}
       </DisclosedValue>
     ) : (
@@ -270,6 +278,7 @@ function RunoffGrid({
                 <td key={`${id}-burden`} className="px-4 py-2.5" colSpan={2}>
                   <DisclosedValue
                     href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                    basis={ASSUMPTION_BASIS}
                   >
                     {burden[id]}
                   </DisclosedValue>

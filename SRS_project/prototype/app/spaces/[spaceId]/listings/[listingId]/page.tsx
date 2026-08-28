@@ -7,7 +7,12 @@ import {
 import { BalancedComparison } from "@/components/domain/balanced-comparison";
 import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import { resolveSet, listingById, COMPROMISE_SENTENCES } from "@/lib/dev/scenarios";
+import {
+  resolveSet,
+  listingById,
+  COMPROMISE_SENTENCES,
+  ASSUMPTION_BASIS,
+} from "@/lib/dev/scenarios";
 import type { ConditionRow, ListingJudgment } from "@/lib/types";
 
 /**
@@ -58,6 +63,10 @@ export default async function ListingDetailPage({
   const solo = scenario.id === "solo";
   const sentence = COMPROMISE_SENTENCES[activeListingId];
   const relaxing = state === "A-15";
+  const disclosure = {
+    href: `/spaces/${spaceId}/conditions?state=A-04a`,
+    basis: ASSUMPTION_BASIS,
+  };
 
   return (
     <PrototypeShell state={state}>
@@ -71,7 +80,7 @@ export default async function ListingDetailPage({
         {jd.confirmationNeeded ? <ConfirmationBadge /> : null}
         <span className="ml-auto text-sm text-ink-muted">
           월{" "}
-          <DisclosedValue href={`/spaces/${spaceId}/conditions?state=A-04a`}>
+          <DisclosedValue href={disclosure.href} basis={disclosure.basis}>
             {scenario.burden[activeListingId]}
           </DisclosedValue>
         </span>
@@ -110,6 +119,7 @@ export default async function ListingDetailPage({
         aLabel={`A — ${scenario.aSummary}`}
         bLabel={solo ? "B — 아직 참여하지 않았어요" : `B — ${scenario.bSummary}`}
         bEmptyNote="B가 초대에 들어오면 두 분 조건을 나란히 보여드려요"
+        disclosure={disclosure}
       />
 
       {relaxing ? <RelaxationPanel jd={jd} spaceId={spaceId} /> : <NextStep spaceId={spaceId} jd={jd} setId={scenario.id} />}
@@ -251,6 +261,7 @@ function RelaxationPanel({
                   {row.estimated ? (
                     <DisclosedValue
                       href={`/spaces/${spaceId}/conditions?state=A-04a`}
+                      basis={ASSUMPTION_BASIS}
                     >
                       {row.actual}
                     </DisclosedValue>
