@@ -21,7 +21,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | --- | --- | --- |
 | 1 | 총점·순위·추천 배지가 어디에도 없는가 | **전 화면** · 특히 `A-16e` |
 | 2 | `확인 필요`가 3분류에 흡수되지 않고 별도 배지인가 | `A-13` · `A-14d` |
-| 3 | 모든 숫자가 기준 시점·가정과 함께 보이는가 | `A-04a` · `A-13` · `A-14b` |
+| 3 | 모든 숫자가 기준 시점·가정과 함께 보이는가 | `A-04a` · `A-13` · `A-14b` (ⓘ는 **행당 1개** — 명세 §5.3) |
 | 4 | A와 B가 같은 시각 비중인가 | `A-14a`~`A-14e` |
 | 5 | 양보 문장이 결론을 말하지 않는가 | `A-14b` |
 | 6 | 두 조건 동시 완화가 불가능한가 | `A-15` |
@@ -57,7 +57,7 @@ cd SRS_project/prototype && pnpm dev   # http://localhost:3000
 | 화면 | URL | 보는 것 |
 | --- | --- | --- |
 | `A-12` | `/spaces/demo/judgments?state=A-12` | 1인 빈 경로 — B 미참여, 실부담 1인 기준 |
-| `A-13` | `/spaces/demo/judgments?state=A-13` | **3분류 그룹 + 확인 필요 배지 + 계산 불가** (질문 1·2·3) |
+| `A-13` | `/spaces/demo/judgments?state=A-13` | **3분류 그룹 + 확인 필요 배지** (질문 1·2·3) — 목록은 축약형이라 `계산 불가`는 싣지 않는다. 그건 `S-02`·`A-14`에서 본다 |
 | `A-13&set=one-commute` | `/spaces/demo/judgments?state=A-13&set=one-commute` | 한쪽만 `해당 없음` → **행 유지** |
 | `A-13&set=no-commute` | `/spaces/demo/judgments?state=A-13&set=no-commute` | 둘 다 `해당 없음` → **행 제거** |
 | `A-13b` | `/spaces/demo/judgments?state=A-13b` | **전부 불충족 → 한 조건 완화 출구** (질문 8) |

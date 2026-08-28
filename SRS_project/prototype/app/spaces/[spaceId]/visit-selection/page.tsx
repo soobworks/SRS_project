@@ -165,6 +165,9 @@ function RunoffGrid({
 }) {
   const labels = ["예산", "통근", "면적", "주차", "유형"];
   /**
+   * 명세 §4.3 — `A-16e`는 **전체형**이다. 실제값·비교기호·임계값을 함께 싣는다.
+   * 기호만 두면 "얼마 기준으로 못 미쳤는지"가 이 화면에서 사라진다.
+   *
    * 5분류를 기호 하나로 뭉뚱그리지 않는다.
    * `확인 필요`(?)와 `기준 없음`·`해당 없음`·`계산 불가`는 서로 다른 상태이며,
    * 이들을 섞는 것이 이 프로젝트에서 가장 치명적인 오분류다(PRD §18.3).
@@ -175,10 +178,30 @@ function RunoffGrid({
 
     switch (row.status) {
       case "MET":
-        return <span className="nums text-met">✓</span>;
+        return (
+          <span className="nums text-ink">
+            {row.actual}
+            {row.comparator && row.threshold ? (
+              <span className="text-ink-muted">
+                {" "}
+                {row.comparator} {row.threshold}
+              </span>
+            ) : null}{" "}
+            <span className="text-met">✓</span>
+          </span>
+        );
       case "UNMET":
         return (
-          <span className="nums text-unmet">✗{row.gap ? ` ${row.gap}` : ""}</span>
+          <span className="nums text-ink">
+            {row.actual}
+            {row.comparator && row.threshold ? (
+              <span className="text-ink-muted">
+                {" "}
+                {row.comparator} {row.threshold}
+              </span>
+            ) : null}{" "}
+            <span className="text-unmet">✗{row.gap ? ` ${row.gap}` : ""}</span>
+          </span>
         );
       case "CONFIRMATION_NEEDED":
         return <span className="nums text-confirm">? 확인 필요</span>;
@@ -201,7 +224,7 @@ function RunoffGrid({
       </p>
 
       <div className="overflow-x-auto rounded-lg border border-line bg-surface">
-        <table className="w-full min-w-[36rem] text-sm">
+        <table className="w-full min-w-[52rem] text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs text-ink-muted">
               <th className="px-4 py-2 font-medium">조건</th>

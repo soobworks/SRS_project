@@ -7,7 +7,7 @@ import {
 } from "@/components/dev/prototype-shell";
 import { CompactSummary } from "@/components/domain/balanced-comparison";
 import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
-import type { CandidateGroup } from "@/lib/types";
+import type { CandidateGroup, ConditionKey } from "@/lib/types";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
 import {
   resolveSet,
@@ -105,7 +105,7 @@ export default async function JudgmentsPage({
               </section>
             ) : null}
             {state === "A-13b" ? <DeadEndPanel spaceId={spaceId} /> : null}
-            {state === "A-13c" ? <ConflictPanel /> : null}
+            {state === "A-13c" ? <ConflictPanel scenario={scenario} /> : null}
 
             {/* 3분류 그룹으로 묶는다(명세 §9.1). 그룹 순서는 고정이며
                 그룹 내부는 후보를 담은 순서 그대로다 — 재정렬하지 않는다.
@@ -256,8 +256,75 @@ function DeadEndPanel({ spaceId }: { spaceId: string }) {
   );
 }
 
-/** A-13c — 후보 집합 내 조건 충돌 설명. 전체 지역에 그런 집이 없다고 단정하지 않는다. */
-function ConflictPanel() {
+/**
+ * A-13c — 후보 집합 내 조건 충돌 설명
+ *
+ * **픽스처에서 도출한다.** 문장을 손으로 쓰면 화면 아래 카드와 어긋나고,
+ * 실제로 어긋났었다(EVAL #5 TOP_FIX — 통근에 가장 가까운 곳을 잘못 지목).
+ * 이 화면은 "조건마다 가장 가까운 후보"를 말하므로 같은 데이터에서 뽑아야 한다.
+ *
+ * 정도(magnitude)가 있는 조건만 줄 세운다 — 주차 `없음`·유형 `빌라` 처럼
+ * 유무형·일치형은 "얼마나 가깝다"가 성립하지 않는다.
+ *
+ * 전체 지역에 그런 집이 없다고 단정하지 않는다.
+ */
+const RANKABLE: ConditionKey[] = ["budget", "commute", "walkToStation", "area"];
+
+/** `+월 15만` · `+3분` · `−7㎡` 에서 크기만 뽑는다. 없으면 줄 세우지 않는다. */
+const magnitudeOf = (gap: string | null): number | null => {
+  if (!gap) return null;
+  const m = gap.match(/(\d+)/);
+  return m ? Number(m[1]) : null;
+};
+
+function ConflictPanel({ scenario }: { scenario: ReturnType<typeof resolveSet> }) {
+  const lines = RANKABLE.map((key) => {
+    type Cand = { listingId: string; who: string; gap: string; mag: number };
+    let met: { listingId: string; who: string } | null = null;
+    let best: Cand | null = null;
+    let label = "";
+
+    for (const jd of scenario.judgments) {
+      for (const [who, rows] of [
+        ["A", jd.a],
+        ["B", jd.b],
+      ] as const) {
+        const row = rows.find((r) => r.key === key && r.threshold !== null);
+        if (!row) continue;
+        label = row.label;
+        if (row.status === "MET") {
+          met ??= { listingId: jd.listingId, who };
+          continue;
+        }
+        const mag = magnitudeOf(row.gap);
+        if (row.status !== "UNMET" || mag === null) continue;
+        if (!best || mag < best.mag)
+          best = { listingId: jd.listingId, who, gap: row.gap!, mag };
+      }
+    }
+
+    if (!label) return null;
+    // 못 미치는 조합이 하나라도 있으면 **그중 가장 가까운 것**을 말한다.
+    // 한쪽이 충족한다고 "이미 충족"이라 하면, 정작 얼마나 모자란지를
+    // 말해야 하는 화면이 아무것도 말하지 못하게 된다.
+    if (best)
+      return (
+        <li key={key}>
+          {label} — 가장 가까운 곳은 {listingById(best.listingId).name},{" "}
+          {best.who} 기준 <b>{best.gap}</b> 모자라요
+        </li>
+      );
+    if (met)
+      return (
+        <li key={key}>
+          {label} — {listingById(met.listingId).name}은{" "}
+          <b className="text-met">이미 충족</b>해요. 다른 조건이 걸려서 후보로
+          남지 못한 거예요
+        </li>
+      );
+    return null;
+  }).filter(Boolean);
+
   return (
     <section className="mb-5 rounded-lg border border-line bg-surface p-4">
       <h2 className="mb-1 font-medium text-ink">
@@ -267,18 +334,7 @@ function ConflictPanel() {
         조건마다 가장 가까운 후보와 얼마나 모자란지만 알려드려요. 서울 전체에
         그런 집이 없다는 뜻은 아니에요.
       </p>
-      <ul className="flex flex-col gap-1.5 text-sm nums">
-        <li>
-          예산 — 가장 가까운 곳은 신대방 코지, A 기준 <b>+월 3만</b> 모자라요
-        </li>
-        <li>
-          통근 — 가장 가까운 곳은 사당 그린홈, B 기준 <b>+4분</b> 모자라요
-        </li>
-        <li>
-          면적 — 사당 그린홈은 <b className="text-met">이미 충족</b>해요. 다른
-          조건이 걸려서 후보로 남지 못한 거예요
-        </li>
-      </ul>
+      <ul className="nums flex flex-col gap-1.5 text-sm">{lines}</ul>
     </section>
   );
 }
