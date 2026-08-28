@@ -26,6 +26,7 @@ const SHOTS = [
   ["A-01", `${S}?state=A-01`],
   ["A-02", `${S}?state=A-02`],
   ["A-02a", `${S}?state=A-02a`],
+  ["A-02b", `${S}?state=A-02b`],
   ["A-02c", `${S}?state=A-02c`],
   ["A-03", `${S}/conditions?state=A-03`],
   ["A-03d", `${S}/conditions?state=A-03d`],

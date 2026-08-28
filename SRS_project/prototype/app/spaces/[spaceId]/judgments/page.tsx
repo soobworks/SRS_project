@@ -278,52 +278,36 @@ const magnitudeOf = (gap: string | null): number | null => {
 };
 
 function ConflictPanel({ scenario }: { scenario: ReturnType<typeof resolveSet> }) {
-  const lines = RANKABLE.map((key) => {
-    type Cand = { listingId: string; who: string; gap: string; mag: number };
-    let met: { listingId: string; who: string } | null = null;
-    let best: Cand | null = null;
-    let label = "";
+  // (조건 × 사람)마다 "이 기준을 만족하는 후보가 하나라도 있는가"를 본다.
+  // 하나도 없는 쌍이 **진짜 막고 있는 것**이다 — 어떤 후보로도 충족되지 않는
+  // 조건. 하나라도 충족하는 조건은 이 화면이 설명할 충돌이 아니다.
+  const blockers = RANKABLE.flatMap((key) =>
+    (["A", "B"] as const).map((who) => {
+      let label = "";
+      let hasThreshold = false;
+      let satisfied = false;
+      let closest: { listingId: string; gap: string; mag: number } | null = null;
 
-    for (const jd of scenario.judgments) {
-      for (const [who, rows] of [
-        ["A", jd.a],
-        ["B", jd.b],
-      ] as const) {
+      for (const jd of scenario.judgments) {
+        const rows = who === "A" ? jd.a : jd.b;
         const row = rows.find((r) => r.key === key && r.threshold !== null);
         if (!row) continue;
+        hasThreshold = true;
         label = row.label;
         if (row.status === "MET") {
-          met ??= { listingId: jd.listingId, who };
-          continue;
+          satisfied = true;
+          break;
         }
         const mag = magnitudeOf(row.gap);
         if (row.status !== "UNMET" || mag === null) continue;
-        if (!best || mag < best.mag)
-          best = { listingId: jd.listingId, who, gap: row.gap!, mag };
+        if (!closest || mag < closest.mag)
+          closest = { listingId: jd.listingId, gap: row.gap!, mag };
       }
-    }
 
-    if (!label) return null;
-    // 못 미치는 조합이 하나라도 있으면 **그중 가장 가까운 것**을 말한다.
-    // 한쪽이 충족한다고 "이미 충족"이라 하면, 정작 얼마나 모자란지를
-    // 말해야 하는 화면이 아무것도 말하지 못하게 된다.
-    if (best)
-      return (
-        <li key={key}>
-          {label} — 가장 가까운 곳은 {listingById(best.listingId).name},{" "}
-          {best.who} 기준 <b>{best.gap}</b> 모자라요
-        </li>
-      );
-    if (met)
-      return (
-        <li key={key}>
-          {label} — {listingById(met.listingId).name}은{" "}
-          <b className="text-met">이미 충족</b>해요. 다른 조건이 걸려서 후보로
-          남지 못한 거예요
-        </li>
-      );
-    return null;
-  }).filter(Boolean);
+      if (!hasThreshold || satisfied || !closest) return null;
+      return { key, who, label, closest };
+    }),
+  ).filter((x): x is NonNullable<typeof x> => x !== null);
 
   return (
     <section className="mb-5 rounded-lg border border-line bg-surface p-4">
@@ -331,10 +315,25 @@ function ConflictPanel({ scenario }: { scenario: ReturnType<typeof resolveSet> }
         지금 담은 5곳 안에서는 두 분 조건이 동시에 맞는 집이 없어요
       </h2>
       <p className="mb-3 text-sm text-ink-muted">
-        조건마다 가장 가까운 후보와 얼마나 모자란지만 알려드려요. 서울 전체에
-        그런 집이 없다는 뜻은 아니에요.
+        어떤 후보로도 맞출 수 없는 조건만 골라, 그중 가장 가까운 곳과 얼마나
+        모자란지 알려드려요. 서울 전체에 그런 집이 없다는 뜻은 아니에요.
       </p>
-      <ul className="nums flex flex-col gap-1.5 text-sm">{lines}</ul>
+      {blockers.length > 0 ? (
+        <ul className="nums flex flex-col gap-1.5 text-sm">
+          {blockers.map((b) => (
+            <li key={`${b.key}-${b.who}`}>
+              {b.label} — {b.who} 기준을 맞추는 곳이 없어요. 가장 가까운 곳은{" "}
+              {listingById(b.closest.listingId).name}, <b>{b.closest.gap}</b>{" "}
+              모자라요
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm text-ink-muted">
+          조건 하나하나는 맞는 곳이 있어요. 다만 그것들이 **한 집에 동시에**
+          모이지 않는 상황이에요.
+        </p>
+      )}
     </section>
   );
 }

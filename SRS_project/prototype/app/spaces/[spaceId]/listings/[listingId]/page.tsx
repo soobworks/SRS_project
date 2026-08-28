@@ -7,12 +7,8 @@ import {
 import { BalancedComparison } from "@/components/domain/balanced-comparison";
 import { GroupBadge, ConfirmationBadge } from "@/components/domain/group-badge";
 import { DisclosedValue } from "@/components/domain/disclosed-value";
-import {
-  resolveSet,
-  listingById,
-  COMPROMISE_SENTENCES,
-  RELAXATION_OPTIONS,
-} from "@/lib/dev/scenarios";
+import { resolveSet, listingById, COMPROMISE_SENTENCES } from "@/lib/dev/scenarios";
+import type { ConditionRow, ListingJudgment } from "@/lib/types";
 
 /**
  * R-001 · R-002 ① — 매물 상세 판정 · trade-off · 조건 완화
@@ -111,7 +107,7 @@ export default async function ListingDetailPage({
         bEmptyNote="B가 초대에 들어오면 두 분 조건을 나란히 보여드려요"
       />
 
-      {relaxing ? <RelaxationPanel /> : <NextStep spaceId={spaceId} jd={jd} />}
+      {relaxing ? <RelaxationPanel jd={jd} /> : <NextStep spaceId={spaceId} jd={jd} />}
 
       <StepNav
         links={[
@@ -188,47 +184,81 @@ function NextStep({
  * A안과 B안을 항상 동시에 보여준다. 두 조건을 동시에 낮추는 안은 만들지 않으며,
  * 그런 조작을 할 UI 자체가 없다.
  */
-function RelaxationPanel() {
+function RelaxationPanel({ jd }: { jd: ListingJudgment }) {
+  // PRD §14.3 — 완화폭은 임의 제안값이 아니라 **지금 보고 있는 이 후보의
+  // 실제 미달량**에서 가져온다. 세트 전체를 훑는 `A-13b`(막다른 길)와 달리
+  // 이 화면은 매물 하나를 보고 있으므로 원천이 다르다.
+  //
+  // A안·B안을 항상 동시에 보여준다. 사람마다 미충족이 여럿이면 **가장 작은
+  // 것 하나만** 고른다 — 두 조건을 동시에 푸는 안은 만들지 않는다(AC-13-03).
+  const pick = (rows: ConditionRow[]) => {
+    let best: { row: ConditionRow; mag: number } | null = null;
+    for (const r of rows) {
+      if (r.status !== "UNMET" || !r.gap || !r.threshold) continue;
+      const m = r.gap.match(/(\d+)/);
+      if (!m) continue;
+      const mag = Number(m[1]);
+      if (!best || mag < best.mag) best = { row: r, mag };
+    }
+    return best?.row ?? null;
+  };
+
+  const plans = ([
+    ["A", pick(jd.a), jd.a],
+    ["B", pick(jd.b), jd.b],
+  ] as const).map(([who, row, rows]) => {
+    if (!row) return { who, row: null, remaining: 0 };
+    const remaining = rows.filter(
+      (r) => r.status === "UNMET" && r.key !== row.key,
+    ).length;
+    return { who, row, remaining };
+  });
+
   return (
     <section className="mt-5 rounded-lg border border-line bg-surface p-5">
       <h2 className="mb-1 font-medium text-ink">조금 풀면 무엇이 달라질까요?</h2>
       <p className="mb-4 text-sm text-ink-muted">
-        지금 모자란 만큼만 풀어봤어요. 한 번에 한 가지 조건만 풀 수 있어요.
+        이 집에서 지금 모자란 만큼만 풀어봤어요. 한 번에 한 가지 조건만 풀 수
+        있어요.
       </p>
 
       <div className="grid gap-3 md:grid-cols-2">
-        {RELAXATION_OPTIONS.map((o) => (
-          <div
-            key={`${o.who}-${o.conditionLabel}`}
-            className="rounded-md border border-line p-4"
-          >
+        {plans.map(({ who, row, remaining }) => (
+          <div key={who} className="rounded-md border border-line p-4">
             <p className="mb-2 text-xs font-medium text-ink-muted">
-              {o.who}안 — {o.conditionLabel}
+              {who}안{row ? ` — ${row.label}` : ""}
             </p>
-            <p className="nums mb-3 text-sm text-ink">
-              {o.from} → <strong>{o.to}</strong>{" "}
-              <span className="text-ink-muted">({o.delta})</span>
-            </p>
-            <div
-              aria-hidden
-              className="relative h-1.5 w-full rounded-full bg-neutral-bg"
-            >
-              <span className="absolute inset-y-0 left-0 w-2/3 rounded-full bg-ink" />
-              <span className="absolute -top-1 left-2/3 size-3.5 -translate-x-1/2 rounded-full border-2 border-surface bg-ink" />
-            </div>
-            {/* 살아나는 후보가 없으면 그렇게 말한다.
-                없는 이득을 만들어내지 않는다(PRD §14.2). */}
-            {o.recovers.length > 0 ? (
-              <p className="mt-3 text-sm text-met">
-                {o.recovers.map((id) => listingById(id).name).join(" · ")}가
-                살아나요
-              </p>
+            {row ? (
+              <>
+                <p className="nums mb-3 text-sm text-ink">
+                  {row.threshold} → <strong>{row.actual}</strong>{" "}
+                  <span className="text-ink-muted">({row.gap})</span>
+                </p>
+                <div
+                  aria-hidden
+                  className="relative h-1.5 w-full rounded-full bg-neutral-bg"
+                >
+                  <span className="absolute inset-y-0 left-0 w-2/3 rounded-full bg-ink" />
+                  <span className="absolute -top-1 left-2/3 size-3.5 -translate-x-1/2 rounded-full border-2 border-surface bg-ink" />
+                </div>
+                <p className="mt-3 text-sm">
+                  {remaining === 0 ? (
+                    <span className="text-met">
+                      이걸 풀면 {who}는 이 집을 전부 충족해요
+                    </span>
+                  ) : (
+                    <span className="text-ink-muted">
+                      이걸 풀어도 {who}는 {remaining}가지가 더 남아요
+                    </span>
+                  )}
+                </p>
+              </>
             ) : (
-              <p className="mt-3 text-sm text-ink-muted">
-                이 조건만 풀어서는 살아나는 후보가 없어요
+              <p className="text-sm text-ink-muted">
+                {who}는 이 집에서 풀 조건이 없어요
               </p>
             )}
-            <p className="mt-1 text-xs text-ink-muted">
+            <p className="mt-2 text-xs text-ink-muted">
               상대 조건은 직접 바꿀 수 없어요 — 제안하면 상대가 수락할 때만
               반영돼요.
             </p>
